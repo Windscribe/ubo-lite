@@ -224,9 +224,9 @@ function onMessage(request, sender, callback) {
     case 'setShowBlockedCount':
         rulesetConfig.showBlockedCount = request.state && true || false;
         if ( canShowBlockedCount ) {
-            dnr.setExtensionActionOptions({
-                displayActionCountAsBadgeText: rulesetConfig.showBlockedCount,
-            });
+            // dnr.setExtensionActionOptions({
+            //     displayActionCountAsBadgeText: rulesetConfig.showBlockedCount,
+            // });
         }
         saveRulesetConfig().then(( ) => {
             callback();
@@ -375,9 +375,9 @@ async function start() {
     // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/declarativeNetRequest
     //   Firefox API does not support `dnr.setExtensionActionOptions`
     if ( process.wakeupRun === false && canShowBlockedCount ) {
-        dnr.setExtensionActionOptions({
-            displayActionCountAsBadgeText: rulesetConfig.showBlockedCount,
-        });
+        // dnr.setExtensionActionOptions({
+        //     displayActionCountAsBadgeText: rulesetConfig.showBlockedCount,
+        // });
     }
 
     runtime.onMessage.addListener(onMessage);
