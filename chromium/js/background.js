@@ -397,7 +397,7 @@ async function start() {
         }
         const disableFirstRunPage = await adminRead('disableFirstRunPage');
         if ( disableFirstRunPage !== true ) {
-            runtime.openOptionsPage();
+            // runtime.openOptionsPage();
         } else {
             process.firstRun = false;
         }

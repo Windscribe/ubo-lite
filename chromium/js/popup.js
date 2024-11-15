@@ -294,7 +294,7 @@ dom.on('[data-i18n-title="popupTipReport"]', 'click', ev => {
 dom.on('[data-i18n-title="popupTipDashboard"]', 'click', ev => {
     if ( ev.isTrusted !== true ) { return; }
     if ( ev.button !== 0 ) { return; }
-    runtime.openOptionsPage();
+    // runtime.openOptionsPage();
 });
 
 /******************************************************************************/
