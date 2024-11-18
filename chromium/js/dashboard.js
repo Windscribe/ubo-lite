@@ -25,8 +25,10 @@ import { runtime } from './ext.js';
 /******************************************************************************/
 
 {
-    const manifest = runtime.getManifest();
-    dom.text('#aboutNameVer', `${manifest.name} ${manifest.version}`);
+   
+    // we dont copy over manifest.json so we need to use the ubo lite version
+    // and the name captured from ublock's manifest json during the build process
+    dom.text('#aboutNameVer', `${UBO_LITE_NAME} ${UBO_LITE_VERSION}`);
 }
 
 dom.attr('a', 'target', '_blank');
