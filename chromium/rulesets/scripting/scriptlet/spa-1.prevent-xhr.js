@@ -41,7 +41,7 @@ const scriptletGlobals = {}; // eslint-disable-line
 
 const argsList = [["widgets.outbrain.com"],["pagead2.googlesyndication.com"],["securepubads.g.doubleclick.net/pagead/ppub_config"],["popads.net"]];
 
-const hostnamesMap = new Map([["file4go.net",0],["aqualapp.com",1],["raulprietofernandez.net",1],["minhaconexao.com.br",2],["caroloportunidades.com.br",3],["dicasgostosas.com",3]]);
+const hostnamesMap = new Map([["file4go.net",0],["aqualapp.com",1],["raulprietofernandez.net",1],["minhaconexao.com.br",2],["receitasdaora.online",3],["foodiesgallery.com",3],["caroloportunidades.com.br",3],["dicasgostosas.com",3]]);
 
 const entitiesMap = new Map([]);
 
@@ -68,7 +68,7 @@ function preventXhrFn(
     const safeDispatchEvent = (xhr, type) => {
         try {
             xhr.dispatchEvent(new Event(type));
-        } catch(_) {
+        } catch {
         }
     };
     const XHRBefore = XMLHttpRequest.prototype;
@@ -310,7 +310,7 @@ function matchObjectProperties(propNeedles, ...objs) {
         if ( value === undefined ) { continue; }
         if ( typeof value !== 'string' ) {
             try { value = safe.JSON_stringify(value); }
-            catch(ex) { }
+            catch { }
             if ( typeof value !== 'string' ) { continue; }
         }
         if ( safe.testPattern(details, value) ) { continue; }
@@ -324,9 +324,13 @@ function parsePropertiesToMatch(propsToMatch, implicit = '') {
     const needles = new Map();
     if ( propsToMatch === undefined || propsToMatch === '' ) { return needles; }
     const options = { canNegate: true };
-    for ( const needle of propsToMatch.split(/\s+/) ) {
-        const [ prop, pattern ] = needle.split(':');
+    for ( const needle of safe.String_split.call(propsToMatch, /\s+/) ) {
+        let [ prop, pattern ] = safe.String_split.call(needle, ':');
         if ( prop === '' ) { continue; }
+        if ( pattern !== undefined && /[^$\w -]/.test(prop) ) {
+            prop = `${prop}:${pattern}`;
+            pattern = undefined;
+        }
         if ( pattern !== undefined ) {
             needles.set(prop, safe.initPattern(pattern, options));
         } else if ( implicit !== '' ) {
@@ -360,6 +364,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -435,7 +440,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -513,7 +518,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }

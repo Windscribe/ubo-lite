@@ -39,11 +39,11 @@ const uBOL_setLocalStorageItem = function() {
 
 const scriptletGlobals = {}; // eslint-disable-line
 
-const argsList = [["adDisplayed","$remove$"],["PageCount","$remove$"],["a_render","true"],["adf_plays","2"],["email","true"],["adshield-analytics-uuid","$remove$"],["/_fa_dXVpZA==$/","$remove$"],["/_fa_Y2FjaGVfaXNfYmxvY2tpbmdfYWNjZXB0YWJsZV9hZHM=$/","$remove$"],["/_fa_Y2FjaGVfaXNfYmxvY2tpbmdfYWRz$/","$remove$"],["/_fa_Y2FjaGVfYWRibG9ja19jaXJjdW12ZW50X3Njb3Jl$/","$remove$"],["segmentDeviceId","$remove$"],["/optimizely_data|tealium_timing/","$remove$"],["IIElevenLabsDubbingResult","$remove$"],["didomi_token","$remove$"],["fdx_enable_new_detail_page","true"]];
+const argsList = [["lastRedirect","true"],["PageCount","$remove$"],["a_render","true"],["adf_plays","2"],["email","true"],["adDisplayed","$remove$"],["forcefeaturetoggle.enable_ad_block_detect","false"],["adWatched","true"],["adshield-analytics-uuid","$remove$"],["/_fa_bGFzdF9iZmFfYXQ=$/","$remove$"],["/_fa_dXVpZA==$/","$remove$"],["/_fa_Y2FjaGVfaXNfYmxvY2tpbmdfYWNjZXB0YWJsZV9hZHM=$/","$remove$"],["/_fa_Y2FjaGVfaXNfYmxvY2tpbmdfYWRz$/","$remove$"],["/_fa_Y2FjaGVfYWRibG9ja19jaXJjdW12ZW50X3Njb3Jl$/","$remove$"],["segmentDeviceId","$remove$"],["/optimizely_data|tealium_timing/","$remove$"],["IIElevenLabsDubbingResult","$remove$"],["didomi_token","$remove$"],["browser-ids","$remove$"],["fdx_enable_new_detail_page","true"]];
 
-const hostnamesMap = new Map([["hdfilmcehennemi2.cx",0],["jetpunk.com",1],["bravedown.com",2],["adultdeepfakes.com",3],["freewsad.com",4],["loawa.com",[5,6,7,8,9]],["ygosu.com",[5,6,7,8,9]],["sportalkorea.com",[5,6,7,8,9]],["edaily.co.kr",[5,6,7,8,9]],["economist.co.kr",[5,6,7,8,9]],["etoday.co.kr",[5,6,7,8,9]],["isplus.com",[5,6,7,8,9]],["hometownstation.com",[5,6,7,8,9]],["honkailab.com",[5,6,7,8,9]],["thestockmarketwatch.com",[5,6,7,8,9]],["issuya.com",[5,6,7,8,9]],["worldhistory.org",[5,6,7,8,9]],["etnews.com",[5,6,7,8,9]],["iusm.co.kr",[5,6,7,8,9]],["dogdrip.net",[5,6,7,8,9]],["etoland.co.kr",[5,6,7,8,9]],["picrew.me",[5,6,7,8,9]],["text-compare.com",[5,6,7,8,9]],["fntimes.com",[5,6,7,8,9]],["javatpoint.com",[5,6,7,8,9]],["lamire.jp",[5,6,7,8,9]],["bamgosu.site",[5,6,7,8,9]],["allthekingz.com",[5,6,7,8,9]],["automobile-catalog.com",[5,6,7,8,9]],["maketecheasier.com",[5,6,7,8,9]],["thesaurus.net",[5,6,7,8,9]],["wfmz.com",[5,6,7,8,9]],["thestar.co.uk",[5,6,7,8,9]],["yorkshirepost.co.uk",[5,6,7,8,9]],["mydaily.co.kr",[5,6,7,8,9]],["raenonx.cc",[5,6,7,8,9]],["ndtvprofit.com",[5,6,7,8,9]],["badmouth1.com",[5,6,7,8,9]],["logicieleducatif.fr",[5,6,7,8,9]],["taxguru.in",[5,6,7,8,9]],["islamicfinder.org",[5,6,7,8,9]],["aikatu.jp",[5,6,7,8,9]],["secure-signup.net",[5,6,7,8,9]],["globalrph.com",[5,6,7,8,9]],["sportsrec.com",[5,6,7,8,9]],["reportera.co.kr",[5,6,7,8,9]],["flatpanelshd.com",[5,6,7,8,9]],["videogamemods.com",[5,6,7,8,9]],["adintrend.tv",[5,6,7,8,9]],["ark-unity.com",[5,6,7,8,9]],["cool-style.com.tw",[5,6,7,8,9]],["dziennik.pl",[5,6,7,8,9]],["eurointegration.com.ua",[5,6,7,8,9]],["winfuture.de",[5,6,7,8,9]],["freemcserver.net",[5,6,7,8,9]],["pravda.com.ua",[5,6,7,8,9]],["infinityfree.com",[5,6,7,8,9]],["wort-suchen.de",[5,6,7,8,9]],["word-grabber.com",[5,6,7,8,9]],["palabr.as",[5,6,7,8,9]],["motscroises.fr",[5,6,7,8,9]],["cruciverba.it",[5,6,7,8,9]],["dramabeans.com",[5,6,7,8,9]],["mynet.com",[5,6,7,8,9]],["sportsseoul.com",[5,6,7,8,9]],["smsonline.cloud",[5,6,7,8,9]],["meeco.kr",[5,6,7,8,9]],["heureka.cz",[5,6,7,8,9]],["slobodnadalmacija.hr",[5,6,7,8,9]],["crosswordsolver.com",[5,6,7,8,9]],["demotywatory.pl",[5,6,7,8,9]],["economictimes.com",[5,6,7,8,9]],["gloria.hr",[5,6,7,8,9]],["joemonster.org",[5,6,7,8,9]],["laleggepertutti.it",[5,6,7,8,9]],["lovelive-petitsoku.com",[5,6,7,8,9]],["manta.com",[5,6,7,8,9]],["mirrored.to",[5,6,7,8,9]],["missyusa.com",[5,6,7,8,9]],["mistrzowie.org",[5,6,7,8,9]],["mlbpark.donga.com",[5,6,7,8,9]],["netzwelt.de",[5,6,7,8,9]],["oeffnungszeitenbuch.de",[5,6,7,8,9]],["ondemandkorea.com",[5,6,7,8,9]],["oradesibiu.ro",[5,6,7,8,9]],["oraridiapertura24.it",[5,6,7,8,9]],["petitfute.com",[5,6,7,8,9]],["rabitsokuhou.2chblog.jp",[5,6,7,8,9]],["rostercon.com",[5,6,7,8,9]],["suzusoku.blog.jp",[5,6,7,8,9]],["talkwithstranger.com",[5,6,7,8,9]],["the-crossword-solver.com",[5,6,7,8,9]],["tportal.hr",[5,6,7,8,9]],["wouldurather.io",[5,6,7,8,9]],["golf-live.at",[5,6,7,8,9]],["motherlyvisions.com",[5,6,7,8,9]],["w.grapps.me",[5,6,7,8,9]],["gazetaprawna.pl",[5,6,7,8,9]],["pressian.com",[5,6,7,8,9]],["kreuzwortraetsel.de",[5,6,7,8,9]],["verkaufsoffener-sonntag.com",[5,6,7,8,9]],["raetsel-hilfe.de",[5,6,7,8,9]],["horairesdouverture24.fr",[5,6,7,8,9]],["nyitvatartas24.hu",[5,6,7,8,9]],["convertcase.net",[5,6,7,8,9]],["mindbodygreen.com",10],["1und1.de",11],["elevenlabs.io",12],["tv5mondeplus.com",13],["fedex.com",14]]);
+const hostnamesMap = new Map([["exambd.net",0],["jetpunk.com",1],["bravedown.com",2],["adultdeepfakes.com",3],["freewsad.com",4],["hdfilmcehennemi2.cx",5],["tradingview.com",6],["gputrends.net",7],["loawa.com",[8,9,10,11,12,13]],["ygosu.com",[8,9,10,11,12,13]],["sportalkorea.com",[8,9,10,11,12,13]],["edaily.co.kr",[8,9,10,11,12,13]],["economist.co.kr",[8,9,10,11,12,13]],["etoday.co.kr",[8,9,10,11,12,13]],["isplus.com",[8,9,10,11,12,13]],["hometownstation.com",[8,9,10,11,12,13]],["honkailab.com",[8,9,10,11,12,13]],["thestockmarketwatch.com",[8,9,10,11,12,13]],["issuya.com",[8,9,10,11,12,13]],["worldhistory.org",[8,9,10,11,12,13]],["etnews.com",[8,9,10,11,12,13]],["iusm.co.kr",[8,9,10,11,12,13]],["dogdrip.net",[8,9,10,11,12,13]],["etoland.co.kr",[8,9,10,11,12,13]],["picrew.me",[8,9,10,11,12,13]],["text-compare.com",[8,9,10,11,12,13]],["fntimes.com",[8,9,10,11,12,13]],["javatpoint.com",[8,9,10,11,12,13]],["lamire.jp",[8,9,10,11,12,13]],["bamgosu.site",[8,9,10,11,12,13]],["allthekingz.com",[8,9,10,11,12,13]],["automobile-catalog.com",[8,9,10,11,12,13]],["maketecheasier.com",[8,9,10,11,12,13]],["thesaurus.net",[8,9,10,11,12,13]],["wfmz.com",[8,9,10,11,12,13]],["thestar.co.uk",[8,9,10,11,12,13]],["yorkshirepost.co.uk",[8,9,10,11,12,13]],["mydaily.co.kr",[8,9,10,11,12,13]],["raenonx.cc",[8,9,10,11,12,13]],["ndtvprofit.com",[8,9,10,11,12,13]],["badmouth1.com",[8,9,10,11,12,13]],["logicieleducatif.fr",[8,9,10,11,12,13]],["taxguru.in",[8,9,10,11,12,13]],["islamicfinder.org",[8,9,10,11,12,13]],["aikatu.jp",[8,9,10,11,12,13]],["secure-signup.net",[8,9,10,11,12,13]],["globalrph.com",[8,9,10,11,12,13]],["sportsrec.com",[8,9,10,11,12,13]],["reportera.co.kr",[8,9,10,11,12,13]],["flatpanelshd.com",[8,9,10,11,12,13]],["videogamemods.com",[8,9,10,11,12,13]],["adintrend.tv",[8,9,10,11,12,13]],["ark-unity.com",[8,9,10,11,12,13]],["cool-style.com.tw",[8,9,10,11,12,13]],["dziennik.pl",[8,9,10,11,12,13]],["eurointegration.com.ua",[8,9,10,11,12,13]],["winfuture.de",[8,9,10,11,12,13]],["freemcserver.net",[8,9,10,11,12,13]],["pravda.com.ua",[8,9,10,11,12,13]],["infinityfree.com",[8,9,10,11,12,13]],["wort-suchen.de",[8,9,10,11,12,13]],["word-grabber.com",[8,9,10,11,12,13]],["palabr.as",[8,9,10,11,12,13]],["motscroises.fr",[8,9,10,11,12,13]],["cruciverba.it",[8,9,10,11,12,13]],["dramabeans.com",[8,9,10,11,12,13]],["mynet.com",[8,9,10,11,12,13]],["sportsseoul.com",[8,9,10,11,12,13]],["smsonline.cloud",[8,9,10,11,12,13]],["meeco.kr",[8,9,10,11,12,13]],["heureka.cz",[8,9,10,11,12,13]],["slobodnadalmacija.hr",[8,9,10,11,12,13]],["ap7am.com",[8,9,10,11,12,13]],["autoby.jp",[8,9,10,11,12,13]],["bg-mania.jp",[8,9,10,11,12,13]],["cinema.com.my",[8,9,10,11,12,13]],["crosswordsolver.com",[8,9,10,11,12,13]],["daily.co.jp",[8,9,10,11,12,13]],["demotywatory.pl",[8,9,10,11,12,13]],["dnevno.hr",[8,9,10,11,12,13]],["dolldivine.com",[8,9,10,11,12,13]],["economictimes.com",[8,9,10,11,12,13]],["forsal.pl",[8,9,10,11,12,13]],["gazetaprawna.pl",[8,9,10,11,12,13]],["giornalone.it",[8,9,10,11,12,13]],["gloria.hr",[8,9,10,11,12,13]],["iplocation.net",[8,9,10,11,12,13]],["j-cast.com",[8,9,10,11,12,13]],["j-town.net",[8,9,10,11,12,13]],["joemonster.org",[8,9,10,11,12,13]],["jutarnji.hr",[8,9,10,11,12,13]],["lacuarta.com",[8,9,10,11,12,13]],["laleggepertutti.it",[8,9,10,11,12,13]],["lovelive-petitsoku.com",[8,9,10,11,12,13]],["mamastar.jp",[8,9,10,11,12,13]],["manta.com",[8,9,10,11,12,13]],["mediaindonesia.com",[8,9,10,11,12,13]],["mirrored.to",[8,9,10,11,12,13]],["missyusa.com",[8,9,10,11,12,13]],["mistrzowie.org",[8,9,10,11,12,13]],["mlbpark.donga.com",[8,9,10,11,12,13]],["netzwelt.de",[8,9,10,11,12,13]],["nmplus.hk",[8,9,10,11,12,13]],["oeffnungszeitenbuch.de",[8,9,10,11,12,13]],["ondemandkorea.com",[8,9,10,11,12,13]],["oradesibiu.ro",[8,9,10,11,12,13]],["oraridiapertura24.it",[8,9,10,11,12,13]],["persoenlich.com",[8,9,10,11,12,13]],["petitfute.com",[8,9,10,11,12,13]],["powerpyx.com",[8,9,10,11,12,13]],["rabitsokuhou.2chblog.jp",[8,9,10,11,12,13]],["rostercon.com",[8,9,10,11,12,13]],["slashdot.org",[8,9,10,11,12,13]],["sourceforge.net",[8,9,10,11,12,13]],["suzusoku.blog.jp",[8,9,10,11,12,13]],["talkwithstranger.com",[8,9,10,11,12,13]],["the-crossword-solver.com",[8,9,10,11,12,13]],["tportal.hr",[8,9,10,11,12,13]],["tvtv.ca",[8,9,10,11,12,13]],["tvtv.us",[8,9,10,11,12,13]],["webdesignledger.com",[8,9,10,11,12,13]],["wouldurather.io",[8,9,10,11,12,13]],["yutura.net",[8,9,10,11,12,13]],["zagreb.info",[8,9,10,11,12,13]],["golf-live.at",[8,9,10,11,12,13]],["motherlyvisions.com",[8,9,10,11,12,13]],["w.grapps.me",[8,9,10,11,12,13]],["pressian.com",[8,9,10,11,12,13]],["kreuzwortraetsel.de",[8,9,10,11,12,13]],["verkaufsoffener-sonntag.com",[8,9,10,11,12,13]],["raetsel-hilfe.de",[8,9,10,11,12,13]],["horairesdouverture24.fr",[8,9,10,11,12,13]],["nyitvatartas24.hu",[8,9,10,11,12,13]],["convertcase.net",[8,9,10,11,12,13]],["mindbodygreen.com",14],["1und1.de",15],["elevenlabs.io",16],["tv5mondeplus.com",17],["visible.com",18],["fedex.com",19]]);
 
-const entitiesMap = new Map([["woxikon",[5,6,7,8,9]]]);
+const entitiesMap = new Map([["woxikon",[8,9,10,11,12,13]]]);
 
 const exceptionsMap = new Map([]);
 
@@ -113,7 +113,7 @@ function setLocalStorageItemFn(
         } else {
             storage.setItem(key, `${value}`);
         }
-    } catch(ex) {
+    } catch {
     }
 }
 
@@ -136,6 +136,9 @@ function getSafeCookieValuesFn() {
         'on', 'off',
         'true', 't', 'false', 'f',
         'yes', 'y', 'no', 'n',
+        'all', 'none', 'functional',
+        'granted', 'done',
+        'decline', 'declined',
     ];
 }
 
@@ -163,6 +166,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -238,7 +242,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -316,7 +320,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }

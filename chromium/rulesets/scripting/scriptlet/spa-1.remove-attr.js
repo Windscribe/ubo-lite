@@ -39,9 +39,9 @@ const uBOL_removeAttr = function() {
 
 const scriptletGlobals = {}; // eslint-disable-line
 
-const argsList = [["href","a[href]#clickfakeplayer"],["href","li[onclick^=\"go_to_player\"] > a[target=\"_blank\"][href]"],["href","a[href^=\"https://adalites.site/\"]"],["href","a.elementor-icon[target=\"_blank\"][rel][href]"],["href","a[xhref=\"javascript:void(0)\"][target=\"_blank\"]"]];
+const argsList = [["href","a[href]#clickfakeplayer"],["href","li[onclick^=\"go_to_player\"] > a[target=\"_blank\"][href]"],["href","a[href^=\"https://adalites.site/\"]"],["href","#fakeplayer > a"],["href","a.elementor-icon[target=\"_blank\"][rel][href]"],["href","a[xhref=\"javascript:void(0)\"][target=\"_blank\"]"]];
 
-const hostnamesMap = new Map([["megafilmeshd.si",0],["pobreflix.do",0],["redecanais.in",0],["cinelatino.net",0],["paraveronline.org",0],["verpelis.gratis",0],["cineplus123.org",0],["cinemitas.org",0],["pobreflix.vc",0],["animesgratis.org",0],["serieslatinoamerica.tv",0],["pepeliculas.org",0],["cinetux.to",0],["gnula.club",1],["pelisplushd.site",2],["anime-latino.com",3],["peliculasyserieslatino.me",4]]);
+const hostnamesMap = new Map([["megafilmeshd.si",0],["pobreflix.do",0],["redecanais.in",0],["cinelatino.net",0],["paraveronline.org",0],["verpelis.gratis",0],["cineplus123.org",0],["cinemitas.org",0],["pobreflix.vc",0],["animesgratis.org",0],["serieslatinoamerica.tv",0],["pepeliculas.org",0],["cinetux.to",0],["gnula.club",1],["pelisplushd.site",2],["pobreflix.foo",3],["anime-latino.com",4],["peliculasyserieslatino.me",5]]);
 
 const entitiesMap = new Map([["assistirfilmeshdgratis",0]]);
 
@@ -58,7 +58,7 @@ function removeAttr(
     if ( rawToken === '' ) { return; }
     const safe = safeSelf();
     const logPrefix = safe.makeLogPrefix('remove-attr', rawToken, rawSelector, behavior);
-    const tokens = rawToken.split(/\s*\|\s*/);
+    const tokens = safe.String_split.call(rawToken, /\s*\|\s*/);
     const selector = tokens
         .map(a => `${rawSelector}[${CSS.escape(a)}]`)
         .join(',');
@@ -88,7 +88,7 @@ function removeAttr(
                     safe.uboLog(logPrefix, `Removed attribute '${attr}'`);
                 }
             }
-        } catch(ex) {
+        } catch {
         }
     };
     const mutationHandler = mutations => {
@@ -118,7 +118,7 @@ function removeAttr(
             subtree: true,
         });
     };
-    runAt(( ) => { start(); }, behavior.split(/\s+/));
+    runAt(( ) => { start(); }, safe.String_split.call(behavior, /\s+/));
 }
 
 function runAt(fn, when) {
@@ -174,6 +174,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -249,7 +250,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -327,7 +328,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }

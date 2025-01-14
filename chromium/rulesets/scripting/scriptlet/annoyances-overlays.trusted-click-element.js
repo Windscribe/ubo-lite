@@ -58,7 +58,7 @@ function trustedClickElement(
     const logPrefix = safe.makeLogPrefix('trusted-click-element', selectors, extraMatch, delay);
 
     if ( extraMatch !== '' ) {
-        const assertions = extraMatch.split(',').map(s => {
+        const assertions = safe.String_split.call(extraMatch, ',').map(s => {
             const pos1 = s.indexOf(':');
             const s1 = pos1 !== -1 ? s.slice(0, pos1) : s;
             const not = s1.startsWith('!');
@@ -126,11 +126,11 @@ function trustedClickElement(
         return shadowRoot && querySelectorEx(inside, shadowRoot);
     };
 
-    const selectorList = selectors.split(/\s*,\s*/)
+    const selectorList = safe.String_split.call(selectors, /\s*,\s*/)
         .filter(s => {
             try {
                 void querySelectorEx(s);
-            } catch(_) {
+            } catch {
                 return false;
             }
             return true;
@@ -218,7 +218,8 @@ function trustedClickElement(
 }
 
 function getAllCookiesFn() {
-    return document.cookie.split(/\s*;\s*/).map(s => {
+    const safe = safeSelf();
+    return safe.String_split.call(document.cookie, /\s*;\s*/).map(s => {
         const pos = s.indexOf('=');
         if ( pos === 0 ) { return; }
         if ( pos === -1 ) { return `${s.trim()}=`; }
@@ -275,6 +276,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -350,7 +352,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -428,7 +430,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }

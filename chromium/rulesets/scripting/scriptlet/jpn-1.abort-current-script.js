@@ -41,7 +41,7 @@ const scriptletGlobals = {}; // eslint-disable-line
 
 const argsList = [["onload","google_esf"],["onload","adsCount"],["navigator.brave"],["document.getElementById","_0x"],["document.querySelector","_0x"],["jQuery","decodeURIComponent"],["document.write","sitejack"],["document.createElement","overview"],["document.getElementById","imageUrls"],["$","google_ads_iframe_"],["onload","puHref"],["document.referrer","gmo_bb"],["document.write","LinkURL"],["document.currentScript","insertAdjacentHTML"],["jQuery","floatingAd"],["tag","Math.random"],["addEventListener","style.display"],["jmp","Math"],["document.getElementById","lists"]];
 
-const hostnamesMap = new Map([["qa.crefan.jp",0],["blog-and-destroy.com",1],["musenboya.com",2],["kledgeb.blogspot.com",3],["connect.coron.tech",5],["akibablog.blog.jp",6],["blog.livedoor.jp",[6,14,17]],["erommd-street.com",7],["twivideo.net",8],["ac-illust.com",9],["photo-ac.com",9],["javple.com",10],["engineweb.jp",11],["kenshonavi.com",11],["maidonanews.jp",11],["nkreport.jp",11],["riajo.com",11],["searchkoreanews.jp",11],["shiori-tabi.jp",11],["trafficnews.jp",11],["yougakumap.com",11],["encount.press",11],["realsound.jp",11],["h1g.jp",11],["russianbeauties.jp",12],["agora-web.jp",13],["2chblog.jp",14],["yugioh-starlight.com",14],["kijomatomelog.com",14],["gundamlog.com",14],["doorblog.jp",14],["digital-thread.com",14],["livedoor.blog",14],["blog.jp",14],["majikichi.com",15],["xn--gmq92kd2rm1kx34a.com",16],["momoiroadult.com",18]]);
+const hostnamesMap = new Map([["qa.crefan.jp",0],["blog-and-destroy.com",1],["musenboya.com",2],["kledgeb.blogspot.com",3],["connect.coron.tech",5],["akibablog.blog.jp",6],["blog.livedoor.jp",[6,14,17]],["erommd-street.com",7],["twivideo.net",8],["ac-illust.com",9],["photo-ac.com",9],["javple.com",10],["chibanippo.co.jp",11],["engineweb.jp",11],["kenshonavi.com",11],["maidonanews.jp",11],["nkreport.jp",11],["riajo.com",11],["searchkoreanews.jp",11],["shiori-tabi.jp",11],["trafficnews.jp",11],["yougakumap.com",11],["encount.press",11],["realsound.jp",11],["h1g.jp",11],["russianbeauties.jp",12],["agora-web.jp",13],["2chblog.jp",14],["yugioh-starlight.com",14],["kijomatomelog.com",14],["gundamlog.com",14],["doorblog.jp",14],["digital-thread.com",14],["livedoor.blog",14],["blog.jp",14],["majikichi.com",15],["xn--gmq92kd2rm1kx34a.com",16],["momoiroadult.com",18]]);
 
 const entitiesMap = new Map([["manga1001",4],["javmix",16]]);
 
@@ -68,7 +68,7 @@ function abortCurrentScriptCore(
     const reContext = safe.patternToRegex(context);
     const extraArgs = safe.getExtraArgs(Array.from(arguments), 3);
     const thisScript = document.currentScript;
-    const chain = target.split('.');
+    const chain = safe.String_split.call(target, '.');
     let owner = window;
     let prop;
     for (;;) {
@@ -106,7 +106,7 @@ function abortCurrentScriptCore(
                 text = self.decodeURIComponent(content);
                 break;
             }
-        } catch(ex) {
+        } catch {
         }
         scriptTexts.set(elem, text);
         return text;
@@ -209,6 +209,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -284,7 +285,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -362,7 +363,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }

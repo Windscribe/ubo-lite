@@ -39,9 +39,9 @@ const uBOL_removeCookie = function() {
 
 const scriptletGlobals = {}; // eslint-disable-line
 
-const argsList = [["ca_public_page_views"],["lmt"],["/^ev_did|ev_sid/"]];
+const argsList = [["/^ev_did|ev_sid/"]];
 
-const hostnamesMap = new Map([["chef.se",0],["lexbase.se",1],["synonymer.se",2]]);
+const hostnamesMap = new Map([["synonymer.se",0]]);
 
 const entitiesMap = new Map([]);
 
@@ -64,7 +64,7 @@ function removeCookie(
         }, ms);
     };
     const remove = ( ) => {
-        document.cookie.split(';').forEach(cookieStr => {
+        safe.String_split.call(document.cookie, ';').forEach(cookieStr => {
             const pos = cookieStr.indexOf('=');
             if ( pos === -1 ) { return; }
             const cookieName = cookieStr.slice(0, pos).trim();
@@ -102,7 +102,7 @@ function removeCookie(
     window.addEventListener('beforeunload', remove);
     if ( typeof extraArgs.when !== 'string' ) { return; }
     const supportedEventTypes = [ 'scroll', 'keydown' ];
-    const eventTypes = extraArgs.when.split(/\s/);
+    const eventTypes = safe.String_split.call(extraArgs.when, /\s/);
     for ( const type of eventTypes ) {
         if ( supportedEventTypes.includes(type) === false ) { continue; }
         document.addEventListener(type, ( ) => {
@@ -135,6 +135,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -210,7 +211,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -288,7 +289,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }

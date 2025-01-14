@@ -39,9 +39,9 @@ const uBOL_removeAttr = function() {
 
 const scriptletGlobals = {}; // eslint-disable-line
 
-const argsList = [["style",".js-reward-target[style]"],["id","#div-gpt-ad-sidebottom"],["id","#div-gpt-ad-footer"],["id","#div-gpt-ad-pagebottom"],["id","#div-gpt-ad-relatedbottom-1"],["class","[id][role] > [id] > [class] > section"],["href",".cps-post-main > a[href^=\"https://www.amazon.co.jp\"]"],["data-popup-url"],["onclick","span > a[onclick]"]];
+const argsList = [["href","a[style*=\"display:\"][href^=\"https://al.dmm.co.jp\"]","stay"],["style",".js-reward-target[style]"],["id","#div-gpt-ad-sidebottom"],["id","#div-gpt-ad-footer"],["id","#div-gpt-ad-pagebottom"],["id","#div-gpt-ad-relatedbottom-1"],["class","[id][role] > [id] > [class] > section"],["href",".cps-post-main > a[href^=\"https://www.amazon.co.jp\"]"],["data-popup-url"],["onclick","span > a[onclick]"]];
 
-const hostnamesMap = new Map([["jprime.jp",0],["rocketnews24.com",[1,2,3,4]],["youpouch.com",[1,2,3,4]],["coron.tech",5],["lifematome.blog",6],["wav.tv",7],["380cc.cc",8]]);
+const hostnamesMap = new Map([["exploader.net",0],["jprime.jp",1],["rocketnews24.com",[2,3,4,5]],["youpouch.com",[2,3,4,5]],["coron.tech",6],["lifematome.blog",7],["wav.tv",8],["380cc.cc",9]]);
 
 const entitiesMap = new Map([]);
 
@@ -58,7 +58,7 @@ function removeAttr(
     if ( rawToken === '' ) { return; }
     const safe = safeSelf();
     const logPrefix = safe.makeLogPrefix('remove-attr', rawToken, rawSelector, behavior);
-    const tokens = rawToken.split(/\s*\|\s*/);
+    const tokens = safe.String_split.call(rawToken, /\s*\|\s*/);
     const selector = tokens
         .map(a => `${rawSelector}[${CSS.escape(a)}]`)
         .join(',');
@@ -88,7 +88,7 @@ function removeAttr(
                     safe.uboLog(logPrefix, `Removed attribute '${attr}'`);
                 }
             }
-        } catch(ex) {
+        } catch {
         }
     };
     const mutationHandler = mutations => {
@@ -118,7 +118,7 @@ function removeAttr(
             subtree: true,
         });
     };
-    runAt(( ) => { start(); }, behavior.split(/\s+/));
+    runAt(( ) => { start(); }, safe.String_split.call(behavior, /\s+/));
 }
 
 function runAt(fn, when) {
@@ -174,6 +174,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -249,7 +250,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -327,7 +328,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }

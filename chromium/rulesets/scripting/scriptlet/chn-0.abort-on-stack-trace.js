@@ -64,13 +64,15 @@ function abortOnStackTrace(
             let v = owner[chain];
             Object.defineProperty(owner, chain, {
                 get: function() {
-                    if ( matchesStackTrace(needleDetails, extraArgs.log) ) {
+                    const log = safe.logLevel > 1 ? 'all' : 'match';
+                    if ( matchesStackTraceFn(needleDetails, log) ) {
                         throw new ReferenceError(getExceptionToken());
                     }
                     return v;
                 },
                 set: function(a) {
-                    if ( matchesStackTrace(needleDetails, extraArgs.log) ) {
+                    const log = safe.logLevel > 1 ? 'all' : 'match';
+                    if ( matchesStackTraceFn(needleDetails, log) ) {
                         throw new ReferenceError(getExceptionToken());
                     }
                     v = a;
@@ -113,7 +115,7 @@ function getExceptionToken() {
     return token;
 }
 
-function matchesStackTrace(
+function matchesStackTraceFn(
     needleDetails,
     logLevel = ''
 ) {
@@ -125,7 +127,7 @@ function matchesStackTrace(
     // Normalize stack trace
     const reLine = /(.*?@)?(\S+)(:\d+):\d+\)?$/;
     const lines = [];
-    for ( let line of error.stack.split(/[\n\r]+/) ) {
+    for ( let line of safe.String_split.call(error.stack, /[\n\r]+/) ) {
         if ( line.includes(exceptionToken) ) { continue; }
         line = line.trim();
         const match = safe.RegExp_exec.call(reLine, line);
@@ -182,6 +184,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -257,7 +260,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -335,7 +338,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }

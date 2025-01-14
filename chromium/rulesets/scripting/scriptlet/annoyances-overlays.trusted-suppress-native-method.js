@@ -39,9 +39,9 @@ const uBOL_trustedSuppressNativeMethod = function() {
 
 const scriptletGlobals = {}; // eslint-disable-line
 
-const argsList = [["Function.prototype.constructor","\"debugger\"","abort"]];
+const argsList = [["Function.prototype.constructor","\"debugger\"","abort"],["RegExp.prototype.test","\"contact@foxteller.com\"","abort"]];
 
-const hostnamesMap = new Map([["ate60vs7zcjhsjo5qgv8.com",0],["jetv.xyz",0]]);
+const hostnamesMap = new Map([["ate60vs7zcjhsjo5qgv8.com",0],["autoembed.cc",0],["jetv.xyz",0],["t.17track.net",0],["embasic.pro",0],["dlions.pro",0],["foxteller.com",1]]);
 
 const entitiesMap = new Map([]);
 
@@ -56,12 +56,14 @@ function trustedSuppressNativeMethod(
     stack = ''
 ) {
     if ( methodPath === '' ) { return; }
-    if ( stack !== '' ) { return; }
     const safe = safeSelf();
-    const logPrefix = safe.makeLogPrefix('trusted-suppress-native-method', methodPath, signature, how);
-    const signatureArgs = signature.split(/\s*\|\s*/).map(v => {
+    const logPrefix = safe.makeLogPrefix('trusted-suppress-native-method', methodPath, signature, how, stack);
+    const signatureArgs = safe.String_split.call(signature, /\s*\|\s*/).map(v => {
         if ( /^".*"$/.test(v) ) {
             return { type: 'pattern', re: safe.patternToRegex(v.slice(1, -1)) };
+        }
+        if ( /^\/.+\/$/.test(v) ) {
+            return { type: 'pattern', re: safe.patternToRegex(v) };
         }
         if ( v === 'false' ) {
             return { type: 'exact', value: false };
@@ -76,6 +78,7 @@ function trustedSuppressNativeMethod(
             return { type: 'exact', value: undefined };
         }
     });
+    const stackNeedle = safe.initPattern(stack, { canNegate: true });
     proxyApplyFn(methodPath, function(context) {
         const { callArgs } = context;
         if ( signature === '' ) {
@@ -97,6 +100,12 @@ function trustedSuppressNativeMethod(
                 }
             }
         }
+        if ( stackNeedle.matchAll !== true ) {
+            const logLevel = safe.logLevel > 1 ? 'all' : '';
+            if ( matchesStackTraceFn(stackNeedle, logLevel) === false ) {
+                return context.reflect();
+            }
+        }
         if ( how === 'debug' ) {
             debugger; // eslint-disable-line no-debugger
             return context.reflect();
@@ -106,6 +115,51 @@ function trustedSuppressNativeMethod(
             throw new ReferenceError();
         }
     });
+}
+
+function matchesStackTraceFn(
+    needleDetails,
+    logLevel = ''
+) {
+    const safe = safeSelf();
+    const exceptionToken = getExceptionToken();
+    const error = new safe.Error(exceptionToken);
+    const docURL = new URL(self.location.href);
+    docURL.hash = '';
+    // Normalize stack trace
+    const reLine = /(.*?@)?(\S+)(:\d+):\d+\)?$/;
+    const lines = [];
+    for ( let line of safe.String_split.call(error.stack, /[\n\r]+/) ) {
+        if ( line.includes(exceptionToken) ) { continue; }
+        line = line.trim();
+        const match = safe.RegExp_exec.call(reLine, line);
+        if ( match === null ) { continue; }
+        let url = match[2];
+        if ( url.startsWith('(') ) { url = url.slice(1); }
+        if ( url === docURL.href ) {
+            url = 'inlineScript';
+        } else if ( url.startsWith('<anonymous>') ) {
+            url = 'injectedScript';
+        }
+        let fn = match[1] !== undefined
+            ? match[1].slice(0, -1)
+            : line.slice(0, match.index).trim();
+        if ( fn.startsWith('at') ) { fn = fn.slice(2).trim(); }
+        let rowcol = match[3];
+        lines.push(' ' + `${fn} ${url}${rowcol}:1`.trim());
+    }
+    lines[0] = `stackDepth:${lines.length-1}`;
+    const stack = lines.join('\t');
+    const r = needleDetails.matchAll !== true &&
+        safe.testPattern(needleDetails, stack);
+    if (
+        logLevel === 'all' ||
+        logLevel === 'match' && r ||
+        logLevel === 'nomatch' && !r
+    ) {
+        safe.uboLog(stack.replace(/\t/g, '\n'));
+    }
+    return r;
 }
 
 function proxyApplyFn(
@@ -136,7 +190,7 @@ function proxyApplyFn(
             }
             reflect() {
                 const r = Reflect.construct(this.callFn, this.callArgs);
-                this.callFn = this.callArgs = undefined;
+                this.callFn = this.callArgs = this.private = undefined;
                 proxyApplyFn.ctorContexts.push(this);
                 return r;
             }
@@ -159,7 +213,7 @@ function proxyApplyFn(
             }
             reflect() {
                 const r = Reflect.apply(this.callFn, this.thisArg, this.callArgs);
-                this.callFn = this.thisArg = this.callArgs = undefined;
+                this.callFn = this.thisArg = this.callArgs = this.private = undefined;
                 proxyApplyFn.applyContexts.push(this);
                 return r;
             }
@@ -213,6 +267,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -288,7 +343,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -366,7 +421,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }
@@ -374,6 +429,24 @@ function safeSelf() {
         };
     }
     return safe;
+}
+
+function getExceptionToken() {
+    const token = getRandomToken();
+    const oe = self.onerror;
+    self.onerror = function(msg, ...args) {
+        if ( typeof msg === 'string' && msg.includes(token) ) { return true; }
+        if ( oe instanceof Function ) {
+            return oe.call(this, msg, ...args);
+        }
+    }.bind();
+    return token;
+}
+
+function getRandomToken() {
+    const safe = safeSelf();
+    return safe.String_fromCharCode(Date.now() % 26 + 97) +
+        safe.Math_floor(safe.Math_random() * 982451653 + 982451653).toString(36);
 }
 
 /******************************************************************************/

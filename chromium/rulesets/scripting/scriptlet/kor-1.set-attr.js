@@ -68,7 +68,7 @@ function setAttr(
         }
     }
 
-    setAttrFn(logPrefix, selector, attr, value);
+    setAttrFn(false, logPrefix, selector, attr, value);
 }
 
 function safeSelf() {
@@ -95,6 +95,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -170,7 +171,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -248,7 +249,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }
@@ -259,6 +260,7 @@ function safeSelf() {
 }
 
 function setAttrFn(
+    trusted = false,
     logPrefix,
     selector = '',
     attr = '',
@@ -268,7 +270,7 @@ function setAttrFn(
     if ( attr === '' ) { return; }
 
     const safe = safeSelf();
-    const copyFrom = /^\[.+\]$/.test(value)
+    const copyFrom = trusted === false && /^\[.+\]$/.test(value)
         ? value.slice(1, -1)
         : '';
 
@@ -280,7 +282,7 @@ function setAttrFn(
         let elems;
         try {
             elems = document.querySelectorAll(selector);
-        } catch(_) {
+        } catch {
             return false;
         }
         for ( const elem of elems ) {

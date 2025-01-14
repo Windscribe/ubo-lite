@@ -12,8 +12,7 @@
  },
  "condition": {
   "requestDomains": [
-   "cliphot69.art",
-   "phimhaythuyetminh.live",
+   "cliphot69.cfd",
    "truyen4u.pro"
   ],
   "resourceTypes": [
@@ -58,7 +57,7 @@
  },
  "condition": {
   "requestDomains": [
-   "phimhdc.us"
+   "phimhdc.wiki"
   ],
   "resourceTypes": [
    "main_frame",
@@ -102,7 +101,7 @@
  },
  "condition": {
   "requestDomains": [
-   "ungtycomics.io"
+   "ungtycomicsxyz.com"
   ],
   "resourceTypes": [
    "main_frame",

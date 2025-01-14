@@ -39,9 +39,9 @@ const uBOL_removeAttr = function() {
 
 const scriptletGlobals = {}; // eslint-disable-line
 
-const argsList = [["style","body"],["style","div[id^=\"head\"]"]];
+const argsList = [["style","body"]];
 
-const hostnamesMap = new Map([["super.cz",0],["titulky.com",1]]);
+const hostnamesMap = new Map([["super.cz",0]]);
 
 const entitiesMap = new Map([]);
 
@@ -58,7 +58,7 @@ function removeAttr(
     if ( rawToken === '' ) { return; }
     const safe = safeSelf();
     const logPrefix = safe.makeLogPrefix('remove-attr', rawToken, rawSelector, behavior);
-    const tokens = rawToken.split(/\s*\|\s*/);
+    const tokens = safe.String_split.call(rawToken, /\s*\|\s*/);
     const selector = tokens
         .map(a => `${rawSelector}[${CSS.escape(a)}]`)
         .join(',');
@@ -88,7 +88,7 @@ function removeAttr(
                     safe.uboLog(logPrefix, `Removed attribute '${attr}'`);
                 }
             }
-        } catch(ex) {
+        } catch {
         }
     };
     const mutationHandler = mutations => {
@@ -118,7 +118,7 @@ function removeAttr(
             subtree: true,
         });
     };
-    runAt(( ) => { start(); }, behavior.split(/\s+/));
+    runAt(( ) => { start(); }, safe.String_split.call(behavior, /\s+/));
 }
 
 function runAt(fn, when) {
@@ -174,6 +174,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -249,7 +250,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -327,7 +328,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }

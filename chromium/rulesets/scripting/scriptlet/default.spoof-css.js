@@ -39,7 +39,7 @@ const uBOL_spoofCSS = function() {
 
 const scriptletGlobals = {}; // eslint-disable-line
 
-const argsList = [["#btx1, #btx2, #wg-genx > .mediafire","visibility","visible"],["[id^=\"div-gpt-ad\"]","display","block"],["a img:not([src=\"images/main_logo_inverted.png\"])","visibility","visible"],["[target=\"_blank\"][rel$=\" noopener noreferrer\"]:has(> img[src^=\"/images/\"]), [target=\"_blank\"][rel^=\"noopener noreferrer\"]:has(> img[src^=\"/images/\"])","display","block"]];
+const argsList = [["#btx1, #btx2, #wg-genx > .mediafire","visibility","visible"],["[id^=\"div-gpt-ad\"]","display","block"],["a img:not([src=\"images/main_logo_inverted.png\"])","visibility","visible"],["div[class=\"nav tabTop\"] + div > div:first-child > div:first-child > a:has(> img[src*=\"/\"][src*=\"_\"][alt]), #head + div[id] > div:last-child > div > a:has(> img[src*=\"/\"][src*=\"_\"][alt])","display","block"]];
 
 const hostnamesMap = new Map([["techcyan.com",0],["kiktu.com",0],["upshrink.com",0],["trangchu.news",0],["banaraswap.in",0],["jytechs.in",1],["dev.miuiflash.com",1],["djxmaza.in",1],["thecubexguide.com",1],["download.megaup.net",2],["1001tracklists.com",3]]);
 
@@ -57,16 +57,20 @@ function spoofCSS(
     if ( selector === '' ) { return; }
     const toCamelCase = s => s.replace(/-[a-z]/g, s => s.charAt(1).toUpperCase());
     const propToValueMap = new Map();
+    const privatePropToValueMap = new Map();
     for ( let i = 0; i < args.length; i += 2 ) {
-        if ( typeof args[i+0] !== 'string' ) { break; }
-        if ( args[i+0] === '' ) { break; }
-        if ( typeof args[i+1] !== 'string' ) { break; }
-        propToValueMap.set(toCamelCase(args[i+0]), args[i+1]);
+        const prop = toCamelCase(args[i+0]);
+        if ( prop === '' ) { break; }
+        const value = args[i+1];
+        if ( typeof value !== 'string' ) { break; }
+        if ( prop.charCodeAt(0) === 0x5F /* _ */ ) {
+            privatePropToValueMap.set(prop, value);
+        } else {
+            propToValueMap.set(prop, value);
+        }
     }
     const safe = safeSelf();
     const logPrefix = safe.makeLogPrefix('spoof-css', selector, ...args);
-    const canDebug = scriptletGlobals.canDebug;
-    const shouldDebug = canDebug && propToValueMap.get('debug') || 0;
     const instanceProperties = [ 'cssText', 'length', 'parentRule' ];
     const spoofStyle = (prop, real) => {
         const normalProp = toCamelCase(prop);
@@ -88,7 +92,7 @@ function spoofCSS(
     self.getComputedStyle = new Proxy(self.getComputedStyle, {
         apply: function(target, thisArg, args) {
             // eslint-disable-next-line no-debugger
-            if ( shouldDebug !== 0 ) { debugger; }
+            if ( privatePropToValueMap.has('_debug') ) { debugger; }
             const style = Reflect.apply(target, thisArg, args);
             const targetElements = new WeakSet(document.querySelectorAll(selector));
             if ( targetElements.has(args[0]) === false ) { return style; }
@@ -131,18 +135,28 @@ function spoofCSS(
     Element.prototype.getBoundingClientRect = new Proxy(Element.prototype.getBoundingClientRect, {
         apply: function(target, thisArg, args) {
             // eslint-disable-next-line no-debugger
-            if ( shouldDebug !== 0 ) { debugger; }
+            if ( privatePropToValueMap.has('_debug') ) { debugger; }
             const rect = Reflect.apply(target, thisArg, args);
             const targetElements = new WeakSet(document.querySelectorAll(selector));
             if ( targetElements.has(thisArg) === false ) { return rect; }
-            let { height, width } = rect;
-            if ( propToValueMap.has('width') ) {
+            let { x, y, height, width } = rect;
+            if ( privatePropToValueMap.has('_rectx') ) {
+                x = parseFloat(privatePropToValueMap.get('_rectx'));
+            }
+            if ( privatePropToValueMap.has('_recty') ) {
+                y = parseFloat(privatePropToValueMap.get('_recty'));
+            }
+            if ( privatePropToValueMap.has('_rectw') ) {
+                width = parseFloat(privatePropToValueMap.get('_rectw'));
+            } else if ( propToValueMap.has('width') ) {
                 width = parseFloat(propToValueMap.get('width'));
             }
-            if ( propToValueMap.has('height') ) {
+            if ( privatePropToValueMap.has('_recth') ) {
+                height = parseFloat(privatePropToValueMap.get('_recth'));
+            } else if ( propToValueMap.has('height') ) {
                 height = parseFloat(propToValueMap.get('height'));
             }
-            return new self.DOMRect(rect.x, rect.y, width, height);
+            return new self.DOMRect(x, y, width, height);
         },
         get(target, prop) {
             if ( prop === 'toString' ) {
@@ -177,6 +191,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -252,7 +267,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -330,7 +345,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }

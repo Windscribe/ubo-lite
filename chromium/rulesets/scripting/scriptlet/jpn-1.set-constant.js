@@ -39,9 +39,9 @@ const uBOL_setConstant = function() {
 
 const scriptletGlobals = {}; // eslint-disable-line
 
-const argsList = [["adBlockerDetected","false"],["blockId","0"],["all520dddaaa2022ccc","true"],["canRunAds","true"],["flgDisplay","false"],["adsbygoogle.loaded","true"],["gptScriptLoaded","true"],["adBlockDetected","noopFunc"],["pum_vars","undefined"],["ads_data","{}"],["document.write","noopFunc"],["adPopupStatus","false"],["endInterstitialShow","true"],["geparams.custom.enableYdn",""],["PREMIUM","true"],["geoAvailable","true"],["FIRST_DELAY","0"],["NEXT_DELAY","0"],["sec","0"],["univresalP","noopFunc"],["TagProvider.cleanup","noopFunc"]];
+const argsList = [["adBlockerDetected","false"],["all520dddaaa2022ccc","true"],["canRunAds","true"],["flgDisplay","false"],["adsbygoogle.loaded","true"],["gptScriptLoaded","true"],["adBlockDetected","noopFunc"],["pum_vars","undefined"],["ads_data","{}"],["document.write","noopFunc"],["adPopupStatus","false"],["endInterstitialShow","true"],["geparams.custom.enableYdn",""],["PREMIUM","true"],["geoAvailable","true"],["FIRST_DELAY","0"],["NEXT_DELAY","0"],["sec","0"],["univresalP","noopFunc"],["TagProvider.cleanup","noopFunc"]];
 
-const hostnamesMap = new Map([["egotter.com",0],["inkbrushpainting.work",1],["bridalgown.work",1],["contents-group.work",1],["heisei-housewarming.work",1],["liquidfoundation.work",1],["nailcolor.work",1],["studioglass.work",1],["tapestry.work",1],["teaceremony.work",1],["weddinghall.work",1],["520call.me",2],["520cc.cc",2],["dropbooks.net",3],["coolpan.net",4],["g-pc.info",5],["intaa.net",6],["h-ken.net",7],["pictab.art",8],["onagazou.info",8],["fashionpost.jp",9],["jav380.com",10],["sukima.me",[11,12,13,14]],["sonae.sankei.co.jp",15],["ponta.abstractpainting.work",[16,17]],["dotti2.jp",18],["pochitto2.jp",18],["gotouchi.jp",18],["cmnw.jp",18],["ddd-smart.net",19],["famitsu.com",20]]);
+const hostnamesMap = new Map([["egotter.com",0],["520call.me",1],["520cc.cc",1],["dropbooks.net",2],["coolpan.net",3],["g-pc.info",4],["intaa.net",5],["h-ken.net",6],["pictab.art",7],["onagazou.info",7],["fashionpost.jp",8],["jav380.com",9],["sukima.me",[10,11,12,13]],["sonae.sankei.co.jp",14],["ponta.abstractpainting.work",[15,16]],["dotti2.jp",17],["pochitto2.jp",17],["gotouchi.jp",17],["cmnw.jp",17],["ddd-smart.net",18],["famitsu.com",19]]);
 
 const entitiesMap = new Map([]);
 
@@ -258,6 +258,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -333,7 +334,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -411,7 +412,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }
@@ -452,9 +453,9 @@ function validateConstantFn(trusted, raw, extraArgs = {}) {
         if ( Math.abs(raw) > 0x7FFF ) { return; }
     } else if ( trusted ) {
         if ( raw.startsWith('json:') ) {
-            try { value = safe.JSON_parse(raw.slice(5)); } catch(ex) { return; }
+            try { value = safe.JSON_parse(raw.slice(5)); } catch { return; }
         } else if ( raw.startsWith('{') && raw.endsWith('}') ) {
-            try { value = safe.JSON_parse(raw).value; } catch(ex) { return; }
+            try { value = safe.JSON_parse(raw).value; } catch { return; }
         }
     } else {
         return;

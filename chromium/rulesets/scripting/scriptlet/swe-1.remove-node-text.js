@@ -39,9 +39,9 @@ const uBOL_removeNodeText = function() {
 
 const scriptletGlobals = {}; // eslint-disable-line
 
-const argsList = [["noscript"],["script","/wccp_pro/"],["#text","casino"],["script","decodeURIComponent"],["script","checkAdsBlocked"]];
+const argsList = [["script","contextmenu"],["script","e.keyCode"],["noscript"],["script","/wccp_pro/"],["script","e.preventDefault"],["script","eval(function(h","u","n","t","e","r)"],["script","show_msg"],["script","decodeURIComponent"],["script","checkAdsBlocked"]];
 
-const hostnamesMap = new Map([["dinbyggare.se",[0,1]],["garaget.org",2],["pilsner.nu",3],["swedroid.se",4]]);
+const hostnamesMap = new Map([["byggipedia.se",[0,1]],["dinbyggare.se",[2,3]],["internetodontologi.se",4],["skrattsajten.com",4],["norpan.se",4],["medibok.se",[5,6]],["pilsner.nu",7],["swedroid.se",8]]);
 
 const entitiesMap = new Map([]);
 
@@ -218,6 +218,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -293,7 +294,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -371,7 +372,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }

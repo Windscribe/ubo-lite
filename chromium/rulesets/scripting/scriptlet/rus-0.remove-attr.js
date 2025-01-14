@@ -41,7 +41,7 @@ const scriptletGlobals = {}; // eslint-disable-line
 
 const argsList = [["autoplay","[data-video-player=\"small\"]","stay"],["autoplay","video","stay"],["autoplay|loop",".watch-live__link > video","stay"],["autoplay|loop","video","stay"],["class",".js-video-box__container"],["data-autoplay","video"],["disabled",".uk-modal-footer > button"],["oncontextmenu","[class]","stay"],["oncontextmenu|oncopy|onselectstart"]];
 
-const hostnamesMap = new Map([["i-ua.tv",0],["cnews.ru",1],["gfycat.com",1],["inter.ua",1],["obozrevatel.com",1],["platformcraft.ru",1],["protv.md",1],["rg.ru",1],["rusvesna.su",1],["tv8.md",1],["xsport.ua",1],["u24.ua",2],["afisha.ru",3],["byruthub.org",3],["film.ru",3],["filmpro.ru",3],["thelastupd.org",3],["lenta.ru",4],["svoboda.org",5],["myshared.ru",6],["lostfilm.download",7],["lostfilm.life",7],["lostfilm.one",7],["lostfilm.pro",7],["lostfilm.today",7],["lostfilm.tv",7],["lostfilm.tw",7],["lostfilm.uno",7],["lostfilm.win",7],["lostfilmtv.site",7],["lostfilmtv.uno",7],["lostfilmtv1.site",7],["lostfilmtv2.site",7],["lostfilmtv3.site",7],["lostfilmtv4.site",7],["lostfilmtv5.site",7],["stalker-mods.clan.su",8],["stalker-mods.su",8]]);
+const hostnamesMap = new Map([["i-ua.tv",0],["cnews.ru",1],["gfycat.com",1],["inter.ua",1],["obozrevatel.com",1],["platformcraft.ru",1],["protv.md",1],["rg.ru",1],["rusvesna.su",1],["tv8.md",1],["xsport.ua",1],["u24.ua",2],["afisha.ru",3],["film.ru",3],["filmpro.ru",3],["thelastupd.org",3],["lenta.ru",4],["svoboda.org",5],["myshared.ru",6],["lostfilm.download",7],["lostfilm.life",7],["lostfilm.one",7],["lostfilm.pro",7],["lostfilm.today",7],["lostfilm.tv",7],["lostfilm.tw",7],["lostfilm.uno",7],["lostfilm.win",7],["lostfilmtv.site",7],["lostfilmtv.uno",7],["lostfilmtv1.site",7],["lostfilmtv2.site",7],["lostfilmtv3.site",7],["lostfilmtv4.site",7],["lostfilmtv5.site",7],["stalker-mods.clan.su",8],["stalker-mods.su",8]]);
 
 const entitiesMap = new Map([]);
 
@@ -58,7 +58,7 @@ function removeAttr(
     if ( rawToken === '' ) { return; }
     const safe = safeSelf();
     const logPrefix = safe.makeLogPrefix('remove-attr', rawToken, rawSelector, behavior);
-    const tokens = rawToken.split(/\s*\|\s*/);
+    const tokens = safe.String_split.call(rawToken, /\s*\|\s*/);
     const selector = tokens
         .map(a => `${rawSelector}[${CSS.escape(a)}]`)
         .join(',');
@@ -88,7 +88,7 @@ function removeAttr(
                     safe.uboLog(logPrefix, `Removed attribute '${attr}'`);
                 }
             }
-        } catch(ex) {
+        } catch {
         }
     };
     const mutationHandler = mutations => {
@@ -118,7 +118,7 @@ function removeAttr(
             subtree: true,
         });
     };
-    runAt(( ) => { start(); }, behavior.split(/\s+/));
+    runAt(( ) => { start(); }, safe.String_split.call(behavior, /\s+/));
 }
 
 function runAt(fn, when) {
@@ -174,6 +174,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -249,7 +250,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -327,7 +328,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }

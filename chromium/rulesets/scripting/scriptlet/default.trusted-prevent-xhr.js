@@ -39,9 +39,9 @@ const uBOL_trustedPreventXhr = function() {
 
 const scriptletGlobals = {}; // eslint-disable-line
 
-const argsList = [["outbrain.com","outbrain"]];
+const argsList = [["googlesyndication","a.getAttribute(\"data-ad-client\")||\"\""],["outbrain.com","outbrain"],["s4.cdnpc.net/front/css/style.min.css?version=v93","slider--features"],["cdn.taboola.com/libtrc/san1go-network/loader.js","feOffset"],["pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?ord=","b.google_reactive_tag_first"],["sbs.demdex.net/dest5.html?d_nsid=0&ord=","Demdex.canSetThirdPartyCookies"],["securepubads.g.doubleclick.net/pagead/ima_ppub_config?ippd=https%3A%2F%2Fwww.sbs.com.au%2Fondemand%2F&ord=","[\"4117\"]"]];
 
-const hostnamesMap = new Map([["animefire.info",0],["animesonlinecc.us",0],["animesonliner4.com",0],["animesup.info",0],["animeyabu.net",0],["animeyabu.org",0],["anitube.us",0],["anitube.vip",0],["caroloportunidades.com.br",0],["dattebayo-br.com",0],["drstonebr.com",0],["flyanimes.cloud",0],["goanimes.vip",0],["goyabu.us",0],["hinatasoul.com",0],["isekaibrasil.com",0],["meuanime.info",0],["otakuanimess.net",0],["superanimes.in",0]]);
+const hostnamesMap = new Map([["bowfile.com",0],["1cloudfile.com",0],["koramaup.com",0],["animefire.info",[1,2,3]],["animesonlinecc.us",[1,2,3]],["animesonliner4.com",[1,2,3]],["animesup.info",[1,2,3]],["animeyabu.net",[1,2,3]],["animeyabu.org",[1,2,3]],["anitube.us",[1,2,3]],["anitube.vip",[1,2,3]],["caroloportunidades.com.br",[1,2,3]],["dattebayo-br.com",[1,2,3]],["drstonebr.com",[1,2,3]],["flyanimes.cloud",[1,2,3]],["goanimes.vip",[1,2,3]],["goyabu.us",[1,2,3]],["hinatasoul.com",[1,2,3]],["isekaibrasil.com",[1,2,3]],["meuanime.info",[1,2,3]],["otakuanimess.net",[1,2,3]],["superanimes.in",[1,2,3]],["sbs.com.au",[4,5,6]]]);
 
 const entitiesMap = new Map([]);
 
@@ -68,7 +68,7 @@ function preventXhrFn(
     const safeDispatchEvent = (xhr, type) => {
         try {
             xhr.dispatchEvent(new Event(type));
-        } catch(_) {
+        } catch {
         }
     };
     const XHRBefore = XMLHttpRequest.prototype;
@@ -310,7 +310,7 @@ function matchObjectProperties(propNeedles, ...objs) {
         if ( value === undefined ) { continue; }
         if ( typeof value !== 'string' ) {
             try { value = safe.JSON_stringify(value); }
-            catch(ex) { }
+            catch { }
             if ( typeof value !== 'string' ) { continue; }
         }
         if ( safe.testPattern(details, value) ) { continue; }
@@ -324,9 +324,13 @@ function parsePropertiesToMatch(propsToMatch, implicit = '') {
     const needles = new Map();
     if ( propsToMatch === undefined || propsToMatch === '' ) { return needles; }
     const options = { canNegate: true };
-    for ( const needle of propsToMatch.split(/\s+/) ) {
-        const [ prop, pattern ] = needle.split(':');
+    for ( const needle of safe.String_split.call(propsToMatch, /\s+/) ) {
+        let [ prop, pattern ] = safe.String_split.call(needle, ':');
         if ( prop === '' ) { continue; }
+        if ( pattern !== undefined && /[^$\w -]/.test(prop) ) {
+            prop = `${prop}:${pattern}`;
+            pattern = undefined;
+        }
         if ( pattern !== undefined ) {
             needles.set(prop, safe.initPattern(pattern, options));
         } else if ( implicit !== '' ) {
@@ -360,6 +364,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -435,7 +440,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -513,7 +518,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }

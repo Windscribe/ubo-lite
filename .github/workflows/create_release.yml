@@ -47,7 +47,6 @@ jobs:
           cd - > /dev/null
           rm -rf chromium
           mv "$UBLOCK_REPO_DIR/dist/build/uBOLite.chromium" chromium
-          cp "$UBLOCK_REPO_DIR/dist/build/mv3-data/log.txt" chromium/
       # Edge
       - name: Build Edge uBOLite MV3 packages
         run: |
@@ -64,9 +63,12 @@ jobs:
           commit_message: "[workflow] Update uBOLite MV3 package files for ${{ env.TAGNAME }}"
       - name: Create GitHub release
         id: create_release
-        uses: ncipollo/release-action@v1
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag: ${{ env.TAGNAME }}
+          tag_name: ${{ env.TAGNAME }}
+          name: ${{ env.TAGNAME }}
           prerelease: true
           body: |
             **uBO Lite** (uBOL), a **permission-less** [MV3 API-based](https://developer.chrome.com/docs/extensions/mv3/intro/) content blocker.
@@ -93,14 +95,14 @@ jobs:
             
             </details>
       - name: Upload Chromium uBOLite MV3 package
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ env.TAGNAME }}
           files: ${{ env.UBLOCK_REPO_DIR }}/dist/build/${{ env.CHROMIUM_PACKAGE }}
       - name: Upload Edge uBOLite MV3 package
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

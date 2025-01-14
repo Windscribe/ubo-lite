@@ -15,10 +15,12 @@
    "divahair.ro",
    "evz.ro",
    "jurnalul.ro",
+   "kanald2.ro",
    "observator.tv",
    "observatornews.ro",
    "qbebe.ro",
    "spynews.ro",
+   "stiripesurse.ro",
    "zutv.ro"
   ],
   "resourceTypes": [
@@ -27,25 +29,6 @@
   "urlFilter": "||imasdk.googleapis.com/js/sdkloader/ima3.js"
  },
  "id": 1,
- "priority": 32
-},
-{
- "action": {
-  "redirect": {
-   "extensionPath": "/web_accessible_resources/google-ima.js"
-  },
-  "type": "redirect"
- },
- "condition": {
-  "initiatorDomains": [
-   "stiripesurse.ro"
-  ],
-  "resourceTypes": [
-   "script"
-  ],
-  "urlFilter": "||imasdk.googleapis.com/js/sdkloader/ima3.js"
- },
- "id": 2,
- "priority": 2
+ "priority": 11
 }
 ]

@@ -39,7 +39,7 @@ const uBOL_jsonPruneXhrResponse = function() {
 
 const scriptletGlobals = {}; // eslint-disable-line
 
-const argsList = [["data.viewer.instream_video_ads data.scrubber","","propsToMatch","/api/graphql"],["data.home.home_timeline_urt.instructions.[].entries.[-].content.itemContent.promotedMetadata","","propsToMatch","url:/Home"],["data.search_by_raw_query.search_timeline.timeline.instructions.[].entries.[-].content.itemContent.promotedMetadata","","propsToMatch","url:/SearchTimeline"],["data.threaded_conversation_with_injections_v2.instructions.[].entries.[-].content.items.[].item.itemContent.promotedMetadata","","propsToMatch","url:/TweetDetail"],["data.user.result.timeline_v2.timeline.instructions.[].entries.[-].content.itemContent.promotedMetadata","","propsToMatch","url:/UserTweets"],["data.immersiveMedia.timeline.instructions.[].entries.[-].content.itemContent.promotedMetadata","","propsToMatch","url:/ImmersiveMedia"],["playerAds adPlacements adSlots playerResponse.playerAds playerResponse.adPlacements playerResponse.adSlots [].playerResponse.adPlacements [].playerResponse.playerAds [].playerResponse.adSlots","","propsToMatch","/\\/player(?:\\?.+)?$/"]];
+const argsList = [["data.viewer.instream_video_ads data.scrubber","","propsToMatch","/api/graphql"],["data.home.home_timeline_urt.instructions.[].entries.[-].content.itemContent.promotedMetadata","","propsToMatch","url:/Home"],["data.search_by_raw_query.search_timeline.timeline.instructions.[].entries.[-].content.itemContent.promotedMetadata","","propsToMatch","url:/SearchTimeline"],["data.threaded_conversation_with_injections_v2.instructions.[].entries.[-].content.items.[].item.itemContent.promotedMetadata","","propsToMatch","url:/TweetDetail"],["data.user.result.timeline_v2.timeline.instructions.[].entries.[-].content.itemContent.promotedMetadata","","propsToMatch","url:/UserTweets"],["data.immersiveMedia.timeline.instructions.[].entries.[-].content.itemContent.promotedMetadata","","propsToMatch","url:/ImmersiveMedia"],["playerAds adPlacements adSlots no_ads playerResponse.playerAds playerResponse.adPlacements playerResponse.adSlots playerResponse.no_ads [].playerResponse.adPlacements [].playerResponse.playerAds [].playerResponse.adSlots [].playerResponse.no_ads","","propsToMatch","/\\/player(?:\\?.+)?$/"]];
 
 const hostnamesMap = new Map([["web.facebook.com",0],["www.facebook.com",0],["twitter.com",[1,2,3,4,5]],["x.com",[1,2,3,4,5]],["www.youtube.com",6]]);
 
@@ -98,7 +98,7 @@ function jsonPruneXhrResponse(
             } else if ( typeof innerResponse === 'string' ) {
                 try {
                     objBefore = safe.JSON_parse(innerResponse);
-                } catch(ex) {
+                } catch {
                 }
             }
             if ( typeof objBefore !== 'object' ) {
@@ -153,7 +153,7 @@ function matchObjectProperties(propNeedles, ...objs) {
         if ( value === undefined ) { continue; }
         if ( typeof value !== 'string' ) {
             try { value = safe.JSON_stringify(value); }
-            catch(ex) { }
+            catch { }
             if ( typeof value !== 'string' ) { continue; }
         }
         if ( safe.testPattern(details, value) ) { continue; }
@@ -170,14 +170,15 @@ function objectPruneFn(
     extraArgs = {}
 ) {
     if ( typeof rawPrunePaths !== 'string' ) { return; }
+    const safe = safeSelf();
     const prunePaths = rawPrunePaths !== ''
-        ? rawPrunePaths.split(/ +/)
+        ? safe.String_split.call(rawPrunePaths, / +/)
         : [];
     const needlePaths = prunePaths.length !== 0 && rawNeedlePaths !== ''
-        ? rawNeedlePaths.split(/ +/)
+        ? safe.String_split.call(rawNeedlePaths, / +/)
         : [];
     if ( stackNeedleDetails.matchAll !== true ) {
-        if ( matchesStackTrace(stackNeedleDetails, extraArgs.logstack) === false ) {
+        if ( matchesStackTraceFn(stackNeedleDetails, extraArgs.logstack) === false ) {
             return;
         }
     }
@@ -208,9 +209,13 @@ function parsePropertiesToMatch(propsToMatch, implicit = '') {
     const needles = new Map();
     if ( propsToMatch === undefined || propsToMatch === '' ) { return needles; }
     const options = { canNegate: true };
-    for ( const needle of propsToMatch.split(/\s+/) ) {
-        const [ prop, pattern ] = needle.split(':');
+    for ( const needle of safe.String_split.call(propsToMatch, /\s+/) ) {
+        let [ prop, pattern ] = safe.String_split.call(needle, ':');
         if ( prop === '' ) { continue; }
+        if ( pattern !== undefined && /[^$\w -]/.test(prop) ) {
+            prop = `${prop}:${pattern}`;
+            pattern = undefined;
+        }
         if ( pattern !== undefined ) {
             needles.set(prop, safe.initPattern(pattern, options));
         } else if ( implicit !== '' ) {
@@ -244,6 +249,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -319,7 +325,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -397,7 +403,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }
@@ -407,7 +413,7 @@ function safeSelf() {
     return safe;
 }
 
-function matchesStackTrace(
+function matchesStackTraceFn(
     needleDetails,
     logLevel = ''
 ) {
@@ -419,7 +425,7 @@ function matchesStackTrace(
     // Normalize stack trace
     const reLine = /(.*?@)?(\S+)(:\d+):\d+\)?$/;
     const lines = [];
-    for ( let line of error.stack.split(/[\n\r]+/) ) {
+    for ( let line of safe.String_split.call(error.stack, /[\n\r]+/) ) {
         if ( line.includes(exceptionToken) ) { continue; }
         line = line.trim();
         const match = safe.RegExp_exec.call(reLine, line);

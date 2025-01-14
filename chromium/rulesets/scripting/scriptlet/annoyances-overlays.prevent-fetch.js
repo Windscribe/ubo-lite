@@ -39,9 +39,9 @@ const uBOL_noFetchIf = function() {
 
 const scriptletGlobals = {}; // eslint-disable-line
 
-const argsList = [["analytics"],["googlesyndication"],["ads"],["/googlesyndication|googletag/"],["cloudflareinsights.com"]];
+const argsList = [["analytics"],["googlesyndication"],["ads"],["/googlesyndication|googletag/"],["cloudflareinsights.com"],["/adsbygoogle|ad-manager/"]];
 
-const hostnamesMap = new Map([["textcleaner.net",1],["socialcounts.org",1],["viewing.nyc",1],["autopareri.com",1],["curseforge.com",1],["theonegenerator.com",2],["mcskinhistory.com",2],["bypass.city",3],["adbypass.org",3],["amtraker.com",4]]);
+const hostnamesMap = new Map([["textcleaner.net",1],["socialcounts.org",1],["viewing.nyc",1],["autopareri.com",1],["curseforge.com",1],["theonegenerator.com",2],["mcskinhistory.com",2],["bypass.city",3],["adbypass.org",3],["amtraker.com",4],["ark-unity.com",5]]);
 
 const entitiesMap = new Map([["ddys",0]]);
 
@@ -57,7 +57,7 @@ function noFetchIf(
     const safe = safeSelf();
     const logPrefix = safe.makeLogPrefix('prevent-fetch', propsToMatch, responseBody, responseType);
     const needles = [];
-    for ( const condition of propsToMatch.split(/\s+/) ) {
+    for ( const condition of safe.String_split.call(propsToMatch, /\s+/) ) {
         if ( condition === '' ) { continue; }
         const pos = condition.indexOf(':');
         let key, value;
@@ -86,7 +86,7 @@ function noFetchIf(
                 responseProps[p] = { value: v };
             });
         }
-        catch(ex) {}
+        catch { }
     } else if ( responseType !== '' ) {
         if ( validResponseProps.type.includes(responseType) ) {
             responseProps.type = { value: responseType };
@@ -104,7 +104,7 @@ function noFetchIf(
                 let v = details[prop];
                 if ( typeof v !== 'string' ) {
                     try { v = safe.JSON_stringify(v); }
-                    catch(ex) { }
+                    catch { }
                 }
                 if ( typeof v !== 'string' ) { continue; }
                 props.set(prop, v);
@@ -126,7 +126,7 @@ function noFetchIf(
                     break;
                 }
             }
-        } catch(ex) {
+        } catch {
         }
         if ( proceed ) {
             return context.reflect();
@@ -234,7 +234,7 @@ function proxyApplyFn(
             }
             reflect() {
                 const r = Reflect.construct(this.callFn, this.callArgs);
-                this.callFn = this.callArgs = undefined;
+                this.callFn = this.callArgs = this.private = undefined;
                 proxyApplyFn.ctorContexts.push(this);
                 return r;
             }
@@ -257,7 +257,7 @@ function proxyApplyFn(
             }
             reflect() {
                 const r = Reflect.apply(this.callFn, this.thisArg, this.callArgs);
-                this.callFn = this.thisArg = this.callArgs = undefined;
+                this.callFn = this.thisArg = this.callArgs = this.private = undefined;
                 proxyApplyFn.applyContexts.push(this);
                 return r;
             }
@@ -311,6 +311,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -386,7 +387,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -464,7 +465,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }

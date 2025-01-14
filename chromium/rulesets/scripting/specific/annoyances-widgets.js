@@ -33,9 +33,9 @@
 
 /******************************************************************************/
 
-const argsList = ["#floating-experience-feature-tour-popover,\n#view-__module-context__-_amzn_conversational-experience-module__tandalone-0",".chatWindow,\n.chatbotSection,\n.chatbotSlider,\n.chatbotentrybtn,\n.healthshotsChannels,\n.secBannerWidget","#chatbotToronto",".woot-widget-bubble"];
+const argsList = ["#chatbotToronto","#floating-experience-feature-tour-popover,\n#view-__module-context__-_amzn_conversational-experience-module__tandalone-0",".chat-button,\n.chat-container",".chatWindow,\n.chatbotSection,\n.chatbotSlider,\n.chatbotentrybtn,\n.healthshotsChannels,\n.secBannerWidget",".rufus-panel-container",".woot-widget-bubble"];
 
-const hostnamesMap = new Map([["docs.aws.amazon.com",0],["healthshots.com",1],["hp.com",2],["therealdeal.com",3]]);
+const hostnamesMap = new Map([["hp.com",0],["docs.aws.amazon.com",1],["casbin.org",2],["healthshots.com",3],["amazon.com",4],["therealdeal.com",5]]);
 
 const entitiesMap = new Map(undefined);
 

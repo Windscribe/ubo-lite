@@ -41,7 +41,7 @@ const scriptletGlobals = {}; // eslint-disable-line
 
 const argsList = [[],["bit.ly"],["google.com/url?"]];
 
-const hostnamesMap = new Map([["rcjza2fzqyr4.buzz",0],["d3xg9jm5zucs.buzz",0],["fwlcqyxc88qx.buzz",0],["lgrmdr8asu8l.buzz",0],["kc2uta38qg2t.buzz",0],["agb3nquu6rzw.buzz",0],["yvt2bm7hzgtt.cloud",0],["elzemfilm.org",0],["movietube32.xyz",0],["turkerotikfilm.com",0],["diziwatch.net",0],["hdizlefilmleri.com",0],["izleorg3.org",0],["youtubemp3.us",0],["izlekolik.org",0],["pchocasi.com.tr",1],["sinema.cx",2]]);
+const hostnamesMap = new Map([["rcjza2fzqyr4.buzz",0],["d3xg9jm5zucs.buzz",0],["fwlcqyxc88qx.buzz",0],["lgrmdr8asu8l.buzz",0],["kc2uta38qg2t.buzz",0],["agb3nquu6rzw.buzz",0],["yvt2bm7hzgtt.cloud",0],["elzemfilm.org",0],["movietube32.xyz",0],["turkerotikfilm.com",0],["hdizlefilmleri.com",0],["izleorg3.org",0],["youtubemp3.us",0],["izlekolik.org",0],["pchocasi.com.tr",1],["sinema.cx",2]]);
 
 const entitiesMap = new Map([["erosfilmizle",0],["breakingbadizle",0],["jetfilmizle",0],["4kfilmizlesene",0]]);
 
@@ -163,7 +163,7 @@ function proxyApplyFn(
             }
             reflect() {
                 const r = Reflect.construct(this.callFn, this.callArgs);
-                this.callFn = this.callArgs = undefined;
+                this.callFn = this.callArgs = this.private = undefined;
                 proxyApplyFn.ctorContexts.push(this);
                 return r;
             }
@@ -186,7 +186,7 @@ function proxyApplyFn(
             }
             reflect() {
                 const r = Reflect.apply(this.callFn, this.thisArg, this.callArgs);
-                this.callFn = this.thisArg = this.callArgs = undefined;
+                this.callFn = this.thisArg = this.callArgs = this.private = undefined;
                 proxyApplyFn.applyContexts.push(this);
                 return r;
             }
@@ -240,6 +240,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -315,7 +316,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -393,7 +394,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }

@@ -39,9 +39,9 @@ const uBOL_setCookie = function() {
 
 const scriptletGlobals = {}; // eslint-disable-line
 
-const argsList = [["KUF_SUGGESTER_SHOW_2_ITERATION","1"],["adBlockModal","true"],["callToRegisterClosed","true"],["cookieAccepted","true"],["cookie_accept","1"],["ha","1"],["kuf_agr","true"],["pg_SuggestGameFollow","true"],["telegram_popup","Y"]];
+const argsList = [["KUF_SUGGESTER_SHOW_2_ITERATION","1"],["adBlockModal","true"],["callToRegisterClosed","true"],["cookieAccepted","true"],["cookie_accept","1"],["cookie_consent_shown","1"],["ha","1"],["kuf_agr","true"],["pg_SuggestGameFollow","true"],["telegram_popup","Y"]];
 
-const hostnamesMap = new Map([["kufar.by",[0,6]],["myshows.me",1],["direct.farm",2],["liga.net",3],["ixbt.com",4],["forum.ixbt.com",5],["playground.ru",7],["kinotv.ru",8]]);
+const hostnamesMap = new Map([["kufar.by",[0,7]],["myshows.me",1],["direct.farm",2],["liga.net",3],["ixbt.com",4],["avito.ru",5],["forum.ixbt.com",6],["playground.ru",8],["kinotv.ru",9]]);
 
 const entitiesMap = new Map([]);
 
@@ -100,6 +100,9 @@ function getSafeCookieValuesFn() {
         'on', 'off',
         'true', 't', 'false', 'f',
         'yes', 'y', 'no', 'n',
+        'all', 'none', 'functional',
+        'granted', 'done',
+        'decline', 'declined',
     ];
 }
 
@@ -127,6 +130,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -202,7 +206,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -280,7 +284,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }
@@ -337,7 +341,7 @@ function setCookieFn(
 
     try {
         document.cookie = cookieParts.join('');
-    } catch(_) {
+    } catch {
     }
 
     const done = getCookieFn(name) === value;
@@ -351,7 +355,8 @@ function setCookieFn(
 function getCookieFn(
     name = ''
 ) {
-    for ( const s of document.cookie.split(/\s*;\s*/) ) {
+    const safe = safeSelf();
+    for ( const s of safe.String_split.call(document.cookie, /\s*;\s*/) ) {
         const pos = s.indexOf('=');
         if ( pos === -1 ) { continue; }
         if ( s.slice(0, pos) !== name ) { continue; }

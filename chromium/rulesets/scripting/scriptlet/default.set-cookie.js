@@ -39,11 +39,11 @@ const uBOL_setCookie = function() {
 
 const scriptletGlobals = {}; // eslint-disable-line
 
-const argsList = [["popunder_stop","1"],["ts_popunder","true","","reload","1"],["__pf","1"],["npabp","1"],["popunder","yes"],["dscl","1"],["ppndr","1"],["clicked","1","","reload","1"],["aalset","1"],["__gads","1"],["clictune_pop","off"],["_ckLV1","1"],["fckXBlock","1"],["antiBlock","1"],["WHITELISTED_CLOSED","1"],["popunder","1"],["softonic-r2d2-view-state","1"],["modal_cookie","yes"],["__gads","OK","","reload","1"],["visits","1"],["ad_opened","true"],["customscript0","1"],["visited","1"],["inter","1","","reload","1"],["Ads","1"],["Ads","2"],["Geo","OK"],["bitmovin_analytics_uuid","OK"],["am-sub","1"]];
+const argsList = [["popunder_stop","1"],["ADBp","yes"],["ADBpcount","1"],["__gads","1"],["clictune_pop","off"],["_ckLV1","1"],["fckXBlock","1"],["antiBlock","1"],["WHITELISTED_CLOSED","1"],["popunder","1"],["softonic-r2d2-view-state","1"],["modal_cookie","yes"],["__gads","OK","","reload","1"],["visits","1"],["ad_opened","true"],["customscript0","1"],["visited","1"],["inter","1","","reload","1"],["Ads","1"],["Ads","2"],["ts_popunder","true","","reload","1"],["__pf","1"],["npabp","1"],["aawsmackeroo0","1"],["popunder","yes"],["dscl","1"],["ppndr","1"],["clicked","1","","reload","1"],["aalset","1"],["lk21-player-dona","1"],["pop","1"],["BetterJsPop0","1"],["Geo","OK"],["bitmovin_analytics_uuid","OK"],["am-sub","1"]];
 
-const hostnamesMap = new Map([["tnaflix.com",0],["buktube.com",1],["fullxh.com",1],["galleryxh.site",1],["megaxh.com",1],["movingxh.world",1],["seexh.com",1],["unlockxh4.com",1],["valuexh.life",1],["xhaccess.com",1],["xhadult2.com",1],["xhadult3.com",1],["xhadult4.com",1],["xhadult5.com",1],["xhamster46.com",1],["xhamsterporno.mx",1],["xhbig.com",1],["xhbranch5.com",1],["xhchannel.com",1],["xhchannel2.com",1],["xhdate.world",1],["xhday.com",1],["xhday1.com",1],["xhlease.world",1],["xhmoon5.com",1],["xhofficial.com",1],["xhopen.com",1],["xhplanet1.com",1],["xhplanet2.com",1],["xhreal2.com",1],["xhreal3.com",1],["xhspot.com",1],["xhtab2.com",1],["xhtab4.com",1],["xhtotal.com",1],["xhtree.com",1],["xhvictory.com",1],["xhwebsite.com",1],["xhwebsite2.com",1],["xhwebsite5.com",1],["xhwide1.com",1],["xhwide2.com",1],["xhwide5.com",1],["xhxh3.xyz",1],["animesuge.to",2],["anix.to",2],["anix.vc",2],["bflix.to",2],["bflixhd.to",2],["fboxz.to",2],["flixflare.to",2],["flixhive.to",2],["flixhq.bz",2],["flixtorz.to",2],["fmovies24.to",2],["hurawatch.bz",2],["hurawatch2.to",2],["losmoviesz.to",2],["mangafire.to",2],["moviestowatch.id",2],["soap2dayx.to",2],["watchseriesx.to",2],["twitchmetrics.net",3],["andhrafriends.com",4],["porno-baguette.com",[5,6]],["xnxxcom.xyz",7],["pricearchive.org",8],["laweducationinfo.com",9],["savemoneyinfo.com",9],["worldaffairinfo.com",9],["godstoryinfo.com",9],["successstoryinfo.com",9],["cxissuegk.com",9],["learnmarketinfo.com",9],["bhugolinfo.com",9],["armypowerinfo.com",9],["rsadnetworkinfo.com",9],["rsinsuranceinfo.com",9],["rsfinanceinfo.com",9],["rsgamer.app",9],["rssoftwareinfo.com",9],["rshostinginfo.com",9],["rseducationinfo.com",9],["phonereviewinfo.com",9],["makeincomeinfo.com",9],["gknutshell.com",9],["vichitrainfo.com",9],["workproductivityinfo.com",9],["dopomininfo.com",9],["hostingdetailer.com",9],["fitnesssguide.com",9],["tradingfact4u.com",9],["cryptofactss.com",9],["softwaredetail.com",9],["artoffocas.com",9],["insurancesfact.com",9],["dlink2.net",10],["apkmodvn.com",11],["dl.apkmoddone.com",12],["phongroblox.com",13],["imgur.com",14],["imgur-com.translate.goog",14],["xcity.org",15],["top16.net",[15,22]],["coolrom.com.au",17],["gourmetscans.net",18],["smartkhabrinews.com",19],["sharedisk.me",20],["shrdsk.me",20],["iporntoo.com",21],["hentai.tv",23],["noticiasdehoje.biz",24],["jornaldigital.org",25],["fandom.com",26],["clickorlando.com",27],["mediaite.com",28]]);
+const hostnamesMap = new Map([["tnaflix.com",0],["eporner.com",[1,2]],["laweducationinfo.com",3],["savemoneyinfo.com",3],["worldaffairinfo.com",3],["godstoryinfo.com",3],["successstoryinfo.com",3],["cxissuegk.com",3],["learnmarketinfo.com",3],["bhugolinfo.com",3],["armypowerinfo.com",3],["rsadnetworkinfo.com",3],["rsinsuranceinfo.com",3],["rsfinanceinfo.com",3],["rsgamer.app",3],["rssoftwareinfo.com",3],["rshostinginfo.com",3],["rseducationinfo.com",3],["phonereviewinfo.com",3],["makeincomeinfo.com",3],["gknutshell.com",3],["vichitrainfo.com",3],["workproductivityinfo.com",3],["dopomininfo.com",3],["hostingdetailer.com",3],["fitnesssguide.com",3],["tradingfact4u.com",3],["cryptofactss.com",3],["softwaredetail.com",3],["artoffocas.com",3],["insurancesfact.com",3],["travellingdetail.com",3],["dlink2.net",4],["apkmodvn.com",5],["dl.apkmoddone.com",6],["phongroblox.com",7],["imgur.com",8],["imgur-com.translate.goog",8],["xcity.org",9],["top16.net",[9,16]],["coolrom.com.au",11],["gourmetscans.net",12],["smartkhabrinews.com",13],["sharedisk.me",14],["shrdsk.me",14],["iporntoo.com",15],["hentai.tv",17],["noticiasdehoje.biz",18],["jornaldigital.org",19],["buktube.com",20],["fullxh.com",20],["galleryxh.site",20],["megaxh.com",20],["movingxh.world",20],["seexh.com",20],["unlockxh4.com",20],["valuexh.life",20],["xhaccess.com",20],["xhadult2.com",20],["xhadult3.com",20],["xhadult4.com",20],["xhadult5.com",20],["xhamster46.com",20],["xhamsterporno.mx",20],["xhbig.com",20],["xhbranch5.com",20],["xhchannel.com",20],["xhchannel2.com",20],["xhdate.world",20],["xhday.com",20],["xhday1.com",20],["xhlease.world",20],["xhmoon5.com",20],["xhofficial.com",20],["xhopen.com",20],["xhplanet1.com",20],["xhplanet2.com",20],["xhreal2.com",20],["xhreal3.com",20],["xhspot.com",20],["xhtab2.com",20],["xhtab4.com",20],["xhtotal.com",20],["xhtree.com",20],["xhvictory.com",20],["xhwebsite.com",20],["xhwebsite2.com",20],["xhwebsite5.com",20],["xhwide1.com",20],["xhwide2.com",20],["xhwide5.com",20],["mangafire.to",21],["twitchmetrics.net",22],["x-x-x.tube",23],["andhrafriends.com",24],["porno-baguette.com",[25,26]],["xnxxcom.xyz",27],["pricearchive.org",28],["lk21official.pics",29],["netplayz.ru",30],["feed2all.org",31],["fandom.com",32],["clickorlando.com",33],["mediaite.com",34]]);
 
-const entitiesMap = new Map([["hamsterix",1],["xhamster",1],["xhamster1",1],["xhamster10",1],["xhamster11",1],["xhamster12",1],["xhamster13",1],["xhamster14",1],["xhamster15",1],["xhamster16",1],["xhamster17",1],["xhamster18",1],["xhamster19",1],["xhamster20",1],["xhamster2",1],["xhamster3",1],["xhamster4",1],["xhamster42",1],["xhamster5",1],["xhamster7",1],["xhamster8",1],["aniwave",2],["softonic",16]]);
+const entitiesMap = new Map([["softonic",10],["hamsterix",20],["xhamster",20],["xhamster1",20],["xhamster10",20],["xhamster11",20],["xhamster12",20],["xhamster13",20],["xhamster14",20],["xhamster15",20],["xhamster16",20],["xhamster17",20],["xhamster18",20],["xhamster19",20],["xhamster20",20],["xhamster2",20],["xhamster3",20],["xhamster4",20],["xhamster42",20],["xhamster5",20],["xhamster7",20],["xhamster8",20],["aniwave",21]]);
 
 const exceptionsMap = new Map([]);
 
@@ -100,6 +100,9 @@ function getSafeCookieValuesFn() {
         'on', 'off',
         'true', 't', 'false', 'f',
         'yes', 'y', 'no', 'n',
+        'all', 'none', 'functional',
+        'granted', 'done',
+        'decline', 'declined',
     ];
 }
 
@@ -127,6 +130,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -202,7 +206,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -280,7 +284,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }
@@ -337,7 +341,7 @@ function setCookieFn(
 
     try {
         document.cookie = cookieParts.join('');
-    } catch(_) {
+    } catch {
     }
 
     const done = getCookieFn(name) === value;
@@ -351,7 +355,8 @@ function setCookieFn(
 function getCookieFn(
     name = ''
 ) {
-    for ( const s of document.cookie.split(/\s*;\s*/) ) {
+    const safe = safeSelf();
+    for ( const s of safe.String_split.call(document.cookie, /\s*;\s*/) ) {
         const pos = s.indexOf('=');
         if ( pos === -1 ) { continue; }
         if ( s.slice(0, pos) !== name ) { continue; }

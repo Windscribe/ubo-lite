@@ -41,7 +41,7 @@ const scriptletGlobals = {}; // eslint-disable-line
 
 const argsList = [[]];
 
-const hostnamesMap = new Map([["cl1ca.com",0],["4br.me",0],["fir3.net",0]]);
+const hostnamesMap = new Map([["enrt.eu",0],["dev.encurta.app",0],["fir3.net",0],["ent4.net",0],["cl1ca.com",0],["4br.me",0]]);
 
 const entitiesMap = new Map([["seulink",0],["encurtalink",0]]);
 
@@ -99,6 +99,7 @@ function safeSelf() {
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
         'String_fromCharCode': String.fromCharCode,
+        'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
         'addEventListener': self.EventTarget.prototype.addEventListener,
         'removeEventListener': self.EventTarget.prototype.removeEventListener,
@@ -174,7 +175,7 @@ function safeSelf() {
             try {
                 return new RegExp(match[1], match[2] || undefined);
             }
-            catch(ex) {
+            catch {
             }
             return /^/;
         },
@@ -252,7 +253,7 @@ function safeSelf() {
             }
         };
         bc.postMessage('areyouready?');
-    } catch(_) {
+    } catch {
         safe.sendToLogger = (type, ...args) => {
             const text = safe.toLogText(type, ...args);
             if ( text === undefined ) { return; }
