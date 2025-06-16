@@ -516,7 +516,7 @@ async function registerInjectables(origins) {
     ]);
 
      // dont mess with windscribe content scripts
-    const windscribeContentScriptIds = ['workerBlockScript', 'splitPersonalityScript', 'locationWarpScript', 'languageWarpScript', 'timeZoneWarpScript']
+    const windscribeContentScriptIds = ['workerBlockScript', 'splitPersonalityScript', 'locationWarpScript', 'languageWarpScript', 'timeZoneWarpScript',  'fontAntiFingerprintingScript', 'screenResAntiFingerprintingScript', 'canvasAntiFingerprintingScript', 'audioAntiFingerprintingScript', 'fingerprintjsAntiFingerprintingScript']
 
     const before = new Map(
         normalizeRegisteredContentScripts(registered.filter(entry => !windscribeContentScriptIds.includes(entry.id))).map(
