@@ -20,42 +20,34 @@
 
 */
 
-/* eslint-disable indent */
-
 // ruleset: spa-1
-
-/******************************************************************************/
 
 // Important!
 // Isolate from global scope
 
 // Start of local scope
-(( ) => {
+(function uBOL_preventFetch() {
 
 /******************************************************************************/
 
-// Start of code to inject
-const uBOL_noFetchIf = function() {
+function preventFetch(...args) {
+    preventFetchFn(false, ...args);
+}
 
-const scriptletGlobals = {}; // eslint-disable-line
-
-const argsList = [["www3.doubleclick.net"],["method:HEAD"],["pagead2.googlesyndication.com"],["adskeeper.com"],["/mopinion\\.com|iubenda\\.com|bannersnack\\.com|unblockia\\.com|googlesyndication\\.com/"],["/googlesyndication\\.com|iubenda\\.com|unblockia\\.com|bannersnack\\.com|mopinion\\.com/"],["imasdk.googleapis.com"],["/ads-twitter\\.com|pagead|googleads|doubleclick/","","opaque"],["securepubads.g.doubleclick.net/pagead/ppub_config"],["adsbygoogle"],["call-zone-adxs"],["/pagead2\\.googlesyndication\\.com|ads-api\\.twitter\\.com/"],["/^(?!.*(chrome-extension:)).*$/ method:HEAD"],["ads-twitter.com"],["static.ads-twitter.com"],["/adsbygoogle.js"],["/outbrain\\.com|adligature\\.com|quantserve\\.com|srvtrck\\.com/"]];
-
-const hostnamesMap = new Map([["sussyscan.com",0],["atresplayer.com",0],["sussytoons.site",0],["tivify.tv",0],["enlacito.com",1],["acortados.com",[1,7]],["todoandroid.live",1],["gadgetzona.net",1],["qwanturankpro.com",1],["acortame-esto.com",1],["gourlpro.com",2],["casperhd.com",2],["short.7hd.club",2],["istigo.net",2],["modescanlator.net",2],["r7.com",2],["descargas2024gratis.blogspot.com",2],["megacurioso.net",2],["tudonoticiasbr.com",2],["ggames.com.br",2],["mundodonghua.com",2],["receitasoncaseiras.online",2],["receitasdochico.life",2],["dicasdefinancas.net",2],["dicasfinanceirasbr.com",2],["expertplay.net",2],["alarmadefraude.com",2],["modescanlator.com",2],["sabornutritivo.com",2],["financasdeouro.com",2],["animeszone.net",2],["megacanaisonline.me",2],["animesonline.nz",2],["los40.com",2],["negociosecommerce.com",[2,10]],["puromarketing.com",[2,10]],["todostartups.com",[2,10]],["pobre.wtf",2],["suaurl.com",[2,12]],["reidoplacar.com",[2,12]],["suaads.com",[2,12]],["link-descarga.site",2],["meutimao.com.br",2],["discografias.net",2],["listas.pro",2],["emperorscan.com",2],["lawebdelprogramador.com",2],["dicasgostosas.com",2],["cerisetoon.com",3],["sinensistoon.com",3],["packsmega.info",4],["peliculas8k.com",5],["southparkstudios.com.br",6],["southpark.lat",6],["acortalink.me",7],["atv.pe",8],["monumental.co.cr",8],["elcomercio.com",8],["antena7.com.do",8],["rqp.com.bo",8],["canal12.com.sv",8],["chapintv.com",8],["vtv.com.hn",8],["tn23.tv",8],["canal13mexico.com",8],["c9n.com.py",8],["repretel.com",8],["redbolivision.tv.bo",8],["independentespanol.com",8],["teleculinaria.pt",9],["nptmedia.tv",11],["costumbresmexico.com",13],["desbloqueador.site",13],["notipostingt.com",14],["netmovies.com.br",15],["coempregos.com.br",16],["anitube.us",16],["anitube.vip",16],["hinatasoul.com",16]]);
-
-const entitiesMap = new Map([]);
-
-const exceptionsMap = new Map([]);
-
-/******************************************************************************/
-
-function noFetchIf(
+function preventFetchFn(
+    trusted = false,
     propsToMatch = '',
     responseBody = '',
     responseType = ''
 ) {
     const safe = safeSelf();
-    const logPrefix = safe.makeLogPrefix('prevent-fetch', propsToMatch, responseBody, responseType);
+    const scriptletName = `${trusted ? 'trusted-' : ''}prevent-fetch`;
+    const logPrefix = safe.makeLogPrefix(
+        scriptletName,
+        propsToMatch,
+        responseBody,
+        responseType
+    );
     const needles = [];
     for ( const condition of safe.String_split.call(propsToMatch, /\s+/) ) {
         if ( condition === '' ) { continue; }
@@ -131,7 +123,7 @@ function noFetchIf(
         if ( proceed ) {
             return context.reflect();
         }
-        return Promise.resolve(generateContentFn(false, responseBody)).then(text => {
+        return Promise.resolve(generateContentFn(trusted, responseBody)).then(text => {
             safe.uboLog(logPrefix, `Prevented with response "${text}"`);
             const response = new Response(text, {
                 headers: {
@@ -306,10 +298,12 @@ function safeSelf() {
         'Object_defineProperties': Object.defineProperties.bind(Object),
         'Object_fromEntries': Object.fromEntries.bind(Object),
         'Object_getOwnPropertyDescriptor': Object.getOwnPropertyDescriptor.bind(Object),
+        'Object_hasOwn': Object.hasOwn.bind(Object),
         'RegExp': self.RegExp,
         'RegExp_test': self.RegExp.prototype.test,
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
+        'String': self.String,
         'String_fromCharCode': String.fromCharCode,
         'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
@@ -477,95 +471,83 @@ function safeSelf() {
 
 /******************************************************************************/
 
-const hnParts = [];
-try {
-    let origin = document.location.origin;
-    if ( origin === 'null' ) {
-        const origins = document.location.ancestorOrigins;
-        for ( let i = 0; i < origins.length; i++ ) {
-            origin = origins[i];
-            if ( origin !== 'null' ) { break; }
-        }
-    }
-    const pos = origin.lastIndexOf('://');
-    if ( pos === -1 ) { return; }
-    hnParts.push(...origin.slice(pos+3).split('.'));
-}
-catch(ex) { }
-const hnpartslen = hnParts.length;
-if ( hnpartslen === 0 ) { return; }
+const scriptletGlobals = {}; // eslint-disable-line
+const argsList = [["popads.net"],["pagead2.googlesyndication.com"],["method:HEAD"],["mode:no-cors"],["www3.doubleclick.net"],["pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"],["adskeeper.com"],["/mopinion\\.com|iubenda\\.com|bannersnack\\.com|unblockia\\.com|googlesyndication\\.com/"],["/googlesyndication\\.com|iubenda\\.com|unblockia\\.com|bannersnack\\.com|mopinion\\.com/"],["imasdk.googleapis.com"],["/ads-twitter\\.com|pagead|googleads|doubleclick/","","opaque"],["securepubads.g.doubleclick.net/pagead/ppub_config"],["adsbygoogle"],["call-zone-adxs"],["/pagead2\\.googlesyndication\\.com|ads-api\\.twitter\\.com/"],["/^(?!.*(chrome-extension:)).*$/ method:HEAD"],["ads-twitter.com"],["static.ads-twitter.com"],["/adsbygoogle.js"],["/outbrain\\.com|adligature\\.com|quantserve\\.com|srvtrck\\.com/"]];
+const hostnamesMap = new Map([["fgtd.online",0],["jornaldacidadeonline.com.br",1],["gourlpro.com",1],["casperhd.com",1],["short.7hd.club",1],["istigo.net",1],["modescanlator.net",1],["r7.com",1],["descargas2024gratis.blogspot.com",1],["ggames.com.br",1],["mundodonghua.com",1],["receitasoncaseiras.online",1],["dicasdefinancas.net",1],["expertplay.net",1],["alarmadefraude.com",1],["modescanlator.com",1],["sabornutritivo.com",1],["megacanaisonline.me",1],["neworldtravel.com",[1,2,10]],["financialtrust.info",[1,2,10]],["tulink.org",[1,2,10]],["acortados.com",[1,2,10]],["notipostingt.com",[1,17]],["animesonline.nz",1],["los40.com",1],["negociosecommerce.com",[1,13]],["puromarketing.com",[1,13]],["todostartups.com",[1,13]],["pobre.wtf",1],["suaurl.com",[1,15]],["reidoplacar.com",[1,15]],["suaads.com",[1,15]],["link-descarga.site",1],["meutimao.com.br",1],["listas.pro",1],["emperorscan.com",1],["lawebdelprogramador.com",1],["dicasgostosas.com",1],["cuitonline.com",2],["enlacito.com",2],["todoandroid.live",2],["gadgetzona.net",2],["qwanturankpro.com",2],["acortame-esto.com",2],["redecanaistv.*",3],["redecanais.*",3],["sussyscan.com",4],["atresplayer.com",4],["sussytoons.*",4],["tivify.tv",4],["animefire.plus",5],["animesonlinecc.us",5],["animesup.info",5],["animeyabu.net",5],["animeyabu.org",5],["drstonebr.com",5],["goanimes.vip",5],["goyabu.us",5],["otakuanimess.net",5],["cerisetoon.com",6],["sinensistoon.com",6],["packsmega.info",7],["peliculas8k.com",8],["southparkstudios.com.br",9],["southpark.lat",9],["acortalink.me",10],["atv.pe",11],["monumental.co.cr",11],["elcomercio.com",11],["antena7.com.do",11],["rqp.com.bo",11],["canal12.com.sv",11],["chapintv.com",11],["vtv.com.hn",11],["tn23.tv",11],["canal13mexico.com",11],["c9n.com.py",11],["repretel.com",11],["redbolivision.tv.bo",11],["independentespanol.com",11],["teleculinaria.pt",12],["nptmedia.tv",14],["costumbresmexico.com",16],["desbloqueador.site",16],["netmovies.com.br",18],["coempregos.com.br",19],["anitube.us",19],["anitube.vip",19],["hinatasoul.com",19]]);
+const exceptionsMap = new Map([]);
+const hasEntities = true;
+const hasAncestors = false;
 
-const todoIndices = new Set();
-const tonotdoIndices = [];
-
-// Exceptions
-if ( exceptionsMap.size !== 0 ) {
-    for ( let i = 0; i < hnpartslen; i++ ) {
-        const hn = hnParts.slice(i).join('.');
-        const excepted = exceptionsMap.get(hn);
-        if ( excepted ) { tonotdoIndices.push(...excepted); }
-    }
-    exceptionsMap.clear();
-}
-
-// Hostname-based
-if ( hostnamesMap.size !== 0 ) {
-    const collectArgIndices = hn => {
-        let argsIndices = hostnamesMap.get(hn);
-        if ( argsIndices === undefined ) { return; }
-        if ( typeof argsIndices === 'number' ) { argsIndices = [ argsIndices ]; }
+const collectArgIndices = (hn, map, out) => {
+    let argsIndices = map.get(hn);
+    if ( argsIndices === undefined ) { return; }
+    if ( typeof argsIndices !== 'number' ) {
         for ( const argsIndex of argsIndices ) {
-            if ( tonotdoIndices.includes(argsIndex) ) { continue; }
-            todoIndices.add(argsIndex);
+            out.add(argsIndex);
         }
-    };
-    for ( let i = 0; i < hnpartslen; i++ ) {
-        const hn = hnParts.slice(i).join('.');
-        collectArgIndices(hn);
+    } else {
+        out.add(argsIndices);
     }
-    collectArgIndices('*');
-    hostnamesMap.clear();
-}
+};
 
-// Entity-based
-if ( entitiesMap.size !== 0 ) {
-    const n = hnpartslen - 1;
-    for ( let i = 0; i < n; i++ ) {
-        for ( let j = n; j > i; j-- ) {
-            const en = hnParts.slice(i,j).join('.');
-            let argsIndices = entitiesMap.get(en);
-            if ( argsIndices === undefined ) { continue; }
-            if ( typeof argsIndices === 'number' ) { argsIndices = [ argsIndices ]; }
-            for ( const argsIndex of argsIndices ) {
-                if ( tonotdoIndices.includes(argsIndex) ) { continue; }
-                todoIndices.add(argsIndex);
+const indicesFromHostname = (hostname, suffix = '') => {
+    const hnParts = hostname.split('.');
+    const hnpartslen = hnParts.length;
+    if ( hnpartslen === 0 ) { return; }
+    for ( let i = 0; i < hnpartslen; i++ ) {
+        const hn = `${hnParts.slice(i).join('.')}${suffix}`;
+        collectArgIndices(hn, hostnamesMap, todoIndices);
+        collectArgIndices(hn, exceptionsMap, tonotdoIndices);
+    }
+    if ( hasEntities ) {
+        const n = hnpartslen - 1;
+        for ( let i = 0; i < n; i++ ) {
+            for ( let j = n; j > i; j-- ) {
+                const en = `${hnParts.slice(i,j).join('.')}.*${suffix}`;
+                collectArgIndices(en, hostnamesMap, todoIndices);
+                collectArgIndices(en, exceptionsMap, tonotdoIndices);
             }
         }
     }
-    entitiesMap.clear();
+};
+
+const entries = (( ) => {
+    const docloc = document.location;
+    const origins = [ docloc.origin ];
+    if ( docloc.ancestorOrigins ) {
+        origins.push(...docloc.ancestorOrigins);
+    }
+    return origins.map((origin, i) => {
+        const beg = origin.lastIndexOf('://');
+        if ( beg === -1 ) { return; }
+        const hn = origin.slice(beg+3)
+        const end = hn.indexOf(':');
+        return { hn: end === -1 ? hn : hn.slice(0, end), i };
+    }).filter(a => a !== undefined);
+})();
+if ( entries.length === 0 ) { return; }
+
+const todoIndices = new Set();
+const tonotdoIndices = new Set();
+
+indicesFromHostname(entries[0].hn);
+if ( hasAncestors ) {
+    for ( const entry of entries ) {
+        if ( entry.i === 0 ) { continue; }
+        indicesFromHostname(entry.hn, '>>');
+    }
 }
 
 // Apply scriplets
 for ( const i of todoIndices ) {
-    try { noFetchIf(...argsList[i]); }
-    catch(ex) {}
+    if ( tonotdoIndices.has(i) ) { continue; }
+    try { preventFetch(...argsList[i]); }
+    catch { }
 }
-argsList.length = 0;
-
-/******************************************************************************/
-
-};
-// End of code to inject
-
-/******************************************************************************/
-
-uBOL_noFetchIf();
 
 /******************************************************************************/
 
 // End of local scope
 })();
-
-/******************************************************************************/
 
 void 0;

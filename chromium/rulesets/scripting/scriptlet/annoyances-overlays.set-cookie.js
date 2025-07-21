@@ -20,32 +20,13 @@
 
 */
 
-/* eslint-disable indent */
-
 // ruleset: annoyances-overlays
-
-/******************************************************************************/
 
 // Important!
 // Isolate from global scope
 
 // Start of local scope
-(( ) => {
-
-/******************************************************************************/
-
-// Start of code to inject
-const uBOL_setCookie = function() {
-
-const scriptletGlobals = {}; // eslint-disable-line
-
-const argsList = [["exit-intent","true"],["cp_style_3841","true"],["m6e-newsletter","1"],["awpopup_450030403","1"],["popupShown","true"],["awpopup_501941328","1"],["popup_closed","true"],["email_modal","true"],["huck-newsletter-popup","true"],["newsletterModal","true"],["SuppressInterstitial","true","","reload","1"],["marketing-modal-closed-1","2"],["r_p_s_n","1"],["viewedOuibounceModal","true"],["hidePopUp","true"],["newsletter","true"],["isNewsletterPopupShown","false","","reload","1"],["mailerlite:forms:shown:109925949413262377","1"],["pum-276000","true"],["uf_signup_bar","1"],["client-mailingListModalShown","true"],["jetpack_post_subscribe_modal_dismissed","true"],["newsletterLightboxDisplayed","true"],["MCPopupClosed","yes"],["welcome_modal_email_ts","1"],["newsletter-newsletter-popup","true"],["Columbia_IT_emailPopup","1"],["Columbia_AT_emailPopup","1"],["Columbia_DE_emailPopup","1"],["Columbia_FR_emailPopup","1"],["Columbia_ES_emailPopup","1"],["Columbia_UK_emailPopup","1"],["mystery_popup","true"],["sws-gwpop","1"],["popup-newsletter","true"],["ezgwcc","1"],["_ad","0"]];
-
-const hostnamesMap = new Map([["monarchmoney.com",0],["railsnotes.xyz",0],["breachmedia.ca",1],["artribune.com",2],["plantpowercouple.com",3],["commondreams.org",4],["oled-info.com",5],["lowpass.cc",6],["readergrev.com",6],["objectivebayesian.com",6],["monopoly.marketecture.tv",6],["jointhefollowup.com",6],["streamily.com",7],["huckmag.com",8],["egopowerplus.com",9],["gourmetfoodstore.com",10],["theinformation.com",11],["in.investing.com",12],["intellinews.com",13],["kermitlynch.com",14],["jingdaily.com",15],["babiesrus.ca",16],["toysrus.ca",16],["clevercreations.org",17],["thefederalist.com",18],["30seconds.com",19],["iconduck.com",20],["shojiwax.com",21],["skepticalraptor.com",21],["girlscoutshop.com",22],["yvonnebennetti.com",23],["funko.com",24],["loungefly.com",24],["saucerco.com",25],["columbiasportswear.it",26],["columbiasportswear.at",27],["columbiasportswear.de",28],["columbiasportswear.fr",29],["columbiasportswear.es",30],["columbiasportswear.co.uk",31],["sharperimage.com",32],["sweetwater.com",33],["assos.com",34],["scitechdaily.com",35],["klsescreener.com",36]]);
-
-const entitiesMap = new Map([]);
-
-const exceptionsMap = new Map([]);
+(function uBOL_setCookie() {
 
 /******************************************************************************/
 
@@ -103,6 +84,8 @@ function getSafeCookieValuesFn() {
         'all', 'none', 'functional',
         'granted', 'done',
         'decline', 'declined',
+        'closed', 'next', 'mandatory',
+        'disagree', 'agree',
     ];
 }
 
@@ -125,10 +108,12 @@ function safeSelf() {
         'Object_defineProperties': Object.defineProperties.bind(Object),
         'Object_fromEntries': Object.fromEntries.bind(Object),
         'Object_getOwnPropertyDescriptor': Object.getOwnPropertyDescriptor.bind(Object),
+        'Object_hasOwn': Object.hasOwn.bind(Object),
         'RegExp': self.RegExp,
         'RegExp_test': self.RegExp.prototype.test,
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
+        'String': self.String,
         'String_fromCharCode': String.fromCharCode,
         'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
@@ -332,7 +317,16 @@ function setCookieFn(
 
     if ( trusted ) {
         if ( options.domain ) {
-            cookieParts.push(`; domain=${options.domain}`);
+            let domain = options.domain;
+            if ( /^\/.+\//.test(domain) ) {
+                const baseURL = new URL(document.baseURI);
+                const reDomain = new RegExp(domain.slice(1, -1));
+                const match = reDomain.exec(baseURL.hostname);
+                domain = match ? match[0] : undefined;
+            }
+            if ( domain ) {
+                cookieParts.push(`; domain=${domain}`);
+            }
         }
         cookieParts.push('; Secure');
     } else if ( /^__(Host|Secure)-/.test(name) ) {
@@ -366,95 +360,83 @@ function getCookieFn(
 
 /******************************************************************************/
 
-const hnParts = [];
-try {
-    let origin = document.location.origin;
-    if ( origin === 'null' ) {
-        const origins = document.location.ancestorOrigins;
-        for ( let i = 0; i < origins.length; i++ ) {
-            origin = origins[i];
-            if ( origin !== 'null' ) { break; }
-        }
-    }
-    const pos = origin.lastIndexOf('://');
-    if ( pos === -1 ) { return; }
-    hnParts.push(...origin.slice(pos+3).split('.'));
-}
-catch(ex) { }
-const hnpartslen = hnParts.length;
-if ( hnpartslen === 0 ) { return; }
+const scriptletGlobals = {}; // eslint-disable-line
+const argsList = [["block-popuproadblock","true"],["exit-intent","true"],["cp_style_3841","true"],["m6e-newsletter","1"],["popupIsClosed","1"],["awpopup_450030403","1"],["popupShown","true"],["awpopup_501941328","1"],["popup_closed","true"],["email_modal","true"],["huck-newsletter-popup","true"],["newsletterModal","true"],["enewsOptin","1"],["SuppressInterstitial","true","","reload","1"],["marketing-modal-closed-1","2"],["r_p_s_n","1"],["viewedOuibounceModal","true"],["hidePopUp","true"],["newsletter","true"],["bytes_signup_modal_viewed","1"],["isNewsletterPopupShown","false","","reload","1"],["mailerlite:forms:shown:109925949413262377","1"],["pum-276000","true"],["uf_signup_bar","1"],["st_newsletter_splash_desktop_seen","true"],["newsletter_signup_promo","true"],["newsletter_signup_views","1"],["client-mailingListModalShown","true"],["jetpack_post_subscribe_modal_dismissed","true"],["newsletterLightboxDisplayed","true"],["MCPopupClosed","yes"],["welcome_modal_email_ts","1"],["newsletter-newsletter-popup","true"],["Columbia_IT_emailPopup","1"],["Columbia_AT_emailPopup","1"],["Columbia_DE_emailPopup","1"],["Columbia_FR_emailPopup","1"],["Columbia_ES_emailPopup","1"],["Columbia_UK_emailPopup","1"],["mystery_popup","true"],["sws-gwpop","1"],["popup-newsletter","true"],["ezgwcc","1"],["_ad","0"],["leftPanelOpen","0"],["iAgree","1"],["firebox_3330","1"]];
+const hostnamesMap = new Map([["press.princeton.edu",0],["monarchmoney.com",1],["railsnotes.xyz",1],["breachmedia.ca",2],["artribune.com",3],["pbs.org",4],["plantpowercouple.com",5],["commondreams.org",6],["oled-info.com",7],["lowpass.cc",8],["readergrev.com",8],["objectivebayesian.com",8],["monopoly.marketecture.tv",8],["jointhefollowup.com",8],["streamily.com",9],["huckmag.com",10],["egopowerplus.com",11],["vokey.com",12],["gourmetfoodstore.com",13],["theinformation.com",14],["in.investing.com",15],["intellinews.com",16],["kermitlynch.com",17],["jingdaily.com",18],["coinbase.com",19],["babiesrus.ca",20],["toysrus.ca",20],["clevercreations.org",21],["thefederalist.com",22],["30seconds.com",23],["seattletimes.com",24],["snopes.com",[25,26]],["iconduck.com",27],["shojiwax.com",28],["skepticalraptor.com",28],["girlscoutshop.com",29],["yvonnebennetti.com",30],["funko.com",31],["loungefly.com",31],["saucerco.com",32],["columbiasportswear.it",33],["columbiasportswear.at",34],["columbiasportswear.de",35],["columbiasportswear.fr",36],["columbiasportswear.es",37],["columbiasportswear.co.uk",38],["sharperimage.com",39],["sweetwater.com",40],["assos.com",41],["scitechdaily.com",42],["klsescreener.com",43],["fandom.com",44],["bangbros.com",45],["tmnascommunity.eu",46]]);
+const exceptionsMap = new Map([]);
+const hasEntities = false;
+const hasAncestors = false;
 
-const todoIndices = new Set();
-const tonotdoIndices = [];
-
-// Exceptions
-if ( exceptionsMap.size !== 0 ) {
-    for ( let i = 0; i < hnpartslen; i++ ) {
-        const hn = hnParts.slice(i).join('.');
-        const excepted = exceptionsMap.get(hn);
-        if ( excepted ) { tonotdoIndices.push(...excepted); }
-    }
-    exceptionsMap.clear();
-}
-
-// Hostname-based
-if ( hostnamesMap.size !== 0 ) {
-    const collectArgIndices = hn => {
-        let argsIndices = hostnamesMap.get(hn);
-        if ( argsIndices === undefined ) { return; }
-        if ( typeof argsIndices === 'number' ) { argsIndices = [ argsIndices ]; }
+const collectArgIndices = (hn, map, out) => {
+    let argsIndices = map.get(hn);
+    if ( argsIndices === undefined ) { return; }
+    if ( typeof argsIndices !== 'number' ) {
         for ( const argsIndex of argsIndices ) {
-            if ( tonotdoIndices.includes(argsIndex) ) { continue; }
-            todoIndices.add(argsIndex);
+            out.add(argsIndex);
         }
-    };
-    for ( let i = 0; i < hnpartslen; i++ ) {
-        const hn = hnParts.slice(i).join('.');
-        collectArgIndices(hn);
+    } else {
+        out.add(argsIndices);
     }
-    collectArgIndices('*');
-    hostnamesMap.clear();
-}
+};
 
-// Entity-based
-if ( entitiesMap.size !== 0 ) {
-    const n = hnpartslen - 1;
-    for ( let i = 0; i < n; i++ ) {
-        for ( let j = n; j > i; j-- ) {
-            const en = hnParts.slice(i,j).join('.');
-            let argsIndices = entitiesMap.get(en);
-            if ( argsIndices === undefined ) { continue; }
-            if ( typeof argsIndices === 'number' ) { argsIndices = [ argsIndices ]; }
-            for ( const argsIndex of argsIndices ) {
-                if ( tonotdoIndices.includes(argsIndex) ) { continue; }
-                todoIndices.add(argsIndex);
+const indicesFromHostname = (hostname, suffix = '') => {
+    const hnParts = hostname.split('.');
+    const hnpartslen = hnParts.length;
+    if ( hnpartslen === 0 ) { return; }
+    for ( let i = 0; i < hnpartslen; i++ ) {
+        const hn = `${hnParts.slice(i).join('.')}${suffix}`;
+        collectArgIndices(hn, hostnamesMap, todoIndices);
+        collectArgIndices(hn, exceptionsMap, tonotdoIndices);
+    }
+    if ( hasEntities ) {
+        const n = hnpartslen - 1;
+        for ( let i = 0; i < n; i++ ) {
+            for ( let j = n; j > i; j-- ) {
+                const en = `${hnParts.slice(i,j).join('.')}.*${suffix}`;
+                collectArgIndices(en, hostnamesMap, todoIndices);
+                collectArgIndices(en, exceptionsMap, tonotdoIndices);
             }
         }
     }
-    entitiesMap.clear();
+};
+
+const entries = (( ) => {
+    const docloc = document.location;
+    const origins = [ docloc.origin ];
+    if ( docloc.ancestorOrigins ) {
+        origins.push(...docloc.ancestorOrigins);
+    }
+    return origins.map((origin, i) => {
+        const beg = origin.lastIndexOf('://');
+        if ( beg === -1 ) { return; }
+        const hn = origin.slice(beg+3)
+        const end = hn.indexOf(':');
+        return { hn: end === -1 ? hn : hn.slice(0, end), i };
+    }).filter(a => a !== undefined);
+})();
+if ( entries.length === 0 ) { return; }
+
+const todoIndices = new Set();
+const tonotdoIndices = new Set();
+
+indicesFromHostname(entries[0].hn);
+if ( hasAncestors ) {
+    for ( const entry of entries ) {
+        if ( entry.i === 0 ) { continue; }
+        indicesFromHostname(entry.hn, '>>');
+    }
 }
 
 // Apply scriplets
 for ( const i of todoIndices ) {
+    if ( tonotdoIndices.has(i) ) { continue; }
     try { setCookie(...argsList[i]); }
-    catch(ex) {}
+    catch { }
 }
-argsList.length = 0;
-
-/******************************************************************************/
-
-};
-// End of code to inject
-
-/******************************************************************************/
-
-uBOL_setCookie();
 
 /******************************************************************************/
 
 // End of local scope
 })();
-
-/******************************************************************************/
 
 void 0;

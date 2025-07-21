@@ -19,13 +19,7 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/* jshint esversion:11 */
-
-'use strict';
-
 // ruleset: vie-1
-
-/******************************************************************************/
 
 // Important!
 // Isolate from global scope
@@ -33,16 +27,13 @@
 
 /******************************************************************************/
 
-const argsList = [["{\"selector\":\".aScr\",\"action\":[\"style\",\"display:block!important\"]}","{\"selector\":\".aSlB\",\"action\":[\"style\",\"display:flex!important\"]}","{\"selector\":\".aft\",\"action\":[\"style\",\"display:block!important\"]}","{\"selector\":\".pstL\",\"action\":[\"style\",\"display:inline-flex!important\"]}"],["{\"selector\":\"#header\",\"action\":[\"style\",\"margin-top: 0 !important\"]}"],["{\"selector\":\"body\",\"action\":[\"style\",\"position: static !important\"]}"],["{\"selector\":\"div.layout.pt-mobi-top\",\"action\":[\"style\",\"padding-top: 0 !important\"]}","{\"selector\":\"header.bg-white\",\"action\":[\"style\",\"margin-top: 0px !important\"]}"],["{\"selector\":\"html\",\"action\":[\"style\",\"overflow: auto !important\"]}"]];
-
-const hostnamesMap = new Map([["apkmoddone.phongroblox.com",0],["chotlo3s.com",1],["www.o-study.net",2],["www.saostar.vn",3],["z1000.thapcam53.net",4],["hhpanda.love",4]]);
-
-const entitiesMap = new Map(undefined);
-
-const exceptionsMap = new Map(undefined);
+const argsList = ["","{\"selector\":\"#header\",\"action\":[\"style\",\"margin-top: 0 !important\"]}","{\"selector\":\"html\",\"action\":[\"style\",\"overflow: auto !important\"]}","{\"selector\":\"body\",\"action\":[\"style\",\"position: static !important\"]}","{\"selector\":\"div.layout.pt-mobi-top\",\"action\":[\"style\",\"padding-top: 0 !important\"]}\n{\"selector\":\"header.bg-white\",\"action\":[\"style\",\"margin-top: 0px !important\"]}","{\"selector\":\"video[src^=\\\"/\\\"]\",\"action\":[\"style\",\"pointer-events: none\"]}"];
+const argsSeqs = [0,1,2,3,4,5];
+const hostnamesMap = new Map([["chotlo3s.com",1],["hhpanda.win",2],["thempho2.com",2],["phimchautinhtri.net",2],["www.o-study.net",3],["www.saostar.vn",4],["xem15.net",5]]);
+const hasEntities = false;
 
 self.declarativeImports = self.declarativeImports || [];
-self.declarativeImports.push({ argsList, hostnamesMap, entitiesMap, exceptionsMap });
+self.declarativeImports.push({ argsList, argsSeqs, hostnamesMap, hasEntities });
 
 /******************************************************************************/
 

@@ -305,7 +305,7 @@
 {"action":{"type":"block"},"condition":{"urlFilter":"||tvcreta.gr/upload_images/banners/"},"id":304,"priority":10},
 {"action":{"type":"block"},"condition":{"urlFilter":"||unboxholics.com/images/banners/egalaxy/e-galaxynew.jpg"},"id":305,"priority":10},
 {"action":{"type":"block"},"condition":{"urlFilter":"||unboxholics.com/images/banners/inspot/inspot_banner.jpg"},"id":306,"priority":10},
-{"action":{"type":"block"},"condition":{"initiatorDomains":["contra.gr"],"requestDomains":["unibet-cdn.com"]},"id":307,"priority":10},
+{"action":{"type":"block"},"condition":{"initiatorDomains":["contra.gr"],"urlFilter":"||unibet-cdn.com^"},"id":307,"priority":10},
 {"action":{"type":"block"},"condition":{"urlFilter":"||usay.gr/hyperads/"},"id":308,"priority":10},
 {"action":{"type":"block"},"condition":{"urlFilter":"||vidata.gr/files/plugins/longtailvideo/v5a/r6/vidads.swf"},"id":309,"priority":10},
 {"action":{"type":"block"},"condition":{"urlFilter":"||widgets.nova.gr/nownext_compact/el/"},"id":310,"priority":10},
@@ -321,7 +321,7 @@
 {"action":{"type":"block"},"condition":{"urlFilter":"||yupiii.gr/banners/bg/"},"id":320,"priority":10},
 {"action":{"type":"block"},"condition":{"urlFilter":"||zougla.gr/uploads/banners/"},"id":321,"priority":10},
 {"action":{"type":"block"},"condition":{"domainType":"firstParty","resourceTypes":["script"],"urlFilter":"||kavalanews.gr/sites/all/modules/copyprevention/copyprevention.js^"},"id":322,"priority":10},
-{"action":{"type":"block"},"condition":{"requestDomains":["ad.gr.doubleclick.net","ad2.linkwise.gr","adman.kathimerini.gr","adman.otenet.gr","ads.24media.gr","ads.naftemporiki.gr","adserver.linkwise.gr","affiliate.linkwise.gr","axiabanners.exodus.gr","banners.dol.gr","bold.adman.gr","call.theowl.gr","cdn.orangeclickmedia.com","clickbanner.gr","d.agkn.com","educate.theowl.gr","el.williamhillcasino.com","gazzetta.adman.gr","gpoint.gpoint.com.gr","gr.partypoker.com","media.mybet.com","obj.adman.gr","phaistos-ssp.adman.gr","promo.gpoint.com.gr","promos.pathfinder.gr","scripts.bestprice.gr","serve.ads.gr","smartadserver.com","static.adman.gr","switch.statman.gr"]},"id":323,"priority":10},
+{"action":{"type":"block"},"condition":{"requestDomains":["ad.gr.doubleclick.net","ad2.linkwise.gr","adman.kathimerini.gr","adman.otenet.gr","ads.24media.gr","ads.naftemporiki.gr","adserver.linkwise.gr","affiliate.linkwise.gr","banners.dol.gr","bold.adman.gr","cdn.orangeclickmedia.com","clickbanner.gr","d.agkn.com","el.williamhillcasino.com","gazzetta.adman.gr","gpoint.gpoint.com.gr","gr.partypoker.com","media.mybet.com","obj.adman.gr","phaistos-ssp.adman.gr","scripts.bestprice.gr","serve.ads.gr","static.adman.gr"]},"id":323,"priority":10},
 {"action":{"type":"block"},"condition":{"resourceTypes":["image"],"urlFilter":"||www.e-evros.gr/banners/*.gif"},"id":324,"priority":10},
 {"action":{"type":"block"},"condition":{"resourceTypes":["image"],"urlFilter":"||kavalapoint.gr/wp-content/uploads/2023/11/ezgif.com*"},"id":325,"priority":10},
 {"action":{"type":"block"},"condition":{"resourceTypes":["image"],"urlFilter":"||meteo.gr/graphics/ads/"},"id":326,"priority":10},
@@ -400,7 +400,7 @@
 {"action":{"type":"block"},"condition":{"resourceTypes":["object"],"urlFilter":"||realestatenews.gr/images/stories/banner-red.swf"},"id":399,"priority":10},
 {"action":{"type":"block"},"condition":{"initiatorDomains":["gazzetta.gr"],"resourceTypes":["script"],"urlFilter":"||cdnprojectagora.s3.amazonaws.com/gr/gazzetta.js"},"id":400,"priority":10},
 {"action":{"type":"block"},"condition":{"resourceTypes":["sub_frame"],"urlFilter":"||bankingnews.gr/ad/*/"},"id":401,"priority":10},
-{"action":{"type":"block"},"condition":{"requestDomains":["madinad-data.s3.amazonaws.com"],"resourceTypes":["sub_frame"]},"id":402,"priority":10},
+{"action":{"type":"block"},"condition":{"resourceTypes":["sub_frame"],"urlFilter":"||madinad-data.s3.amazonaws.com^"},"id":402,"priority":10},
 {"action":{"type":"block"},"condition":{"resourceTypes":["main_frame"],"urlFilter":"goldenconcept.ir^"},"id":403,"priority":10},
 {"action":{"type":"block"},"condition":{"resourceTypes":["main_frame"],"urlFilter":"indusviva.com^"},"id":404,"priority":10},
 {"action":{"type":"block"},"condition":{"domainType":"thirdParty","requestDomains":["adstorebluebird.cy","adwebone.com","madinad.com","vidads.gr"]},"id":405,"priority":10},
@@ -427,5 +427,7 @@
 {"action":{"type":"block"},"condition":{"resourceTypes":["image"],"urlFilter":"||irafina.gr/wp-content/uploads/2022/07/yellow_t_shirt.jpg"},"id":426,"priority":10},
 {"action":{"type":"block"},"condition":{"resourceTypes":["image"],"urlFilter":"||irafina.gr/wp-content/uploads/2022/07/iliaxt-23_tetr.jpg"},"id":427,"priority":10},
 {"action":{"type":"block"},"condition":{"resourceTypes":["image"],"urlFilter":"||irafina.gr/wp-content/uploads/2022/07/limani_rafinas*.jpg"},"id":428,"priority":10},
-{"action":{"type":"block"},"condition":{"resourceTypes":["image"],"urlFilter":"||irafina.gr/wp-content/uploads/2024/04/solar_star*.jpg"},"id":429,"priority":10}
+{"action":{"type":"block"},"condition":{"resourceTypes":["image"],"urlFilter":"||irafina.gr/wp-content/uploads/2024/04/solar_star*.jpg"},"id":429,"priority":10},
+{"action":{"type":"block"},"condition":{"resourceTypes":["image"],"urlFilter":"||goodnet.gr/files/goodnet/banners/*.jpg"},"id":430,"priority":10},
+{"action":{"type":"block"},"condition":{"resourceTypes":["image"],"urlFilter":"||goodnet.gr/files/goodnet/banners/*.gif"},"id":431,"priority":10}
 ]

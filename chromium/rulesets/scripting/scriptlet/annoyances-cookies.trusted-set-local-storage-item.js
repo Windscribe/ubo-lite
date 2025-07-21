@@ -20,32 +20,13 @@
 
 */
 
-/* eslint-disable indent */
-
 // ruleset: annoyances-cookies
-
-/******************************************************************************/
 
 // Important!
 // Isolate from global scope
 
 // Start of local scope
-(( ) => {
-
-/******************************************************************************/
-
-// Start of code to inject
-const uBOL_trustedSetLocalStorageItem = function() {
-
-const scriptletGlobals = {}; // eslint-disable-line
-
-const argsList = [["CMPList","$currentDate$"],["cv:cookiesAllowed","{\"mandatoryCookies\":true,\"statsCookies\":false,\"marketingCookies\":false}"],["elementor","{\"__expiration\":{},\"pageViews\":1,\"popup_1276_times\":1}"],["dlnews:settings","{\"state\":{\"cookiesConsent\":{\"marketing\":false,\"analytical\":false},\"chartsOptions\":[{\"id\":\"defi-tvl\"},{\"id\":\"top-protocol\"},{\"id\":\"dexs-volume\"},{\"id\":\"chains-tvl-pie\"}],\"isPriceFeedPaused\":false,\"showSubscriptionModal\":false},\"version\":2}"],["kmt_config_web","{\"created_at\":\"$currentDate$\",\"anonymous\":\"\",\"gdpr_ga\":false,\"gdpr_exp\":false}"],["cookies_settings","{\"json\":{\"state\":\"only-essential\"}}"],["cookiesSettings","{\"remarketing\":false,\"personalisation\":false,\"statistics\":false}"],["acceptConsent","{\"acceptAnalysis\":false,\"acceptMarketing\":false,\"showCookie\":1}"],["cookieConsent","{\"consented\":true,\"levels\":{\"level1\":true,\"level2\":false,\"level3\":false,\"level4\":false}}"],["_cmpRepromptHash","CP20-YAP20-YAAKAyBENAfEgAAAAAAAAAAwIAAAI8gBAGfAR4AAA.YAAAAAAAAAAA.1.l4yppBwRRyXiPrnFNrkJzQ==.P21TmRP21TmRAKAaAB4AAAAA"],["noniabvendorconsent","P21TmRP21TmRAKAaAB4AAAAA"],["UserCookieConsent","{\"__typename\":\"CookieConfigModel\",\"cookieSettings\":[],\"essential\":true,\"statistics\":false,\"marketing\":false}"],["trackingAllowedOrDeniedAt","$currentISODate$"],["cookies","{\"essential\":true,\"performance\":false,\"marketing\":false}"],["cookie_consent","{\"consent\":true,\"necessary\":true,\"preference\":false,\"statistics\":false,\"marketing\":false}"],["acceptedCookies","{\"security\":true,\"analytics\":false}"],["cookieManagement","{\"googleAnalytics\":false,\"facebook\":false}"],["cookie.settings","{\"required\":true,\"experience\":false,\"performance\":false,\"analytics\":false,\"date\":$now$,\"version\":1}"],["reduxStore","{\"tracking\":{\"consents\":{\"All\":false,\"functional\":false,\"Segment.io\":true},\"dialog\":{\"open\":false,\"dirty\":false},\"isConfigured\":true},\"loyalty\":{\"hasSeenLoyaltyPage\":false}}"],["cookie-data","{\"version\":\"20210906\",\"value\":\"-ga-ads-fbp-htj-yt\"}"],["cookieSettings","{\"technical\":true,\"bugsnag\":false,\"adjust\":false}"],["appconsent","{\"consents\":{},\"i18n\":{},\"ui\":{},\"vendorlist\":{},\"CMP_VERSION\":10,\"xchange\":{},\"events\":[],\"client\":{\"externalIds\":{},\"floatingPurposes\":[{\"id\":\"\",\"version\":0}],\"floatingPurposesConsent\":[{\"extra_id\":\"\",\"type\":0,\"given_at\":null,\"version\":0}]},\"consentstring\":\"CPzBFAAPzBFAAACAKAFRDUCoAAAAAH_AAAqIIzNF_H_dSSNj8X5_Yft0eY1P5dAz7uQxBhaJg6QFyBLEsJwXwmAIIEnqAKgKGBIEskJAIQBlCAHABUEAYIEBISGMAEAQIQAAJiAEEEERAmJICBBJG4AgEAIQglgCABQAgAsESFsoQMhAAIAABUJAAAgggIABAgAIBDAAQAAAAAAAAgAAEAAAAAAAAAAEABBHYAkw1LiABsiAkJpAwigRAjCIICKBQAAACQMEAACQIAlBGASgwAQAgRQAEBAAAAFEAAAAAAIAEIAAgACBAABAIBAAAABAAAAAQAAAgAIAQAAAABADAEAABAAAAAAACAECEIAAIACAgAAgAEAIAAAAAAIBAIBAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAgAAAA.YAAAAAAAAAAA\",\"consentstringUpdatedAt\":{}}"],["acceptedCookiesAt","$now$"],["am-last-cookie-acceptance","$now$"],["cookie_setting","{\"analytical_cookies\":false,\"functional_cookies\":true}"],["cookieNotification","{\"value\":\"1\"}"],["solvia-consents","{\"tec\":true,\"pers\":false,\"ana\":false,\"publi\":false}"],["COOKIE_CONSENT","\"TECHNICAL_SELECTED\""],["persist:privacy","{\"allowExternalContent\":\"false\",\"allowTracking\":\"false\",\"allowFunctionalCookies\":\"true\",\"allowRequiredCookies\":\"true\",\"showConsentBanner\":\"false\",\"_persist\":\"{\\\"version\\\":-1,\\\"rehydrated\\\":true}\"}"],["consents","{\"*\":true}"],["cookieSettings","{\"fullOptIn\":false,\"googleAnalytics\":false,\"facebookTrackingPixel\":false,\"googleAds\":false}"],["CookiesConsent","{\"necessary\":true,\"functional\":true}"],["aw-thirds","{\"mode\":\"forced-choice\",\"google_analytics\":\"deny\",\"google_tag_manager\":\"deny\",\"facebook_pixel\":\"deny\",\"linkedin\":\"deny\",\"youtube\":\"allow\",\"google_maps\":\"allow\"}"],["lms_cookies","nk9jfSLYwDn7O5xP0UhgFw=="],["partner-cookies","{\"value\":{\"isAnalyticsCookies\":false,\"isFunctionalCookies\":true}}"],["consents","{\"device\":false,\"personalizedContent\":false,\"googleAdsense\":false,\"googleRecaptcha\":false,\"youtube\":true}"],["dtm-cookie-banner","decline"],["cookieConsent","{\"created\":\"1\",\"versionNumber\":2,\"consents\":[{\"type\":\"ANALYTICS_STORAGE\",\"status\":\"DENIED\"},{\"type\":\"AD_STORAGE\",\"status\":\"DENIED\"},{\"type\":\"AD_USER_DATA\",\"status\":\"DENIED\"},{\"type\":\"AD_PERSONALIZATION\",\"status\":\"DENIED\"}],\"gtmParams\":{\"analytics_storage\":\"granted\",\"ad_storage\":\"denied\",\"ad_user_data\":\"denied\",\"ad_personalization\":\"denied\"}}"],["ccm_consent","{\"/\":{\"gen\":2,\"ucid\":\"1\",\"consent\":true,\"embeddings\":[\"1e76acf\",\"8ed8d9a\",\"b429e86\",\"f22e6ed\",\"0b25af3\",\"6079a42\"],\"created\":\"$currentDate$\",\"updated\":\"$currentDate$\",\"clickedButton\":\"acceptAll\",\"iframeConsentDomains\":[],\"tcf\":{\"p\":[],\"lip\":[],\"sf\":[],\"v\":[],\"liv\":[],\"gad\":[]},\"lang\":\"de_DE\"}}"],["userConsents","{\"functional-technology\":true}"],["gtagConsents","{\"ad_personalization\":\"denied\",\"analytics_storage\":\"denied\",\"ad_user_data\":\"denied\",\"ad_storage\":\"denied\"}"],["speedtestUI.Consent","{\"analytics\":false,\"bugReports\":false,\"timestamp\":\"$currentISODate$\"}"],["consentMode","{\"functionality_storage\":\"granted\",\"security_storage\":\"granted\",\"ad_storage\":\"denied\",\"analytics_storage\":\"denied\",\"ad_personalization\":\"denied\",\"ad_user_data\":\"denied\"}"],["cookieConsent","{\"requiredCookies\":true,\"functionality\":true,\"advertisingAndRetargeting\":false,\"analytics\":false}"],["acceptedCookies","{\"\":false,\"AMCV_###@AdobeOrg /\":true,\"AMCVS_###@AdobeOrg\":true,\"APISID, HSID, SAPISID, SID ja SSID cookies\":true,\"(auch GTM)\":true,\"NID cookie\":true,\"SIDCC cookie\":true,\"Youtube cookies\":true,\"mbox\":true,\"consent_adform\":false,\"consent_adobeanalytics\":false,\"consent_adobetarget\":false,\"consent_googleanalytics\":false,\"consent_googleads\":false,\"consent_facebook\":false,\"consent_giosg\":false,\"consent_nid\":true}"],["userTrackingConsent","{\"necessary\":true,\"marketing\":false}"]];
-
-const hostnamesMap = new Map([["express.co.uk",0],["carvertical.com",1],["easyfind.ch",2],["dlnews.com",3],["komoot.com",4],["komoot.de",4],["screen.studio",5],["vivantis.sk",6],["krasa.cz",6],["spv.no",7],["vr.fi",8],["forums.tomsguide.com",[9,10]],["online.depo-diy.ee",11],["auf1.tv",12],["steuerbot.com",13],["vadhander.hogakusten.com",14],["vadhander.kramfors.se",14],["monkeytype.com",15],["wesendit.com",16],["onelink.to",17],["linasmatkasse.se",18],["veikkaus.fi",19],["app.solit-kapital.de",20],["lachainemeteo.com",21],["alan.com",22],["primor.eu",23],["manta.net",24],["login.flex.paychex.com",25],["solvia.es",26],["terviseportaal.ee",27],["vreden.de",28],["if-cdn.com",29],["cnmaarthouse.de",30],["adventisten.de",31],["hopetv.de",31],["soprema.es",32],["luminousindia.com",33],["21vek.by",34],["screenflash.io",35],["salomon.com",36],["auto.nl",37],["eurobaustoff.com",38],["weather.com",39],["wedding.pl",40],["speedtest.vodafone.de",41],["interactivebrokers.com",42],["florence.com.tr",43],["bestdrive.fi",44],["bestdrive.no",44],["crumblcookies.com",45]]);
-
-const entitiesMap = new Map([]);
-
-const exceptionsMap = new Map([]);
+(function uBOL_trustedSetLocalStorageItem() {
 
 /******************************************************************************/
 
@@ -139,6 +120,8 @@ function getSafeCookieValuesFn() {
         'all', 'none', 'functional',
         'granted', 'done',
         'decline', 'declined',
+        'closed', 'next', 'mandatory',
+        'disagree', 'agree',
     ];
 }
 
@@ -161,10 +144,12 @@ function safeSelf() {
         'Object_defineProperties': Object.defineProperties.bind(Object),
         'Object_fromEntries': Object.fromEntries.bind(Object),
         'Object_getOwnPropertyDescriptor': Object.getOwnPropertyDescriptor.bind(Object),
+        'Object_hasOwn': Object.hasOwn.bind(Object),
         'RegExp': self.RegExp,
         'RegExp_test': self.RegExp.prototype.test,
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
+        'String': self.String,
         'String_fromCharCode': String.fromCharCode,
         'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
@@ -332,95 +317,83 @@ function safeSelf() {
 
 /******************************************************************************/
 
-const hnParts = [];
-try {
-    let origin = document.location.origin;
-    if ( origin === 'null' ) {
-        const origins = document.location.ancestorOrigins;
-        for ( let i = 0; i < origins.length; i++ ) {
-            origin = origins[i];
-            if ( origin !== 'null' ) { break; }
-        }
-    }
-    const pos = origin.lastIndexOf('://');
-    if ( pos === -1 ) { return; }
-    hnParts.push(...origin.slice(pos+3).split('.'));
-}
-catch(ex) { }
-const hnpartslen = hnParts.length;
-if ( hnpartslen === 0 ) { return; }
+const scriptletGlobals = {}; // eslint-disable-line
+const argsList = [["CMPList","$currentDate$"],["cv:cookiesAllowed","{\"mandatoryCookies\":true,\"statsCookies\":false,\"marketingCookies\":false}"],["elementor","{\"__expiration\":{},\"pageViews\":1,\"popup_1276_times\":1}"],["dlnews:settings","{\"state\":{\"cookiesConsent\":{\"marketing\":false,\"analytical\":false},\"chartsOptions\":[{\"id\":\"defi-tvl\"},{\"id\":\"top-protocol\"},{\"id\":\"dexs-volume\"},{\"id\":\"chains-tvl-pie\"}],\"isPriceFeedPaused\":false,\"showSubscriptionModal\":false},\"version\":2}"],["kmt_config_web","{\"created_at\":\"$currentDate$\",\"anonymous\":\"\",\"gdpr_ga\":false,\"gdpr_exp\":false}"],["cookies_settings","{\"json\":{\"state\":\"only-essential\"}}"],["cookiesSettings","{\"remarketing\":false,\"personalisation\":false,\"statistics\":false}"],["acceptConsent","{\"acceptAnalysis\":false,\"acceptMarketing\":false,\"showCookie\":1}"],["cookieConsent","{\"consented\":true,\"levels\":{\"level1\":true,\"level2\":false,\"level3\":false,\"level4\":false}}"],["_cmpRepromptHash","CP20-YAP20-YAAKAyBENAfEgAAAAAAAAAAwIAAAI8gBAGfAR4AAA.YAAAAAAAAAAA.1.l4yppBwRRyXiPrnFNrkJzQ==.P21TmRP21TmRAKAaAB4AAAAA"],["noniabvendorconsent","P21TmRP21TmRAKAaAB4AAAAA"],["UserCookieConsent","{\"__typename\":\"CookieConfigModel\",\"cookieSettings\":[],\"essential\":true,\"statistics\":false,\"marketing\":false}"],["trackingAllowedOrDeniedAt","$currentISODate$"],["cookies","{\"essential\":true,\"performance\":false,\"marketing\":false}"],["cookie_consent","{\"consent\":true,\"necessary\":true,\"preference\":false,\"statistics\":false,\"marketing\":false}"],["acceptedCookies","{\"security\":true,\"analytics\":false,\"sentry\":false}"],["cookieManagement","{\"googleAnalytics\":false,\"facebook\":false}"],["cookie.settings","{\"required\":true,\"experience\":false,\"performance\":false,\"analytics\":false,\"date\":$now$,\"version\":1}"],["reduxStore","{\"tracking\":{\"consents\":{\"All\":false,\"functional\":false,\"Segment.io\":true},\"dialog\":{\"open\":false,\"dirty\":false},\"isConfigured\":true},\"loyalty\":{\"hasSeenLoyaltyPage\":false}}"],["cookie-data","{\"version\":\"20210906\",\"value\":\"-ga-ads-fbp-htj-yt\"}"],["Cookies","{\"googleAnalytics\":false,\"facebookPixel\":false,\"tikTokPixel\":false,\"googleConversionTag\":false}"],["cc_cookie","{\"categories\":[\"necessary\"],\"revision\":0,\"data\":null,\"consentTimestamp\":\"$currentISODate$\",\"consentId\":\"00000000-0000-0000-000-000000000000\",\"services\":{\"necessary\":[],\"analytics\":[],\"marketing\":[]},\"lastConsentTimestamp\":\"$currentISODate$\",\"expirationTime\":1779124118406}"],["consent","{\"statistics\":false}"],["cookieSettings","{\"technical\":true,\"bugsnag\":false,\"adjust\":false}"],["appconsent","{\"consents\":{},\"i18n\":{},\"ui\":{},\"vendorlist\":{},\"CMP_VERSION\":10,\"xchange\":{},\"events\":[],\"client\":{\"externalIds\":{},\"floatingPurposes\":[{\"id\":\"\",\"version\":0}],\"floatingPurposesConsent\":[{\"extra_id\":\"\",\"type\":0,\"given_at\":null,\"version\":0}]},\"consentstring\":\"CPzBFAAPzBFAAACAKAFRDUCoAAAAAH_AAAqIIzNF_H_dSSNj8X5_Yft0eY1P5dAz7uQxBhaJg6QFyBLEsJwXwmAIIEnqAKgKGBIEskJAIQBlCAHABUEAYIEBISGMAEAQIQAAJiAEEEERAmJICBBJG4AgEAIQglgCABQAgAsESFsoQMhAAIAABUJAAAgggIABAgAIBDAAQAAAAAAAAgAAEAAAAAAAAAAEABBHYAkw1LiABsiAkJpAwigRAjCIICKBQAAACQMEAACQIAlBGASgwAQAgRQAEBAAAAFEAAAAAAIAEIAAgACBAABAIBAAAABAAAAAQAAAgAIAQAAAABADAEAABAAAAAAACAECEIAAIACAgAAgAEAIAAAAAAIBAIBAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAgAAAA.YAAAAAAAAAAA\",\"consentstringUpdatedAt\":{}}"],["acceptedCookiesAt","$now$"],["am-last-cookie-acceptance","$now$"],["cookie_setting","{\"analytical_cookies\":false,\"functional_cookies\":true}"],["cookieNotification","{\"value\":\"1\"}"],["solvia-consents","{\"tec\":true,\"pers\":false,\"ana\":false,\"publi\":false}"],["COOKIE_CONSENT","\"TECHNICAL_SELECTED\""],["persist:privacy","{\"allowExternalContent\":\"false\",\"allowTracking\":\"false\",\"allowFunctionalCookies\":\"true\",\"allowRequiredCookies\":\"true\",\"showConsentBanner\":\"false\",\"_persist\":\"{\\\"version\\\":-1,\\\"rehydrated\\\":true}\"}"],["consents","{\"*\":true}"],["cookieSettings","{\"fullOptIn\":false,\"googleAnalytics\":false,\"facebookTrackingPixel\":false,\"googleAds\":false}"],["CookiesConsent","{\"necessary\":true,\"functional\":true}"],["aw-thirds","{\"mode\":\"forced-choice\",\"google_analytics\":\"deny\",\"google_tag_manager\":\"deny\",\"facebook_pixel\":\"deny\",\"linkedin\":\"deny\",\"youtube\":\"allow\",\"google_maps\":\"allow\"}"],["lms_cookies","nk9jfSLYwDn7O5xP0UhgFw=="],["partner-cookies","{\"value\":{\"isAnalyticsCookies\":false,\"isFunctionalCookies\":true}}"],["cookieConsent","{\"created\":\"1\",\"versionNumber\":2,\"consents\":[{\"type\":\"ANALYTICS_STORAGE\",\"status\":\"DENIED\"},{\"type\":\"AD_STORAGE\",\"status\":\"DENIED\"},{\"type\":\"AD_USER_DATA\",\"status\":\"DENIED\"},{\"type\":\"AD_PERSONALIZATION\",\"status\":\"DENIED\"}],\"gtmParams\":{\"analytics_storage\":\"granted\",\"ad_storage\":\"denied\",\"ad_user_data\":\"denied\",\"ad_personalization\":\"denied\"}}"],["ccm_consent","{\"/\":{\"gen\":2,\"ucid\":\"1\",\"consent\":true,\"embeddings\":[\"1e76acf\",\"8ed8d9a\",\"b429e86\",\"f22e6ed\",\"0b25af3\",\"6079a42\"],\"created\":\"$currentDate$\",\"updated\":\"$currentDate$\",\"clickedButton\":\"acceptAll\",\"iframeConsentDomains\":[],\"tcf\":{\"p\":[],\"lip\":[],\"sf\":[],\"v\":[],\"liv\":[],\"gad\":[]},\"lang\":\"de_DE\"}}"],["userConsents","{\"functional-technology\":true}"],["gtagConsents","{\"ad_personalization\":\"denied\",\"analytics_storage\":\"denied\",\"ad_user_data\":\"denied\",\"ad_storage\":\"denied\"}"],["speedtestUI.Consent","{\"analytics\":false,\"bugReports\":false,\"timestamp\":\"$currentISODate$\"}"],["consentMode","{\"functionality_storage\":\"granted\",\"security_storage\":\"granted\",\"ad_storage\":\"denied\",\"analytics_storage\":\"denied\",\"ad_personalization\":\"denied\",\"ad_user_data\":\"denied\"}"],["cookieConsent","{\"requiredCookies\":true,\"functionality\":true,\"advertisingAndRetargeting\":false,\"analytics\":false}"],["acceptedCookies","{\"\":false,\"AMCV_###@AdobeOrg /\":true,\"AMCVS_###@AdobeOrg\":true,\"APISID, HSID, SAPISID, SID ja SSID cookies\":true,\"(auch GTM)\":true,\"NID cookie\":true,\"SIDCC cookie\":true,\"Youtube cookies\":true,\"mbox\":true,\"consent_adform\":false,\"consent_adobeanalytics\":false,\"consent_adobetarget\":false,\"consent_googleanalytics\":false,\"consent_googleads\":false,\"consent_facebook\":false,\"consent_giosg\":false,\"consent_nid\":true}"],["userTrackingConsent","{\"necessary\":true,\"marketing\":false}"],["cookieConsent","{\"optional\":[{\"id\":\"google\",\"accepted\":false}]}"],["cookies-consent-674994311cb8576b78bbaad6","{\"functional\":true,\"performance\":false,\"marketing\":false}"],["privacy_preferences_2024-04","{\"required\":true,\"functional\":false,\"analytics\":false,\"marketing\":false}"],["COOKIES_CONSENTS","{\"marketingAndStatistics\":false,\"personalization\":false,\"at\":1}"],["mage_consent","{\"timestamp\":1,\"data\":{\"functional\":true,\"marketing\":false}}"],["spaseekers:cookie-preferences","{\"necessary\":\"granted\",\"functional\":\"denied\",\"analytics\":\"denied\",\"marketing\":\"denied\"}"],["cookieformData","option0=1&analytical=0&performance=0&targeting=0&functional=0&marketing=0"],["lib-cookieconsent","[]"],["lib-cookieconsent-expire","1870726742772"],["procookie-dismissed","$now$"],["procookie-services","[\"cookie_notice\"]"],["user_cookies_acceptance","{\"necessary\":true,\"analytics\":false,\"functional\":false,\"marketing\":false}"],["cookiesManager","{\"acceptedCategories\":[\"necessary\"]}"],["policyAcceptedDate","$currentDate$"],["consent","{\"version\":1,\"consent\":{\"essential\":\"1\",\"analytics\":0,\"marketing\":0,\"external\":\"1\"}}"],["consentMode","{\"functionality_storage\":\"denied\",\"security_storage\":\"denied\",\"ad_storage\":\"denied\",\"analytics_storage\":\"denied\",\"preferences_storage\":\"denied\"}"],["cookieMonster","war schon da"],["consentMode","{\"ad_storage\":\"denied\",\"analytics_storage\":\"denied\",\"functionality_storage\":\"denied\"}"],["partner-cookies","{\"value\":{\"isAnalyticsCookies\":false,\"isFunctionalCookies\":false},\"expireIn\":1868839599999}"],["iracingCookieSettings","{\"performance-cookies\":false,\"functional-cookies\":false,\"marketing-cookies\":false}"],["cookieSettings","\"{\\\"necessary\\\":true,\\\"functional\\\":false,\\\"performance\\\":false,\\\"targeting\\\":false}\""],["consentState","{\"marketing\":false,\"analytics\":false,\"preferences\":false}"],["userAgreeOfCookieOfData","{\"isUserAgreeCollectionOfCookies\":true,\"userConsentDataStorageTime\":1}"],["cookieConsent","{\"functional\":true,\"statistical\":false,\"marketing\":false}"],["cookiefirst-consent","{\"necessary\":true,\"performance\":false,\"functional\":false,\"advertising\":false,\"timestamp\":1,\"type\":\"category\",\"version\":\"1\"}"],["flipdish-cookies-expiry","$now$"],["CXAgreeTerms","{\"agreed\":true}"],["cookiePrefs","{\"cookies.notice.actioned\":true,\"cookies.marketing.accepted\":false,\"cookies.usage.accepted\":false}"],["consent","\"granted\""],["consentMode","{\"functionality_storage\":\"granted\",\"security_storage\":\"granted\",\"analytics_storage\":\"denied\",\"personalization_storage\":\"granted\",\"ad_storage\":\"denied\",\"ad_user_data\":\"denied\",\"ad_personalization\":\"denied\"}"],["consentSettings","{\"essential\":true,\"embeds\":true}"],["cookies.consent","{\"chosen\":true,\"internal\":true,\"external\":false}"],["cookieSettings","{\"essential\":true,\"statistics\":false,\"thirdparty\":false,\"cookiesAccepted\":true}"],["cookieConsent","{\"preferences\":{\"technical\":true},\"timestamp\":1}"],["user_anonymous_profile","{\"config\":{\"tracking\":false,\"userprofile\":false,\"youtube\":true,\"twitter\":true,\"facebook\":true,\"iframe\":true,\"video\":{\"useSubtitles\":true,\"useAudioDescription\":true}},\"votings\":[],\"msgflash\":[],\"history\":[]}"],["ntd_storage_prefer","ntd-gdpr-basic"],["accepted_tos","20241119"],["cookiesAllowed","[\"strictly\"]"],["btdm.cookies","[0,1]"],["cookie-preferences","{\"analytics-cookies\":false,\"profiling-cookies\":false}"],["cookie_policy","{\"data\":\"agreed\"}"],["consent_preferences","{\"analytics_storage\":\"denied\",\"ad_storage\":\"denied\",\"ad_user_data\":\"denied\",\"ad_personalization\":\"denied\"}"],["cookieConsents","{\"required\":true,\"linkedin\":true,\"googleAnalytics\":false,\"googleAdsense\":false,\"facebook\":false,\"comfort\":false,\"personalization\":false}"],["hasConsented","{\"hasConsented\":true,\"timestamp\":1}"],["cookieOptions","{\"essential\":true,\"analytics\":false,\"socialMedia\":true}"],["cookiePreferences","allow-required"],["cookie-consent","{\"name\":\"cookie-consent\",\"default\":false,\"date\":\"$currentDate$\",\"permissions\":{\"ad_personalization\":\"denied\",\"ad_storage\":\"denied\",\"ad_user_data\":\"denied\",\"analytics_storage\":\"denied\",\"personalization_storage\":\"denied\",\"functionality_storage\":\"granted\",\"security_storage\":\"granted\"}}"],["privacySettings","{\"consent\":true,\"additionalSettings\":{\"preferences\":true,\"statistics\":false,\"marketing\":false},\"version\":2}"]];
+const hostnamesMap = new Map([["express.co.uk",0],["carvertical.com",1],["easyfind.ch",2],["dlnews.com",3],["komoot.com",4],["screen.studio",5],["vivantis.*",6],["vivantis-shop.at",6],["krasa.cz",6],["spv.no",7],["vr.fi",8],["forums.tomsguide.com",[9,10]],["online.depo-diy.ee",11],["auf1.tv",12],["steuerbot.com",13],["vadhander.hogakusten.com",14],["vadhander.kramfors.se",14],["monkeytype.com",15],["wesendit.com",16],["onelink.to",17],["linasmatkasse.se",18],["veikkaus.fi",19],["deltaforce.garena.com",20],["imusic.*",21],["feedbutler.app",22],["app.solit-kapital.de",23],["lachainemeteo.com",24],["alan.com",25],["primor.eu",26],["manta.net",27],["login.flex.paychex.com",28],["solvia.es",29],["terviseportaal.ee",30],["vreden.de",31],["if-cdn.com",32],["cnmaarthouse.de",33],["adventisten.de",34],["hopetv.de",34],["soprema.es",35],["luminousindia.com",36],["21vek.by",[37,64,65]],["auto.nl",38],["eurobaustoff.com",39],["weather.com",40],["wedding.pl",41],["speedtest.vodafone.de",42],["interactivebrokers.*",43],["florence.com.tr",44],["bestdrive.fi",45],["bestdrive.no",45],["crumblcookies.com",46],["stadtwerke-heidenheim.de",47],["vivenu-tickets-usa.sailgp.com",48],["aelia.pl",49],["erli.pl",50],["smartphonehoesjes.nl",51],["ploonk.fr",51],["handyhuellen.de",51],["spaseekers.com",52],["superwatchman.com",53],["statech.*",[54,55]],["ebz-business-school.de",[56,57]],["neonet.pl",58],["wildernesshotels.fi",59],["incomeshares.com",60],["germany.travel",61],["townsmith.de",62],["pointomega.de",63],["iracing.com",66],["passes.com",67],["surnamedb.com",68],["puravita.ch",69],["imu.nl",70],["slankmetlinda.nl",70],["choircompany.nl",70],["capaciteitentestoefenen.com",70],["thehuddle.nl",70],["borgch.nl",70],["mcnetiq.nl",70],["gasterijkruisberg.nl",70],["skinnyminds.nl",70],["dewit-elektro.nl",70],["enluse.com",70],["back2front.be",70],["fortressgroup.nl",70],["wel-com.nl",70],["huispromotie.nl",70],["automathoogeveen.nl",70],["icverpleegkundige.com",70],["jenrmarketing.nl",70],["technotrafficcontrol.nl",70],["iclas.org",70],["evac.nl",71],["prenatal.nl",71],["pizzadelight-menu.co.uk",72],["clipix.com",73],["signalrgb.com",74],["beatsperminuteonline.com",75],["tavaratalohurrikaani.fi",76],["ioplus.nl",77],["versteigerungspool.de",78],["banja-tellig.de",79],["adultfriendfinder.com",80],["phoenix.de",81],["epochtimes.fr",82],["archiveofourown.org",83],["nomorobo.com",84],["beststuff.hu",85],["evernote.com",86],["zipair.net",87],["nuvomagazine.com",88],["steirerjobs.at",89],["arredabook.it",90],["condok.org",90],["dietz-motoren.de",90],["lahella.fi",91],["cloud.samsungsds.com",92],["kabasakalonline.com",93],["pizzahut.fi",94]]);
+const exceptionsMap = new Map([["logistics.vr.fi",[8]]]);
+const hasEntities = true;
+const hasAncestors = false;
 
-const todoIndices = new Set();
-const tonotdoIndices = [];
-
-// Exceptions
-if ( exceptionsMap.size !== 0 ) {
-    for ( let i = 0; i < hnpartslen; i++ ) {
-        const hn = hnParts.slice(i).join('.');
-        const excepted = exceptionsMap.get(hn);
-        if ( excepted ) { tonotdoIndices.push(...excepted); }
-    }
-    exceptionsMap.clear();
-}
-
-// Hostname-based
-if ( hostnamesMap.size !== 0 ) {
-    const collectArgIndices = hn => {
-        let argsIndices = hostnamesMap.get(hn);
-        if ( argsIndices === undefined ) { return; }
-        if ( typeof argsIndices === 'number' ) { argsIndices = [ argsIndices ]; }
+const collectArgIndices = (hn, map, out) => {
+    let argsIndices = map.get(hn);
+    if ( argsIndices === undefined ) { return; }
+    if ( typeof argsIndices !== 'number' ) {
         for ( const argsIndex of argsIndices ) {
-            if ( tonotdoIndices.includes(argsIndex) ) { continue; }
-            todoIndices.add(argsIndex);
+            out.add(argsIndex);
         }
-    };
-    for ( let i = 0; i < hnpartslen; i++ ) {
-        const hn = hnParts.slice(i).join('.');
-        collectArgIndices(hn);
+    } else {
+        out.add(argsIndices);
     }
-    collectArgIndices('*');
-    hostnamesMap.clear();
-}
+};
 
-// Entity-based
-if ( entitiesMap.size !== 0 ) {
-    const n = hnpartslen - 1;
-    for ( let i = 0; i < n; i++ ) {
-        for ( let j = n; j > i; j-- ) {
-            const en = hnParts.slice(i,j).join('.');
-            let argsIndices = entitiesMap.get(en);
-            if ( argsIndices === undefined ) { continue; }
-            if ( typeof argsIndices === 'number' ) { argsIndices = [ argsIndices ]; }
-            for ( const argsIndex of argsIndices ) {
-                if ( tonotdoIndices.includes(argsIndex) ) { continue; }
-                todoIndices.add(argsIndex);
+const indicesFromHostname = (hostname, suffix = '') => {
+    const hnParts = hostname.split('.');
+    const hnpartslen = hnParts.length;
+    if ( hnpartslen === 0 ) { return; }
+    for ( let i = 0; i < hnpartslen; i++ ) {
+        const hn = `${hnParts.slice(i).join('.')}${suffix}`;
+        collectArgIndices(hn, hostnamesMap, todoIndices);
+        collectArgIndices(hn, exceptionsMap, tonotdoIndices);
+    }
+    if ( hasEntities ) {
+        const n = hnpartslen - 1;
+        for ( let i = 0; i < n; i++ ) {
+            for ( let j = n; j > i; j-- ) {
+                const en = `${hnParts.slice(i,j).join('.')}.*${suffix}`;
+                collectArgIndices(en, hostnamesMap, todoIndices);
+                collectArgIndices(en, exceptionsMap, tonotdoIndices);
             }
         }
     }
-    entitiesMap.clear();
+};
+
+const entries = (( ) => {
+    const docloc = document.location;
+    const origins = [ docloc.origin ];
+    if ( docloc.ancestorOrigins ) {
+        origins.push(...docloc.ancestorOrigins);
+    }
+    return origins.map((origin, i) => {
+        const beg = origin.lastIndexOf('://');
+        if ( beg === -1 ) { return; }
+        const hn = origin.slice(beg+3)
+        const end = hn.indexOf(':');
+        return { hn: end === -1 ? hn : hn.slice(0, end), i };
+    }).filter(a => a !== undefined);
+})();
+if ( entries.length === 0 ) { return; }
+
+const todoIndices = new Set();
+const tonotdoIndices = new Set();
+
+indicesFromHostname(entries[0].hn);
+if ( hasAncestors ) {
+    for ( const entry of entries ) {
+        if ( entry.i === 0 ) { continue; }
+        indicesFromHostname(entry.hn, '>>');
+    }
 }
 
 // Apply scriplets
 for ( const i of todoIndices ) {
+    if ( tonotdoIndices.has(i) ) { continue; }
     try { trustedSetLocalStorageItem(...argsList[i]); }
-    catch(ex) {}
+    catch { }
 }
-argsList.length = 0;
-
-/******************************************************************************/
-
-};
-// End of code to inject
-
-/******************************************************************************/
-
-uBOL_trustedSetLocalStorageItem();
 
 /******************************************************************************/
 
 // End of local scope
 })();
-
-/******************************************************************************/
 
 void 0;

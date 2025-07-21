@@ -19,11 +19,17 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-import { dnr } from './ext.js';
+import { dnr, normalizeDNRRules } from './ext-compat.js';
+import { browser } from './ext.js';
 
 /******************************************************************************/
 
-export const isSideloaded = dnr.onRuleMatchedDebug instanceof Object;
+const isModern = dnr.onRuleMatchedDebug instanceof Object;
+
+export const isSideloaded = (( ) => {
+    const { permissions } = browser.runtime.getManifest();
+    return permissions?.includes('declarativeNetRequestFeedback') ?? false;
+})();
 
 /******************************************************************************/
 
@@ -42,9 +48,8 @@ matchedRules.fill(null);
 let writePtr = 0;
 
 const pruneLongLists = list => {
-    if ( list.length <= 21 ) { return list; }
-    return [ ...list.slice(0, 10), '...', ...list.slice(-10) ];
-    
+    if ( list.length <= 11 ) { return list; }
+    return [ ...list.slice(0, 5), '...', ...list.slice(-5) ];
 };
 
 const getRuleset = async rulesetId => {
@@ -57,7 +62,11 @@ const getRuleset = async rulesetId => {
     } else {
         const response = await fetch(`/rulesets/main/${rulesetId}.json`).catch(( ) => undefined);
         if ( response === undefined ) { return; }
-        rules = await response.json().catch(( ) => undefined);
+        rules = await response.json().catch(( ) =>
+            undefined
+        ).then(rules =>
+            normalizeDNRRules(rules)
+        );
     }
     if ( Array.isArray(rules) === false ) { return; }
     const ruleset = new Map();
@@ -89,21 +98,35 @@ const getRuleDetails = async ruleInfo => {
 /******************************************************************************/
 
 export const getMatchedRules = (( ) => {
-    const noopFn = ( ) => Promise.resolve([]);
-    if ( isSideloaded !== true ) { return noopFn; }
+    if ( isSideloaded !== true ) {
+        return ( ) => Promise.resolve([]);
+    }
+
+    if ( isModern ) {
+        return async tabId => {
+            const promises = [];
+            for ( let i = 0; i < bufferSize; i++ ) {
+                const j = (writePtr + i) % bufferSize;
+                const ruleInfo = matchedRules[j];
+                if ( ruleInfo === null ) { continue; }
+                if ( ruleInfo.request.tabId !== -1 ) {
+                    if ( ruleInfo.request.tabId !== tabId ) { continue; }
+                }
+                const promise = getRuleDetails(ruleInfo);
+                if ( promise === undefined ) { continue; }
+                promises.unshift(promise);
+            }
+            return Promise.all(promises);
+        };
+    }
 
     return async tabId => {
+        if ( typeof dnr.getMatchedRules !== 'function' ) { return []; }
+        const matchedRules = await dnr.getMatchedRules({ tabId });
+        if ( matchedRules instanceof Object === false ) { return []; }
         const promises = [];
-        for ( let i = 0; i < bufferSize; i++ ) {
-            const j = (writePtr + i) % bufferSize;
-            const ruleInfo = matchedRules[j];
-            if ( ruleInfo === null ) { continue; }
-            if ( ruleInfo.request.tabId !== -1 ) {
-                if ( ruleInfo.request.tabId !== tabId ) { continue; }
-            }
-            const promise = getRuleDetails(ruleInfo);
-            if ( promise === undefined ) { continue; }
-            promises.unshift(promise);
+        for ( const { tabId, rule } of matchedRules.rulesMatchedInfo ) {
+            promises.push(getRuleDetails({ request: { tabId }, rule }));
         }
         return Promise.all(promises);
     };
@@ -118,6 +141,7 @@ const matchedRuleListener = ruleInfo => {
 
 export const toggleDeveloperMode = state => {
     if ( isSideloaded !== true ) { return; }
+    if ( isModern === false ) { return; } 
     if ( state ) {
         dnr.onRuleMatchedDebug.addListener(matchedRuleListener);
     } else {

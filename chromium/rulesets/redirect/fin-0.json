@@ -2,41 +2,23 @@
 {
  "action": {
   "redirect": {
-   "extensionPath": "/web_accessible_resources/noop.txt"
+   "extensionPath": "/web_accessible_resources/noop-0.1s.mp3"
   },
   "type": "redirect"
  },
  "condition": {
   "initiatorDomains": [
-   "telsu.fi"
-  ],
-  "resourceTypes": [
-   "xmlhttprequest"
-  ],
-  "urlFilter": "||adservice.google.com/adsid/integrator.js"
- },
- "id": 1,
- "priority": 11
-},
-{
- "action": {
-  "redirect": {
-   "extensionPath": "/web_accessible_resources/noop.txt"
-  },
-  "type": "redirect"
- },
- "condition": {
-  "initiatorDomains": [
-   "puhekupla.com"
+   "ruutu.fi"
   ],
   "requestDomains": [
-   "doubleclick.net"
+   "freewheel-jitt.sanoma.fi",
+   "sanoma-prod.integration-x.com"
   ],
   "resourceTypes": [
-   "xmlhttprequest"
+   "media"
   ]
  },
- "id": 2,
+ "id": 1,
  "priority": 11
 },
 {
@@ -56,29 +38,7 @@
   ],
   "urlFilter": "||cloudfront.net/creatives/assets/*.mp4"
  },
- "id": 3,
- "priority": 11
-},
-{
- "action": {
-  "redirect": {
-   "extensionPath": "/web_accessible_resources/noop-0.1s.mp3"
-  },
-  "type": "redirect"
- },
- "condition": {
-  "initiatorDomains": [
-   "ruutu.fi"
-  ],
-  "requestDomains": [
-   "freewheel-jitt.sanoma.fi",
-   "sanoma-prod.integration-x.com"
-  ],
-  "resourceTypes": [
-   "media"
-  ]
- },
- "id": 4,
+ "id": 2,
  "priority": 11
 },
 {
@@ -98,7 +58,64 @@
   ],
   "urlFilter": "||nelonenmedia-pmd-ads-*.nm-stream.nelonenmedia.fi^"
  },
+ "id": 3,
+ "priority": 11
+},
+{
+ "action": {
+  "redirect": {
+   "extensionPath": "/web_accessible_resources/noop.txt"
+  },
+  "type": "redirect"
+ },
+ "condition": {
+  "initiatorDomains": [
+   "telsu.fi"
+  ],
+  "resourceTypes": [
+   "xmlhttprequest"
+  ],
+  "urlFilter": "||adservice.google.com/adsid/integrator.js"
+ },
+ "id": 4,
+ "priority": 11
+},
+{
+ "action": {
+  "redirect": {
+   "extensionPath": "/web_accessible_resources/noop.txt"
+  },
+  "type": "redirect"
+ },
+ "condition": {
+  "initiatorDomains": [
+   "puhekupla.com"
+  ],
+  "resourceTypes": [
+   "xmlhttprequest"
+  ],
+  "urlFilter": "||doubleclick.net^"
+ },
  "id": 5,
+ "priority": 11
+},
+{
+ "action": {
+  "redirect": {
+   "extensionPath": "/web_accessible_resources/noop-0.1s.mp3"
+  },
+  "type": "redirect"
+ },
+ "condition": {
+  "initiatorDomains": [
+   "totalvene.fi"
+  ],
+  "resourceTypes": [
+   "media"
+  ],
+  "urlFilter": "/adverts/*.mp4"
+ },
+ "id": 6,
  "priority": 11
 }
 ]

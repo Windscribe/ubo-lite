@@ -21,18 +21,12 @@
 
 import { browser, sendMessage } from './ext.js';
 import { dom, qs$ } from './dom.js';
-import punycode from './punycode.js';
+import { hashFromIterable } from './dashboard.js';
 import { renderFilterLists } from './filter-lists.js';
 
 /******************************************************************************/
 
 let cachedRulesetData = {};
-
-/******************************************************************************/
-
-function hashFromIterable(iter) {
-    return Array.from(iter).sort().join('\n');
-}
 
 /******************************************************************************/
 
@@ -53,7 +47,6 @@ function renderWidgets() {
     }
 
     renderDefaultMode();
-    renderTrustedSites();
 
     qs$('#autoReload input[type="checkbox"]').checked = cachedRulesetData.autoReload;
 
@@ -69,18 +62,16 @@ function renderWidgets() {
 
     {
         const input = qs$('#strictBlockMode input[type="checkbox"]');
-        const canStrictBlock = cachedRulesetData.defaultFilteringMode > 1;
+        const canStrictBlock = cachedRulesetData.hasOmnipotence;
         input.checked = canStrictBlock && cachedRulesetData.strictBlockMode;
         dom.attr(input, 'disabled', canStrictBlock ? null : '');
     }
 
     {
-        dom.prop('#developerMode input[type="checkbox"]', 'checked',
-            Boolean(cachedRulesetData.developerMode)
-        );
-        if ( cachedRulesetData.isSideloaded ) {
-            dom.attr('#developerMode', 'hidden', null);
-        }
+        const state = Boolean(cachedRulesetData.developerMode) &&
+            cachedRulesetData.disabledFeatures?.includes('develop') !== true;
+        dom.body.dataset.develop = `${state}`;
+        dom.prop('#developerMode input[type="checkbox"]', 'checked', state);
     }
 }
 
@@ -102,17 +93,23 @@ async function onFilteringModeChange(ev) {
     const newLevel = parseInt(input.value, 10);
 
     switch ( newLevel ) {
-    case 1: { // Revoke broad permissions
-        // await browser.permissions.remove({
-        //     origins: [ '<all_urls>' ]
-        // });
-        cachedRulesetData.defaultFilteringMode = 1;
+    // case 1: { // Revoke broad permissions
+    //     // await browser.permissions.remove({
+    //     //     origins: [ '<all_urls>' ]
+    //     // });
+    //     cachedRulesetData.defaultFilteringMode = 1;
+    case 1: {
+        const actualLevel = await sendMessage({
+            what: 'setDefaultFilteringMode',
+            level: newLevel,
+        });
+        cachedRulesetData.defaultFilteringMode = actualLevel;
         break;
     }
     case 2:
-    case 3: { // Request broad permissions
+    case 3: {
         const granted = await browser.permissions.request({
-            origins: [ '<all_urls>' ]
+            origins: [ '<all_urls>' ],
         });
         if ( granted ) {
             const actualLevel = await sendMessage({
@@ -120,6 +117,7 @@ async function onFilteringModeChange(ev) {
                 level: newLevel,
             });
             cachedRulesetData.defaultFilteringMode = actualLevel;
+            cachedRulesetData.hasOmnipotence = true;
         }
         break;
     }
@@ -161,49 +159,10 @@ dom.on('#strictBlockMode input[type="checkbox"]', 'change', ev => {
 });
 
 dom.on('#developerMode input[type="checkbox"]', 'change', ev => {
-    sendMessage({
-        what: 'setDeveloperMode',
-        state: ev.target.checked,
-    });
+    const state = ev.target.checked;
+    sendMessage({ what: 'setDeveloperMode', state });
+    dom.body.dataset.develop = `${state}`;
 });
-
-/******************************************************************************/
-
-function renderTrustedSites() {
-    const textarea = qs$('#trustedSites');
-    const hostnames = cachedRulesetData.trustedSites || [];
-    textarea.value = hostnames.map(hn => punycode.toUnicode(hn)).join('\n');
-    if ( textarea.value !== '' ) {
-        textarea.value += '\n';
-    }
-}
-
-function changeTrustedSites() {
-    const hostnames = getStagedTrustedSites();
-    const hash = hashFromIterable(cachedRulesetData.trustedSites || []);
-    if ( hashFromIterable(hostnames) === hash ) { return; }
-    sendMessage({
-        what: 'setTrustedSites',
-        hostnames,
-    });
-}
-
-function getStagedTrustedSites() {
-    const textarea = qs$('#trustedSites');
-    return textarea.value.split(/\s/).map(hn => {
-        try {
-            return punycode.toASCII(
-                (new URL(`https://${hn}/`)).hostname
-            );
-        } catch(_) {
-        }
-        return '';
-    }).filter(hn => hn !== '');
-}
-
-dom.on('#trustedSites', 'blur', changeTrustedSites);
-
-self.addEventListener('beforeunload', changeTrustedSites);
 
 /******************************************************************************/
 
@@ -218,17 +177,9 @@ listen.onmessage = ev => {
     const local = cachedRulesetData;
     let render = false;
 
-    // Keep added sites which have not yet been committed
-    if ( message.trustedSites !== undefined ) {
-        if ( hashFromIterable(message.trustedSites) !== hashFromIterable(local.trustedSites) ) {
-            const current = new Set(local.trustedSites);
-            const staged = new Set(getStagedTrustedSites());
-            for ( const hn of staged ) {
-                if ( current.has(hn) === false ) { continue; }
-                staged.delete(hn);
-            }
-            const combined = Array.from(new Set([ ...message.trustedSites, ...staged ]));
-            local.trustedSites = combined;
+    if ( message.hasOmnipotence !== undefined ) {
+        if ( message.hasOmnipotence !== local.hasOmnipotence ) {
+            local.hasOmnipotence = message.hasOmnipotence;
             render = true;
         }
     }
@@ -257,6 +208,13 @@ listen.onmessage = ev => {
     if ( message.strictBlockMode !== undefined ) {
         if ( message.strictBlockMode !== local.strictBlockMode ) {
             local.strictBlockMode = message.strictBlockMode;
+            render = true;
+        }
+    }
+
+    if ( message.developerMode !== undefined ) {
+        if ( message.developerMode !== local.developerMode ) {
+            local.developerMode = message.developerMode;
             render = true;
         }
     }
@@ -292,7 +250,8 @@ sendMessage({
         renderFilterLists(cachedRulesetData);
         renderWidgets();
         dom.cl.remove(dom.body, 'loading');
-    } catch(ex) {
+    } catch(reason) {
+        console.error(reason);
     }
     listen();
 }).catch(reason => {

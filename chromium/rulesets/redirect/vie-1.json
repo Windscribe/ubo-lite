@@ -2,15 +2,15 @@
 {
  "action": {
   "redirect": {
-   "extensionPath": "/web_accessible_resources/noop-1s.mp4"
+   "extensionPath": "/web_accessible_resources/noop-0.1s.mp3"
   },
   "type": "redirect"
  },
  "condition": {
   "initiatorDomains": [
-   "phimreview.org"
+   "motchill96.com"
   ],
-  "urlFilter": "||phimreview.org/playergk/phimreview.mp4"
+  "urlFilter": "||motchill96.com/3s.m3u8"
  },
  "id": 1,
  "priority": 11
@@ -18,15 +18,15 @@
 {
  "action": {
   "redirect": {
-   "extensionPath": "/web_accessible_resources/noop-1s.mp4"
+   "extensionPath": "/web_accessible_resources/noop-0.1s.mp3"
   },
   "type": "redirect"
  },
  "condition": {
   "initiatorDomains": [
-   "thichxemphim1.net"
+   "mn.mediastation.live"
   ],
-  "urlFilter": "||thichxemphim1.net/fb88-28012023.mp4"
+  "urlFilter": "||static-mn-vnd.mediastation.live/template/*.mp4"
  },
  "id": 2,
  "priority": 11
@@ -34,32 +34,15 @@
 {
  "action": {
   "redirect": {
-   "extensionPath": "/web_accessible_resources/noop-0.1s.mp3"
+   "extensionPath": "/web_accessible_resources/noop-1s.mp4"
   },
   "type": "redirect"
  },
  "condition": {
   "initiatorDomains": [
-   "www.phimchaua.net"
+   "phe18.vip"
   ],
-  "urlFilter": "||www.phimchaua.net/3s.m3u8"
- },
- "id": 3,
- "priority": 11
-},
-{
- "action": {
-  "redirect": {
-   "extensionPath": "/web_accessible_resources/noop-0.1s.mp3"
-  },
-  "type": "redirect"
- },
- "condition": {
-  "initiatorDomains": [
-   "phevkl.to",
-   "viet69.ws"
-  ],
-  "urlFilter": "||i2.vlstorage.com/da88_1080p.mp4"
+  "urlFilter": "||henho24h.net/*.mp4"
  },
  "id": 4,
  "priority": 11
@@ -67,19 +50,15 @@
 {
  "action": {
   "redirect": {
-   "extensionPath": "/web_accessible_resources/noop.js"
+   "extensionPath": "/web_accessible_resources/noop-0.1s.mp3"
   },
   "type": "redirect"
  },
  "condition": {
   "initiatorDomains": [
-   "apkmoddone.com"
+   "xem15.net"
   ],
-  "resourceTypes": [
-   "script",
-   "xmlhttprequest"
-  ],
-  "urlFilter": "||alwingulla.com/88/tag.min.js"
+  "urlFilter": "||xem15.net/*.mp4"
  },
  "id": 5,
  "priority": 11

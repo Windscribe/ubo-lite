@@ -21,41 +21,18 @@
 {
  "action": {
   "redirect": {
-   "extensionPath": "/web_accessible_resources/noop.txt"
+   "extensionPath": "/web_accessible_resources/noop.css"
   },
   "type": "redirect"
  },
  "condition": {
   "initiatorDomains": [
-   "cinemo.hu"
+   "online-filmek.ac",
+   "online-filmek.me"
   ],
-  "resourceTypes": [
-   "xmlhttprequest"
-  ],
-  "urlFilter": "||pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+  "urlFilter": "||galaxypush.com/css/styles.min.css^"
  },
  "id": 2,
- "priority": 11
-},
-{
- "action": {
-  "redirect": {
-   "extensionPath": "/web_accessible_resources/noop.txt"
-  },
-  "type": "redirect"
- },
- "condition": {
-  "initiatorDomains": [
-   "cinemo.hu"
-  ],
-  "requestDomains": [
-   "sovrn.com"
-  ],
-  "resourceTypes": [
-   "xmlhttprequest"
-  ]
- },
- "id": 3,
- "priority": 11
+ "priority": 41
 }
 ]

@@ -5,30 +5,6 @@
    "transform": {
     "queryTransform": {
      "removeParams": [
-      "caid"
-     ]
-    }
-   }
-  },
-  "type": "redirect"
- },
- "condition": {
-  "resourceTypes": [
-   "main_frame",
-   "sub_frame",
-   "xmlhttprequest"
-  ],
-  "urlFilter": "||v.fwmrm.net/ad/g/1"
- },
- "id": 1,
- "priority": 2
-},
-{
- "action": {
-  "redirect": {
-   "transform": {
-    "queryTransform": {
-     "removeParams": [
       "browser"
      ]
     }
@@ -46,7 +22,31 @@
   ],
   "urlFilter": "&browser=mozillafirefox"
  },
- "id": 2,
+ "id": 1,
  "priority": 3
+},
+{
+ "action": {
+  "redirect": {
+   "transform": {
+    "queryTransform": {
+     "removeParams": [
+      "caid"
+     ]
+    }
+   }
+  },
+  "type": "redirect"
+ },
+ "condition": {
+  "resourceTypes": [
+   "main_frame",
+   "sub_frame",
+   "xmlhttprequest"
+  ],
+  "urlFilter": "||v.fwmrm.net/ad/g/1"
+ },
+ "id": 2,
+ "priority": 2
 }
 ]

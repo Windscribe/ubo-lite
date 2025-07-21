@@ -56,7 +56,7 @@
    "transform": {
     "queryTransform": {
      "removeParams": [
-      "autoplay"
+      "adType"
      ]
     }
    }
@@ -65,12 +65,12 @@
  },
  "condition": {
   "initiatorDomains": [
-   "expressen.se"
+   "tv4play.se"
   ],
   "resourceTypes": [
-   "sub_frame"
+   "xmlhttprequest"
   ],
-  "urlFilter": "?autoplay=true"
+  "urlFilter": "?adtype"
  },
  "id": 3,
  "priority": 3

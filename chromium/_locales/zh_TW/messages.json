@@ -19,6 +19,10 @@
     "message": "設定",
     "description": "appears as tab name in dashboard"
   },
+  "developPageName": {
+    "message": "開發",
+    "description": "appears as tab name in dashboard. Inspired from 'Develop' menu in Safari, see https://developer.apple.com/documentation/safari-developer-tools/develop-menu"
+  },
   "aboutPageName": {
     "message": "關於",
     "description": "appears as tab name in dashboard"
@@ -30,6 +34,10 @@
   "popupFilteringModeLabel": {
     "message": "過濾模式",
     "description": "Label in the popup panel for the current filtering mode"
+  },
+  "popupLocalToolsLabel": {
+    "message": "在此網站上",
+    "description": "Label in the popup panel for the local tools section"
   },
   "popupTipReport": {
     "message": "回報此網站的問題",
@@ -111,8 +119,12 @@
     "message": "將特定網站的過濾器問題回報至 <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code> 議題追蹤器</span>。<u>需要 GitHub 帳號。</u>.",
     "description": "First paragraph of 'Filter issues' section in Support pane"
   },
+  "supportS5H": {
+    "message": "疑難排解資訊",
+    "description": "Label of 'Troubleshooting information' section in 'Report a filter issue' page"
+  },
   "supportS6P1S1": {
-    "message": "為避免增加志願者的負擔，請先確認該問題被尚未被回報過。",
+    "message": "為避免增加志願者的負擔，請先確認此問題是否已被回報過。<b>請注意：</b>點選按鈕會將本頁的來源傳送到 GitHub。",
     "description": "A paragraph in the filter issue reporter section"
   },
   "supportFindSpecificButton": {
@@ -166,14 +178,6 @@
   "supportReportSpecificButton": {
     "message": "建立新報告",
     "description": "Text for button which open an external webpage in Support pane"
-  },
-  "firstRunSectionLabel": {
-    "message": "歡迎",
-    "description": "The header text for the welcome message section"
-  },
-  "firstRunDescription": {
-    "message": "您剛安裝了 uBO Lite。您可以在此處選擇會在所有網站上套用的預設過濾模式。\n\n預設情況下，選擇了<em>基礎</em>模式，因為其不需要讀取與變更資料的權限。若您信任 uBO Lite，您可以授予其讀取並變更在所有網站上資料的廣泛權限，以便為所有網站啟用進階過濾功能。",
-    "description": "Descriptive text shown at first install time only "
   },
   "defaultFilteringModeSectionLabel": {
     "message": "預設過濾模式",
@@ -237,7 +241,15 @@
   },
   "enableStrictBlockLegend": {
     "message": "前往潛在不良網站的導航將被阻止，您可以選擇是否繼續前往。",
+    "description": "Short description for a checkbox in the options page"
+  },
+  "developerModeLabel": {
+    "message": "開發人員模式",
     "description": "Label for a checkbox in the options page"
+  },
+  "developerModeLegend": {
+    "message": "啟用適合技術使用者使用的功能。",
+    "description": "Short description for a checkbox in the options page"
   },
   "findListsPlaceholder": {
     "message": "尋找清單",
@@ -278,5 +290,89 @@
   "strictblockProceed": {
     "message": "繼續",
     "description": "A button to navigate to the blocked page"
+  },
+  "zapperTipEnter": {
+    "message": "進入元素臨時移除模式",
+    "description": "Tooltip for the button used to enter zapper mode"
+  },
+  "zapperTipQuit": {
+    "message": "離開元素臨時移除模式",
+    "description": "Tooltip for the button used to exit zapper mode"
+  },
+  "pickerTipEnter": {
+    "message": "建立自訂過濾器",
+    "description": "Label for the menu entry to create cosmetic filters"
+  },
+  "unpickerTipEnter": {
+    "message": "移除自訂過濾器",
+    "description": "Label for the menu entry to delete cosmetic filters"
+  },
+  "developDropdownLabel": {
+    "message": "檢視：",
+    "description": "A label of a dropdown list"
+  },
+  "developOptionFilteringModeDetails": {
+    "message": "過濾模式詳細資訊",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionCustomDnrRules": {
+    "message": "自訂 DNR 規則",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionDnrRulesOf": {
+    "message": "DNR 規則……",
+    "description": "A section header in a dropdown list"
+  },
+  "developOptionDynamicRuleset": {
+    "message": "動態規則集",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionSessionRuleset": {
+    "message": "工作階段規則集",
+    "description": "An option in a dropdown list"
+  },
+  "saveButton": {
+    "message": "儲存",
+    "description": "Text for buttons used to save changes"
+  },
+  "revertButton": {
+    "message": "還原",
+    "description": "Text for buttons used to revert changes"
+  },
+  "importAndAppendButton": {
+    "message": "匯入並加入…",
+    "description": "Text for buttons used to import and append content"
+  },
+  "exportButton": {
+    "message": "匯出…",
+    "description": "Text for buttons used to export content"
+  },
+  "dnrRulesWarning": {
+    "message": "切勿新增來自不受信任來源的內容",
+    "description": "Short description of the DNR rules editor pane"
+  },
+  "dnrRulesCountInfo": {
+    "message": "已登錄規則數：{count}",
+    "description": "Short sentence to report the number of currently registered DNR rules"
+  },
+  "pickerSliderLabel": {
+    "message": "移動滑桿以選取最佳符合",
+    "description": "Label to describe the purpose of the slider"
+  },
+  "pickerPick": {
+    "message": "挑選",
+    "description": "Text for the button to re-enter element-picking mode"
+  },
+  "pickerPreview": {
+    "message": "預覽",
+    "description": "Text for the button to activate preview mode"
+  },
+  "pickerCreate": {
+    "message": "建立",
+    "description": "Text for the button to create the filter"
+  },
+  "unpickerUsage": {
+    "message": "選取下方的過濾器，突顯網頁中符合條件的元素。按一下回收桶可移除過濾器",
+    "description": "Summary description on how to use the tool to remove custom filters"
   }
 }

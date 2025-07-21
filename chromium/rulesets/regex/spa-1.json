@@ -18,19 +18,6 @@
  },
  "condition": {
   "initiatorDomains": [
-   "tvcanales.cf"
-  ],
-  "regexFilter": "qvncc.tvcanales.cf\\/js\\/[_-a-zA-Z0-9]{5,}.js"
- },
- "id": 2,
- "priority": 10
-},
-{
- "action": {
-  "type": "block"
- },
- "condition": {
-  "initiatorDomains": [
    "zubby.com"
   ],
   "regexFilter": "zubby.com\\/[a-z-]+-\\d+\\/\\?_=",
@@ -71,6 +58,22 @@
   ]
  },
  "id": 5,
+ "priority": 10
+},
+{
+ "action": {
+  "type": "block"
+ },
+ "condition": {
+  "initiatorDomains": [
+   "hunterscomics.com"
+  ],
+  "regexFilter": "^https:\\/\\/hunterscomics\\.com\\/wp-content\\/themes(\\/[a-f]{6}){2}\\.js\\?ver=",
+  "resourceTypes": [
+   "script"
+  ]
+ },
+ "id": 6,
  "priority": 10
 }
 ]

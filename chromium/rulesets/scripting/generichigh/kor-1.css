@@ -21,7 +21,6 @@
 
 /* kor-1 */
 
-[id^="div-gpt-ad"],
 a[href*="//ad-api.enuri.info/"],
 a[href*="//ad.planbplus.co.kr/"],
 a[href*="//adv.imadrep.co.kr/"],
@@ -29,7 +28,6 @@ a[href*="//click.soonwe.com/"],
 amp-ad,
 amp-embed,
 div[class^="__staxbn"],
-div[id^="div-gpt-"],
 div[id^="targetpushAd_"],
 iframe[src*=".clickmon.co.kr/"],
 iframe[src*=".contentsfeed.com/RealMedia/ads/"],
@@ -77,6 +75,7 @@ iframe[src*="//www.mediacategory.com/servlet/"],
 iframe[src*="//www.mobwithad.com/"],
 iframe[src*="/ad.bidrich.com/"],
 iframe[src*="://ad.ad4989.co.kr/"],
+iframe[src*="clickon.kr"],
 iframe[src*="https://media.adpnut.com/"],
 iframe[src*="veta.naver.com/fxshow?"],
 iframe[src^="https://ads-partners.coupang.com/"],

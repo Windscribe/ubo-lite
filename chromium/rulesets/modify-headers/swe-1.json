@@ -14,8 +14,7 @@
   "requestDomains": [
    "opulens.se",
    "skogsforum.se",
-   "sv.picmix.com",
-   "tripadvisor.se"
+   "sv.picmix.com"
   ],
   "resourceTypes": [
    "main_frame",
@@ -36,14 +35,12 @@
   "type": "modifyHeaders"
  },
  "condition": {
-  "requestDomains": [
-   "matorama.se"
-  ],
   "resourceTypes": [
    "main_frame",
    "sub_frame"
-  ]
+  ],
+  "urlFilter": "||matorama.se^"
  },
- "id": 1234
+ "id": 2
 }
 ]

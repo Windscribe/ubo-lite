@@ -19,6 +19,10 @@
     "message": "ਸੈਟਿੰਗਾਂ",
     "description": "appears as tab name in dashboard"
   },
+  "developPageName": {
+    "message": "Develop",
+    "description": "appears as tab name in dashboard. Inspired from 'Develop' menu in Safari, see https://developer.apple.com/documentation/safari-developer-tools/develop-menu"
+  },
   "aboutPageName": {
     "message": "ਇਸ ਬਾਰੇ",
     "description": "appears as tab name in dashboard"
@@ -30,6 +34,10 @@
   "popupFilteringModeLabel": {
     "message": "ਫਿਲਟਰ ਕਰਨ ਦਾ ਮੋਡ",
     "description": "Label in the popup panel for the current filtering mode"
+  },
+  "popupLocalToolsLabel": {
+    "message": "On this website",
+    "description": "Label in the popup panel for the local tools section"
   },
   "popupTipReport": {
     "message": "ਇਸ ਵੈੱਬਸਾਈਟ ਉੱਤੇ ਮਸਲੇ ਬਾਰੇ ਰਿਪੋਰਟ ਕਰੋ",
@@ -111,8 +119,12 @@
     "message": "Report filter issues with specific websites to the <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code> issue tracker</span>. <u>Requires a GitHub account.</u>",
     "description": "First paragraph of 'Filter issues' section in Support pane"
   },
+  "supportS5H": {
+    "message": "Troubleshooting information",
+    "description": "Label of 'Troubleshooting information' section in 'Report a filter issue' page"
+  },
   "supportS6P1S1": {
-    "message": "To avoid burdening volunteers with duplicate reports, please verify that the issue has not already been reported.",
+    "message": "To avoid burdening volunteers with duplicate reports, please verify that the issue has not already been reported. <b>Note:</b> clicking the button will cause the page's origin to be sent to GitHub.",
     "description": "A paragraph in the filter issue reporter section"
   },
   "supportFindSpecificButton": {
@@ -166,14 +178,6 @@
   "supportReportSpecificButton": {
     "message": "ਨਵੀਂ ਰਿਪੋਰਟ ਬਣਾਓ",
     "description": "Text for button which open an external webpage in Support pane"
-  },
-  "firstRunSectionLabel": {
-    "message": "ਜੀ ਆਇਆਂ ਨੂੰ",
-    "description": "The header text for the welcome message section"
-  },
-  "firstRunDescription": {
-    "message": "ਤੁਸੀਂ ਹੁਣੇ ਹੀ uBO Lite ਨੂੰ ਇੰਸਟਾਲ ਕੀਤਾ ਹੈ। ਤੁਸੀਂ ਸਾਰੀਆਂ ਵੈੱਬਸਾਈਟਾਂ ਲਈ ਵਰਤਣ ਵਾਸਤੇ ਮੂਲ ਫਿਲਟਰ ਕਰਨ ਦੇ ਢੰਗ ਨੂੰ ਚੁਣ ਸਕਦੇ ਹੋ।\n\nਮੂਲ ਰੂਪ ਵਿੱਚ <em>ਮੁੱਢਲਾ (Basic)</em> ਢੰਗ ਚੁਣਿਆ ਜਾਂਦਾ ਹੈ, ਕਿਉਂਕਿ ਇਸ ਵਾਸਤੇ ਡਾਟਾ ਪੜ੍ਹਨ ਅਤੇ ਸੋਧਣ ਲਈ ਕਿਸੇ ਵੀ ਮਨਜ਼ੂਰੀ ਦੀ ਲੋੜ ਨਹੀਂ ਹੁੰਦੀ ਹੈ। ਜੇ ਤੁਹਾਨੂੰ uBO Lite ਉੱਤੇ ਭਰੋਸਾ ਹੋਵੇ ਤਾਂ ਤੁਸੀਂ ਇਸ ਨੂੰ ਸਾਰੀਆਂ ਵੈੱਬਸਾਈਟਾਂ ਉੱਤੇ ਮੂਲ ਰੂਪ ਵਿੱਚ ਹੀ ਵੱਧ ਤਕਨੀਕੀ ਫਿਲਟਰ ਸਮਰੱਥਾ ਨੂੰ ਚਾਲੂ ਕਰਨ ਲਈ ਸਭ ਵੈੱਬਸਾਈਟਾਂ ਉੱਤੇ ਡਾਟਾ ਪੜ੍ਹਨ ਅਤੇ ਸੋਧਣ ਲਈ ਜਿਆਦਾ ਮਨਜ਼ੂਰੀ ਦੇ ਸਕਦੇ ਹੋ।",
-    "description": "Descriptive text shown at first install time only "
   },
   "defaultFilteringModeSectionLabel": {
     "message": "ਮੂਲ ਫਿਲਟਰ ਕਰਨ ਦਾ ਢੰਗ",
@@ -237,7 +241,15 @@
   },
   "enableStrictBlockLegend": {
     "message": "Navigation to potentially undesirable sites will be blocked, and you will be offered the option to proceed.",
+    "description": "Short description for a checkbox in the options page"
+  },
+  "developerModeLabel": {
+    "message": "Developer mode",
     "description": "Label for a checkbox in the options page"
+  },
+  "developerModeLegend": {
+    "message": "Enables access to features suitable for technical users.",
+    "description": "Short description for a checkbox in the options page"
   },
   "findListsPlaceholder": {
     "message": "Find lists",
@@ -278,5 +290,89 @@
   "strictblockProceed": {
     "message": "Proceed",
     "description": "A button to navigate to the blocked page"
+  },
+  "zapperTipEnter": {
+    "message": "Remove an element",
+    "description": "Tooltip for the button used to enter zapper mode"
+  },
+  "zapperTipQuit": {
+    "message": "Exit element zapper mode",
+    "description": "Tooltip for the button used to exit zapper mode"
+  },
+  "pickerTipEnter": {
+    "message": "Create a custom filter",
+    "description": "Label for the menu entry to create cosmetic filters"
+  },
+  "unpickerTipEnter": {
+    "message": "Remove a custom filter",
+    "description": "Label for the menu entry to delete cosmetic filters"
+  },
+  "developDropdownLabel": {
+    "message": "View:",
+    "description": "A label of a dropdown list"
+  },
+  "developOptionFilteringModeDetails": {
+    "message": "Filtering mode details",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionCustomDnrRules": {
+    "message": "Custom DNR rules",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionDnrRulesOf": {
+    "message": "DNR rules of …",
+    "description": "A section header in a dropdown list"
+  },
+  "developOptionDynamicRuleset": {
+    "message": "Dynamic ruleset",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionSessionRuleset": {
+    "message": "Session ruleset",
+    "description": "An option in a dropdown list"
+  },
+  "saveButton": {
+    "message": "Save",
+    "description": "Text for buttons used to save changes"
+  },
+  "revertButton": {
+    "message": "Revert",
+    "description": "Text for buttons used to revert changes"
+  },
+  "importAndAppendButton": {
+    "message": "Import and append…",
+    "description": "Text for buttons used to import and append content"
+  },
+  "exportButton": {
+    "message": "Export…",
+    "description": "Text for buttons used to export content"
+  },
+  "dnrRulesWarning": {
+    "message": "Do not add content from untrusted sources",
+    "description": "Short description of the DNR rules editor pane"
+  },
+  "dnrRulesCountInfo": {
+    "message": "Number of registered rules: {count}",
+    "description": "Short sentence to report the number of currently registered DNR rules"
+  },
+  "pickerSliderLabel": {
+    "message": "Move the slider to select the best match",
+    "description": "Label to describe the purpose of the slider"
+  },
+  "pickerPick": {
+    "message": "Pick",
+    "description": "Text for the button to re-enter element-picking mode"
+  },
+  "pickerPreview": {
+    "message": "Preview",
+    "description": "Text for the button to activate preview mode"
+  },
+  "pickerCreate": {
+    "message": "Create",
+    "description": "Text for the button to create the filter"
+  },
+  "unpickerUsage": {
+    "message": "Select a filter below to highlight matching elements in the webpage. Click the trash can to remove a filter.",
+    "description": "Summary description on how to use the tool to remove custom filters"
   }
 }

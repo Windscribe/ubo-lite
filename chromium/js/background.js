@@ -24,36 +24,53 @@ import {
     MODE_OPTIMAL,
     getDefaultFilteringMode,
     getFilteringMode,
-    getTrustedSites,
+    getFilteringModeDetails,
     setDefaultFilteringMode,
     setFilteringMode,
-    setTrustedSites,
+    setFilteringModeDetails,
     syncWithBrowserPermissions,
 } from './mode-manager.js';
 
 import {
-    adminRead,
-    browser,
-    dnr,
-    localRead, localRemove, localWrite,
-    runtime,
-    windows,
-} from './ext.js';
+    addCustomFilter,
+    hasCustomFilters,
+    injectCustomFilters,
+    removeCustomFilter,
+    selectorsFromCustomFilters,
+    uninjectCustomFilters,
+} from './filter-manager.js';
 
 import {
     adminReadEx,
     getAdminRulesets,
+    loadAdminConfig,
 } from './admin.js';
+
+import {
+    broadcastMessage,
+    gotoURL,
+    hasBroadHostPermissions,
+    hostnamesFromMatches,
+} from './utils.js';
+
+import {
+    browser,
+    localRead, localRemove, localWrite,
+    runtime,
+} from './ext.js';
 
 import {
     enableRulesets,
     excludeFromStrictBlock,
-    getEnabledRulesetsDetails,
+    getEffectiveDynamicRules,
+    getEffectiveSessionRules,
+    getEffectiveUserRules,
     getRulesetDetails,
     patchDefaultRulesets,
     setStrictBlockMode,
     updateDynamicRules,
     updateSessionRules,
+    updateUserRules,
 } from './ruleset-manager.js';
 
 import {
@@ -70,14 +87,17 @@ import {
     saveRulesetConfig,
 } from './config.js';
 
-import { broadcastMessage } from './utils.js';
+import { dnr } from './ext-compat.js';
 import { registerInjectables } from './scripting-manager.js';
+import { toggleToolbarIcon } from './action.js';
 
 /******************************************************************************/
 
-const UBOL_ORIGIN = runtime.getURL('').replace(/\/$/, '');
+const UBOL_ORIGIN = runtime.getURL('').replace(/\/$/, '').toLowerCase();
 
 const canShowBlockedCount = typeof dnr.setExtensionActionOptions === 'function';
+
+let pendingPermissionRequest;
 
 /******************************************************************************/
 
@@ -87,77 +107,69 @@ function getCurrentVersion() {
 
 /******************************************************************************/
 
-async function hasGreatPowers(origin) {
-    if ( /^https?:\/\//.test(origin) === false ) { return false; }
-    return browser.permissions.contains({
-        origins: [ `${origin}/*` ],
-    });
-}
-
-async function hasOmnipotence() {
-    const manifest = runtime.getManifest();
-    const hasOmnipotence = Array.isArray(manifest.host_permissions) &&
-        manifest.host_permissions.includes('<all_urls>');
-    if ( hasOmnipotence ) { return true; }
-    return browser.permissions.contains({
-        origins: [ '<all_urls>' ],
-    });
-}
-
 async function onPermissionsRemoved() {
-    const beforeMode = await getDefaultFilteringMode();
     const modified = await syncWithBrowserPermissions();
     if ( modified === false ) { return false; }
-    const afterMode = await getDefaultFilteringMode();
-    if ( beforeMode > MODE_BASIC && afterMode <= MODE_BASIC ) {
-        updateDynamicRules();
-    }
     registerInjectables();
     return true;
 }
 
-/******************************************************************************/
-
-async function gotoURL(url, type) {
-    const pageURL = new URL(url, runtime.getURL('/'));
-    const tabs = await browser.tabs.query({
-        url: pageURL.href,
-        windowType: type !== 'popup' ? 'normal' : 'popup'
-    });
-
-    if ( Array.isArray(tabs) && tabs.length !== 0 ) {
-        const { windowId, id } = tabs[0];
+// https://github.com/uBlockOrigin/uBOL-home/issues/280
+async function onPermissionsAdded(permissions) {
+    const details = pendingPermissionRequest;
+    pendingPermissionRequest = undefined;
+    if ( details === undefined ) {
+        const modified = await syncWithBrowserPermissions();
+        if ( modified === false ) { return; }
         return Promise.all([
-            browser.windows.update(windowId, { focused: true }),
-            browser.tabs.update(id, { active: true }),
+            updateSessionRules(),
+            registerInjectables(),
         ]);
     }
-
-    if ( type === 'popup' ) {
-        return windows.create({
-            type: 'popup',
-            url: pageURL.href,
-        });
+    const defaultMode = await getDefaultFilteringMode();
+    if ( defaultMode >= MODE_OPTIMAL ) { return; }
+    if ( Array.isArray(permissions.origins) === false ) { return; }
+    const hostnames = hostnamesFromMatches(permissions.origins);
+    if ( hostnames.includes(details.hostname) === false ) { return; }
+    const beforeLevel = await getFilteringMode(details.hostname);
+    if ( beforeLevel === details.afterLevel ) { return; }
+    const afterLevel = await setFilteringMode(details.hostname, details.afterLevel);
+    if ( afterLevel !== details.afterLevel ) { return; }
+    await registerInjectables();
+    if ( rulesetConfig.autoReload ) {
+        self.setTimeout(( ) => {
+            browser.tabs.update(details.tabId, {
+                url: details.url,
+            });
+        }, 437);
     }
+}
 
-    return browser.tabs.create({
-        active: true,
-        url: pageURL.href,
-    });
+/******************************************************************************/
+
+function setDeveloperMode(state) {
+    rulesetConfig.developerMode = state === true;
+    toggleDeveloperMode(rulesetConfig.developerMode);
+    broadcastMessage({ developerMode: rulesetConfig.developerMode });
+    return Promise.all([
+        updateUserRules(),
+        saveRulesetConfig(),
+    ]);
 }
 
 /******************************************************************************/
 
 function onMessage(request, sender, callback) {
 
+    const tabId = sender?.tab?.id ?? false;
+    const frameId = tabId && (sender?.frameId ?? false);
+
     // Does not require trusted origin.
 
     switch ( request.what ) {
 
     case 'insertCSS': {
-        const tabId = sender?.tab?.id ?? false;
-        const frameId = sender?.frameId ?? false;
-        if ( tabId === false || frameId === false ) { return; }
+        if ( frameId === false ) { return false; }
         browser.scripting.insertCSS({
             css: request.css,
             origin: 'USER',
@@ -168,6 +180,50 @@ function onMessage(request, sender, callback) {
         return false;
     }
 
+    case 'removeCSS': {
+        if ( frameId === false ) { return false; }
+        browser.scripting.removeCSS({
+            css: request.css,
+            origin: 'USER',
+            target: { tabId, frameIds: [ frameId ] },
+        }).catch(reason => {
+            console.log(reason);
+        });
+        return false;
+    }
+
+    case 'toggleToolbarIcon': {
+        if ( tabId ) {
+            toggleToolbarIcon(tabId);
+        }
+        return false;
+    }
+
+    case 'injectCustomFilters':
+        if ( frameId === false ) { return false; }
+        injectCustomFilters(tabId, frameId, request.hostname).then(selectors => {
+            callback(selectors);
+        });
+        return true;
+
+    case 'uninjectCustomFilters':
+        if ( frameId === false ) { return false; }
+        uninjectCustomFilters(tabId, frameId, request.hostname).then(( ) => {
+            callback();
+        });
+        return true;
+
+    case 'injectCSSProceduralAPI':
+        browser.scripting.executeScript({
+            files: [ '/js/scripting/css-procedural-api.js' ],
+            target: { tabId, frameIds: [ frameId ] },
+        }).catch(reason => {
+            console.log(reason);
+        }).then(( ) => {
+            callback();
+        });
+        return true;
+
     default:
         break;
     }
@@ -176,7 +232,9 @@ function onMessage(request, sender, callback) {
 
     // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/MessageSender
     //   Firefox API does not set `sender.origin`
-    if ( sender.origin !== undefined && sender.origin !== UBOL_ORIGIN ) { return; }
+    if ( sender.origin !== undefined ) {
+        if ( sender.origin.toLowerCase() !== UBOL_ORIGIN ) { return; }
+    }
 
     switch ( request.what ) {
 
@@ -194,26 +252,26 @@ function onMessage(request, sender, callback) {
         return true;
     }
 
-    case 'getOptionsPageData': {
+    case 'getOptionsPageData':
         Promise.all([
+            hasBroadHostPermissions(),
             getDefaultFilteringMode(),
-            getTrustedSites(),
             getRulesetDetails(),
             dnr.getEnabledRulesets(),
             getAdminRulesets(),
             adminReadEx('disabledFeatures'),
         ]).then(results => {
             const [
+                hasOmnipotence,
                 defaultFilteringMode,
-                trustedSites,
                 rulesetDetails,
                 enabledRulesets,
                 adminRulesets,
                 disabledFeatures,
             ] = results;
             callback({
+                hasOmnipotence,
                 defaultFilteringMode,
-                trustedSites: Array.from(trustedSites),
                 enabledRulesets,
                 adminRulesets,
                 maxNumberOfEnabledRulesets: dnr.MAX_NUMBER_OF_ENABLED_STATIC_RULESETS,
@@ -230,7 +288,12 @@ function onMessage(request, sender, callback) {
             process.firstRun = false;
         });
         return true;
-    }
+
+    case 'getRulesetDetails':
+        getRulesetDetails().then(rulesetDetails => {
+            callback(Array.from(rulesetDetails.values()));
+        });
+        return true;
 
     case 'setAutoReload':
         rulesetConfig.autoReload = request.state && true || false;
@@ -261,30 +324,26 @@ function onMessage(request, sender, callback) {
         return true;
 
     case 'setDeveloperMode':
-        rulesetConfig.developerMode = request.state;
-        toggleDeveloperMode(rulesetConfig.developerMode);
-        saveRulesetConfig().then(( ) => {
+        setDeveloperMode(request.state).then(( ) => {
             callback();
         });
         return true;
 
     case 'popupPanelData': {
         Promise.all([
+            hasBroadHostPermissions(),
             getFilteringMode(request.hostname),
-            hasOmnipotence(),
-            hasGreatPowers(request.origin),
-            getEnabledRulesetsDetails(),
             adminReadEx('disabledFeatures'),
+            hasCustomFilters(request.hostname),
         ]).then(results => {
             callback({
-                level: results[0],
+                hasOmnipotence: results[0],
+                level: results[1],
                 autoReload: rulesetConfig.autoReload,
-                hasOmnipotence: results[1],
-                hasGreatPowers: results[2],
-                rulesetDetails: results[3],
                 isSideloaded,
                 developerMode: rulesetConfig.developerMode,
-                disabledFeatures: results[4],
+                disabledFeatures: results[2],
+                hasCustomFilters: results[3],
             });
         });
         return true;
@@ -302,15 +361,19 @@ function onMessage(request, sender, callback) {
         break;
 
     case 'setFilteringMode': {
-        getFilteringMode(request.hostname).then(actualLevel => {
-            if ( request.level === actualLevel ) { return actualLevel; }
+        getFilteringMode(request.hostname).then(beforeLevel => {
+            if ( request.level === beforeLevel ) { return beforeLevel; }
             return setFilteringMode(request.hostname, request.level);
-        }).then(actualLevel => {
+        }).then(afterLevel => {
             registerInjectables();
-            callback(actualLevel);
+            callback(afterLevel);
         });
         return true;
     }
+
+    case 'setPendingFilteringMode':
+        pendingPermissionRequest = request;
+        break;
 
     case 'getDefaultFilteringMode': {
         getDefaultFilteringMode().then(level => {
@@ -319,34 +382,33 @@ function onMessage(request, sender, callback) {
         return true;
     }
 
-    case 'setDefaultFilteringMode': {
+    case 'setDefaultFilteringMode':
         getDefaultFilteringMode().then(beforeLevel =>
             setDefaultFilteringMode(request.level).then(afterLevel =>
                 ({ beforeLevel, afterLevel })
             )
         ).then(({ beforeLevel, afterLevel }) => {
-            if ( beforeLevel === 1 || afterLevel === 1 ) {
-                updateDynamicRules();
-            }
             if ( afterLevel !== beforeLevel ) {
                 registerInjectables();
             }
             callback(afterLevel);
         });
         return true;
-    }
 
-    case 'setTrustedSites':
-        setTrustedSites(request.hostnames).then(( ) => {
+    case 'getFilteringModeDetails':
+        getFilteringModeDetails(true).then(details => {
+            callback(details);
+        });
+        return true;
+
+    case 'setFilteringModeDetails':
+        setFilteringModeDetails(request.modes).then(( ) => {
             registerInjectables();
-            return Promise.all([
-                getDefaultFilteringMode(),
-                getTrustedSites(),
-            ]);
-        }).then(results => {
-            callback({
-                defaultFilteringMode: results[0],
-                trustedSites: Array.from(results[1]),
+            getDefaultFilteringMode().then(defaultFilteringMode => {
+                broadcastMessage({ defaultFilteringMode });
+            });
+            getFilteringModeDetails(true).then(details => {
+                callback(details);
             });
         });
         return true;
@@ -365,11 +427,59 @@ function onMessage(request, sender, callback) {
         return true;
 
     case 'showMatchedRules':
-        windows.create({
+        browser.windows.create({
             type: 'popup',
             url: `/matched-rules.html?tab=${request.tabId}`,
         });
         break;
+
+    case 'getEffectiveDynamicRules':
+        getEffectiveDynamicRules().then(result => {
+            callback(result);
+        });
+        return true;
+
+    case 'getEffectiveSessionRules':
+        getEffectiveSessionRules().then(result => {
+            callback(result);
+        });
+        return true;
+
+    case 'getEffectiveUserRules':
+        getEffectiveUserRules().then(result => {
+            callback(result);
+        });
+        return true;
+
+    case 'updateUserDnrRules':
+        updateUserRules().then(result => {
+            callback(result);
+        });
+        return true;
+
+    case 'addCustomFilter':
+        addCustomFilter(request.hostname, request.selector).then(modified => {
+            if ( modified !== true ) { return; }
+            return registerInjectables();
+        }).then(( ) => {
+            callback();
+        })
+        return true;
+
+    case 'removeCustomFilter':
+        removeCustomFilter(request.hostname, request.selector).then(modified => {
+            if ( modified !== true ) { return; }
+            return registerInjectables();
+        }).then(( ) => {
+            callback();
+        });
+        return true;
+
+    case 'selectorsFromCustomFilters':
+        selectorsFromCustomFilters(request.hostname).then(selectors => {
+            callback(selectors);
+        });
+        return true;
 
     default:
         break;
@@ -380,11 +490,37 @@ function onMessage(request, sender, callback) {
 
 /******************************************************************************/
 
-async function start() {
-    await loadRulesetConfig();
+function onCommand(command, tab) {
+    switch ( command ) {
+    case 'enter-zapper-mode': {
+        if ( browser.scripting === undefined ) { return; }
+        browser.scripting.executeScript({
+            files: [ '/js/scripting/tool-overlay.js', '/js/scripting/zapper.js' ],
+            target: { tabId: tab.id },
+        });
+        break;
+    }
+    case 'enter-picker-mode': {
+        if ( browser.scripting === undefined ) { return; }
+        browser.scripting.executeScript({
+            files: [ '/js/scripting/tool-overlay.js', '/js/scripting/picker.js' ],
+            target: { tabId: tab.id },
+        });
+        break;
+    }
+    default:
+        break;
+    }
+}
 
+/******************************************************************************/
+
+async function startSession() {
     const currentVersion = getCurrentVersion();
     const isNewVersion = currentVersion !== rulesetConfig.version;
+
+    // Admin settings override user settings
+    await loadAdminConfig();
 
     // The default rulesets may have changed, find out new ruleset to enable,
     // obsolete ruleset to remove.
@@ -395,80 +531,77 @@ async function start() {
         saveRulesetConfig();
     }
 
-    const rulesetsUpdated = process.wakeupRun === false &&
-        await enableRulesets(rulesetConfig.enabledRulesets);
+    const rulesetsUpdated = await enableRulesets(rulesetConfig.enabledRulesets);
 
     // We need to update the regex rules only when ruleset version changes.
     if ( rulesetsUpdated === false ) {
         if ( isNewVersion ) {
             updateDynamicRules();
-        } else if ( process.wakeupRun === false ) {
+        } else {
             updateSessionRules();
         }
     }
 
     // Permissions may have been removed while the extension was disabled
-    const permissionsChanged = await onPermissionsRemoved();
+    await syncWithBrowserPermissions();
 
     // Unsure whether the browser remembers correctly registered css/scripts
     // after we quit the browser. For now uBOL will check unconditionally at
     // launch time whether content css/scripts are properly registered.
-    if ( process.wakeupRun === false || permissionsChanged ) {
-        registerInjectables();
-
-        const enabledRulesets = await dnr.getEnabledRulesets();
-        ubolLog(`Enabled rulesets: ${enabledRulesets}`);
-
-        dnr.getAvailableStaticRuleCount().then(count => {
-            ubolLog(`Available static rule count: ${count}`);
-        });
-    }
+    registerInjectables();
 
     // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/declarativeNetRequest
     //   Firefox API does not support `dnr.setExtensionActionOptions`
-    if ( process.wakeupRun === false && canShowBlockedCount ) {
+   
+    if ( canShowBlockedCount ) {
         // dnr.setExtensionActionOptions({
         //     displayActionCountAsBadgeText: rulesetConfig.showBlockedCount,
         // });
     }
 
-    runtime.onMessage.addListener(onMessage);
-
-    browser.permissions.onRemoved.addListener(
-        ( ) => { onPermissionsRemoved(); }
-    );
-
+    // Switch to basic filtering if uBOL doesn't have broad permissions at
+    // install time.
     if ( process.firstRun ) {
-        const enableOptimal = await hasOmnipotence();
-        if ( enableOptimal ) {
-            const afterLevel = await setDefaultFilteringMode(MODE_OPTIMAL);
-            if ( afterLevel === MODE_OPTIMAL ) {
-                updateDynamicRules();
+        const enableOptimal = await hasBroadHostPermissions();
+        if ( enableOptimal === false ) {
+            const afterLevel = await setDefaultFilteringMode(MODE_BASIC);
+            if ( afterLevel === MODE_BASIC ) {
                 registerInjectables();
-                process.firstRun = false;
-            }
-        } else {
-            const disableFirstRunPage = await adminRead('disableFirstRunPage');
-            if ( disableFirstRunPage !== true ) {
-                // runtime.openOptionsPage();
-            } else {
                 process.firstRun = false;
             }
         }
         
     }
 
-    toggleDeveloperMode(rulesetConfig.developerMode);
-
-    // Required to ensure the up to date property is available when needed
-    if ( process.wakeupRun === false ) {
-        adminReadEx('disabledFeatures');
-    }
+    // Required to ensure up to date properties are available when needed
+    adminReadEx('disabledFeatures').then(items => {
+        if ( Array.isArray(items) === false ) { return; }
+        if ( items.includes('develop') ) {
+            if ( rulesetConfig.developerMode ) {
+                setDeveloperMode(false);
+            }
+        }
+    });
 }
+
+/******************************************************************************/
+
+async function start() {
+    await loadRulesetConfig();
+
+    if ( process.wakeupRun === false ) {
+        await startSession();
+    }
+
+    toggleDeveloperMode(rulesetConfig.developerMode);
+}
+
+/******************************************************************************/
 
 // https://github.com/uBlockOrigin/uBOL-home/issues/199
 // Force a restart of the extension once when an "internal error" occurs
-start().then(( ) => {
+
+const isFullyInitialized = start().then(( ) => {
     localRemove('goodStart');
     return false;
 }).catch(reason => {
@@ -484,4 +617,30 @@ start().then(( ) => {
 }).then(restart => {
     if ( restart !== true ) { return; }
     runtime.reload();
+});
+
+runtime.onMessage.addListener((request, sender, callback) => {
+    isFullyInitialized.then(( ) => {
+        const r = onMessage(request, sender, callback);
+        if ( r !== true ) { callback(); }
+    });
+    return true;
+});
+
+browser.permissions.onRemoved.addListener((...args) => {
+    isFullyInitialized.then(( ) => {
+        onPermissionsRemoved(...args);
+    });
+});
+
+browser.permissions.onAdded.addListener((...args) => {
+    isFullyInitialized.then(( ) => {
+        onPermissionsAdded(...args);
+    });
+});
+
+browser.commands.onCommand.addListener((...args) => {
+    isFullyInitialized.then(( ) => {
+        onCommand(...args);
+    });
 });

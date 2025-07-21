@@ -38,15 +38,16 @@
    "airport",
    "arcor.easybox",
    "aterm.me",
+   "belkin.range",
    "bthomehub.home",
    "bthub.home",
-   "cloudmesh.net",
    "congstar.box",
    "connect.box",
    "console.gl-inet.com",
    "dishy.starlink.com",
    "easy.box",
    "etxr",
+   "extender.belkin.com",
    "fire.walla",
    "fritz.box",
    "fritz.nas",
@@ -63,14 +64,18 @@
    "localbattle.net",
    "localhost",
    "mobile.hotspot",
+   "mwlogin.net",
    "my.keenetic.net",
    "my.router",
    "myfritz.box",
    "mygateway",
    "ntt.setup",
+   "orbilogin.com",
+   "orbilogin.net",
    "pi.hole",
    "repeater.asus.com",
    "router.asus.com",
+   "router.synology.com",
    "routerlogin.com",
    "routerlogin.net",
    "samsung.router",
@@ -113,36 +118,20 @@
 },
 {
  "action": {
-  "type": "block"
- },
- "condition": {
-  "domainType": "thirdParty",
-  "excludedInitiatorDomains": [
-   "0.0.0.0",
-   "127.0.0.1",
-   "[::1]",
-   "[::]",
-   "app.plex.tv",
-   "local",
-   "localhost"
-  ],
-  "requestDomains": [
-   "plex.direct"
-  ]
- },
- "id": 4,
- "priority": 10
-},
-{
- "action": {
   "type": "allow"
  },
  "condition": {
   "initiatorDomains": [
+   "bancobrasil.com.br",
    "bayernportal.de",
+   "bb.com.br",
+   "bradesco.com.br",
    "bund.de",
    "client.foldingathome.org",
+   "dell.com",
    "deutsche-rentenversicherung.de",
+   "driverhub.asus.com",
+   "filecrypt.co",
    "governikus.de",
    "intel.cn",
    "intel.co.id",
@@ -157,13 +146,12 @@
    "intel.vn",
    "mega.nz",
    "mv-serviceportal.de",
-   "organspende-register.de"
+   "organspende-register.de",
+   "pcsupport.lenovo.com"
   ],
-  "requestDomains": [
-   "127.0.0.1"
-  ]
+  "urlFilter": "||127.0.0.1^"
  },
- "id": 5,
+ "id": 4,
  "priority": 30
 },
 {
@@ -172,13 +160,12 @@
  },
  "condition": {
   "initiatorDomains": [
+   "apollographql.com",
    "deutsche-rentenversicherung.de"
   ],
-  "requestDomains": [
-   "localhost"
-  ]
+  "urlFilter": "||localhost^"
  },
- "id": 6,
+ "id": 5,
  "priority": 30
 },
 {
@@ -190,14 +177,12 @@
    "battlelog.battlefield.com",
    "figma.com"
   ],
-  "requestDomains": [
-   "127.0.0.1"
-  ],
   "resourceTypes": [
    "xmlhttprequest"
-  ]
+  ],
+  "urlFilter": "||127.0.0.1^"
  },
- "id": 7,
+ "id": 6,
  "priority": 30
 },
 {
@@ -208,14 +193,12 @@
   "initiatorDomains": [
    "www.faceit.com"
   ],
-  "requestDomains": [
-   "localhost"
-  ],
   "resourceTypes": [
    "websocket"
-  ]
+  ],
+  "urlFilter": "||localhost^"
  },
- "id": 8,
+ "id": 7,
  "priority": 30
 },
 {
@@ -227,11 +210,29 @@
   "initiatorDomains": [
    "musicbrainz.org"
   ],
-  "requestDomains": [
-   "127.0.0.1"
-  ]
+  "urlFilter": "||127.0.0.1^"
+ },
+ "id": 8,
+ "priority": 30
+},
+{
+ "action": {
+  "type": "block"
+ },
+ "condition": {
+  "domainType": "thirdParty",
+  "excludedInitiatorDomains": [
+   "0.0.0.0",
+   "127.0.0.1",
+   "[::1]",
+   "[::]",
+   "app.plex.tv",
+   "local",
+   "localhost"
+  ],
+  "urlFilter": "||plex.direct^"
  },
  "id": 9,
- "priority": 30
+ "priority": 10
 }
 ]

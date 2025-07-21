@@ -1,6 +1,11 @@
-*.bak
-*.pem
-/**/__pycache__/
 /build/
 /tmp/
 .DS_Store
+
+*.bak
+*.pem
+__pycache__/
+node_modules/
+
+.DS_Store
+xcuserdata/

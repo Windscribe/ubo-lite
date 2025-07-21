@@ -20,7 +20,7 @@
   "type": "block"
  },
  "condition": {
-  "regexFilter": "^(https?:\\/\\/)?[a-z]{10,12}\\.easy\\.co($|\\/.*$)",
+  "regexFilter": "^(https?:\\/\\/)?[a-z]{10,12}\\.easy\\.co(\\/.*)?$",
   "resourceTypes": [
    "main_frame"
   ]
@@ -34,7 +34,7 @@
  },
  "condition": {
   "domainType": "thirdParty",
-  "regexFilter": ":\\/\\/f\\.nordiskemedier\\.dk\\/2[a-z0-9]{12,}\\.(jpg|png|jpeg)"
+  "regexFilter": "^.*:\\/\\/f\\.nordiskemedier\\.dk\\/2[a-z0-9]{12,}\\.(jpe?g|png)((\\?|&).*)?$"
  },
  "id": 3,
  "priority": 10
@@ -58,16 +58,12 @@
 },
 {
  "action": {
-  "type": "allow"
+  "type": "block"
  },
  "condition": {
-  "domainType": "firstParty",
-  "regexFilter": "^https:\\/\\/www.gamer.no\\/[0-9a-f]{32,40}$",
-  "resourceTypes": [
-   "script"
-  ]
+  "regexFilter": "^(https?:\\/\\/)?hokaoneone[a-z0-9].*$"
  },
  "id": 5,
- "priority": 30
+ "priority": 10
 }
 ]

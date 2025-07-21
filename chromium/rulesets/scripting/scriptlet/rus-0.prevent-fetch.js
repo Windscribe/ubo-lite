@@ -20,42 +20,34 @@
 
 */
 
-/* eslint-disable indent */
-
 // ruleset: rus-0
-
-/******************************************************************************/
 
 // Important!
 // Isolate from global scope
 
 // Start of local scope
-(( ) => {
+(function uBOL_preventFetch() {
 
 /******************************************************************************/
 
-// Start of code to inject
-const uBOL_noFetchIf = function() {
+function preventFetch(...args) {
+    preventFetchFn(false, ...args);
+}
 
-const scriptletGlobals = {}; // eslint-disable-line
-
-const argsList = [["/buzzoola\\.com|plrjs\\.org/"],["doubleclick.net"],["rythm"],["/\\/apic\\//"]];
-
-const hostnamesMap = new Map([["volley.ru",0],["animix.lol",1],["ya.ru",2],["mail.ru",3]]);
-
-const entitiesMap = new Map([]);
-
-const exceptionsMap = new Map([["3igames.mail.ru",[3]],["account.mail.ru",[3]],["auto.mail.ru",[3]],["biz.mail.ru",[3]],["blog.mail.ru",[3]],["bonus.mail.ru",[3]],["calendar.mail.ru",[3]],["calls.mail.ru",[3]],["cloud.mail.ru",[3]],["connect.mail.ru",[3]],["deti.mail.ru",[3]],["dobro.mail.ru",[3]],["e.mail.ru",[3]],["finance.mail.ru",[3]],["gibdd.mail.ru",[3]],["health.mail.ru",[3]],["help.mail.ru",[3]],["hi-tech.mail.ru",[3]],["horo.mail.ru",[3]],["kino.mail.ru",[3]],["lady.mail.ru",[3]],["love.mail.ru",[3]],["mcs.mail.ru",[3]],["minigames.mail.ru",[3]],["my.mail.ru",[3]],["news.mail.ru",[3]],["o2.mail.ru",[3]],["octavius.mail.ru",[3]],["okminigames.mail.ru",[3]],["otvet.mail.ru",[3]],["pets.mail.ru",[3]],["player-smotri.mail.ru",[3]],["pogoda.mail.ru",[3]],["top.mail.ru",[3]],["touch.mail.ru",[3]],["tv.mail.ru",[3]],["vfokuse.mail.ru",[3]],["widgets.mail.ru",[3]]]);
-
-/******************************************************************************/
-
-function noFetchIf(
+function preventFetchFn(
+    trusted = false,
     propsToMatch = '',
     responseBody = '',
     responseType = ''
 ) {
     const safe = safeSelf();
-    const logPrefix = safe.makeLogPrefix('prevent-fetch', propsToMatch, responseBody, responseType);
+    const scriptletName = `${trusted ? 'trusted-' : ''}prevent-fetch`;
+    const logPrefix = safe.makeLogPrefix(
+        scriptletName,
+        propsToMatch,
+        responseBody,
+        responseType
+    );
     const needles = [];
     for ( const condition of safe.String_split.call(propsToMatch, /\s+/) ) {
         if ( condition === '' ) { continue; }
@@ -131,7 +123,7 @@ function noFetchIf(
         if ( proceed ) {
             return context.reflect();
         }
-        return Promise.resolve(generateContentFn(false, responseBody)).then(text => {
+        return Promise.resolve(generateContentFn(trusted, responseBody)).then(text => {
             safe.uboLog(logPrefix, `Prevented with response "${text}"`);
             const response = new Response(text, {
                 headers: {
@@ -306,10 +298,12 @@ function safeSelf() {
         'Object_defineProperties': Object.defineProperties.bind(Object),
         'Object_fromEntries': Object.fromEntries.bind(Object),
         'Object_getOwnPropertyDescriptor': Object.getOwnPropertyDescriptor.bind(Object),
+        'Object_hasOwn': Object.hasOwn.bind(Object),
         'RegExp': self.RegExp,
         'RegExp_test': self.RegExp.prototype.test,
         'RegExp_exec': self.RegExp.prototype.exec,
         'Request_clone': self.Request.prototype.clone,
+        'String': self.String,
         'String_fromCharCode': String.fromCharCode,
         'String_split': String.prototype.split,
         'XMLHttpRequest': self.XMLHttpRequest,
@@ -477,95 +471,83 @@ function safeSelf() {
 
 /******************************************************************************/
 
-const hnParts = [];
-try {
-    let origin = document.location.origin;
-    if ( origin === 'null' ) {
-        const origins = document.location.ancestorOrigins;
-        for ( let i = 0; i < origins.length; i++ ) {
-            origin = origins[i];
-            if ( origin !== 'null' ) { break; }
-        }
-    }
-    const pos = origin.lastIndexOf('://');
-    if ( pos === -1 ) { return; }
-    hnParts.push(...origin.slice(pos+3).split('.'));
-}
-catch(ex) { }
-const hnpartslen = hnParts.length;
-if ( hnpartslen === 0 ) { return; }
+const scriptletGlobals = {}; // eslint-disable-line
+const argsList = [["/_events/"],["/buzzoola\\.com|plrjs\\.org/"],["/mpsuadv\\.ru/"],["doubleclick.net"],["rythm_market"],["/\\/apic\\//"]];
+const hostnamesMap = new Map([["www.ukr.net",0],["volley.ru",1],["trychatgpt.ru",2],["animix.lol",3],["ya.ru",4],["mail.ru",5]]);
+const exceptionsMap = new Map([["3igames.mail.ru",[5]],["account.mail.ru",[5]],["auto.mail.ru",[5]],["biz.mail.ru",[5]],["blog.mail.ru",[5]],["bonus.mail.ru",[5]],["calendar.mail.ru",[5]],["calls.mail.ru",[5]],["cloud.mail.ru",[5]],["connect.mail.ru",[5]],["deti.mail.ru",[5]],["dobro.mail.ru",[5]],["e.mail.ru",[5]],["finance.mail.ru",[5]],["gibdd.mail.ru",[5]],["health.mail.ru",[5]],["help.mail.ru",[5]],["hi-tech.mail.ru",[5]],["horo.mail.ru",[5]],["kino.mail.ru",[5]],["lady.mail.ru",[5]],["love.mail.ru",[5]],["mcs.mail.ru",[5]],["minigames.mail.ru",[5]],["my.mail.ru",[5]],["news.mail.ru",[5]],["o2.mail.ru",[5]],["octavius.mail.ru",[5]],["okminigames.mail.ru",[5]],["otvet.mail.ru",[5]],["pets.mail.ru",[5]],["player-smotri.mail.ru",[5]],["pogoda.mail.ru",[5]],["top.mail.ru",[5]],["touch.mail.ru",[5]],["tv.mail.ru",[5]],["vfokuse.mail.ru",[5]],["widgets.mail.ru",[5]]]);
+const hasEntities = false;
+const hasAncestors = false;
 
-const todoIndices = new Set();
-const tonotdoIndices = [];
-
-// Exceptions
-if ( exceptionsMap.size !== 0 ) {
-    for ( let i = 0; i < hnpartslen; i++ ) {
-        const hn = hnParts.slice(i).join('.');
-        const excepted = exceptionsMap.get(hn);
-        if ( excepted ) { tonotdoIndices.push(...excepted); }
-    }
-    exceptionsMap.clear();
-}
-
-// Hostname-based
-if ( hostnamesMap.size !== 0 ) {
-    const collectArgIndices = hn => {
-        let argsIndices = hostnamesMap.get(hn);
-        if ( argsIndices === undefined ) { return; }
-        if ( typeof argsIndices === 'number' ) { argsIndices = [ argsIndices ]; }
+const collectArgIndices = (hn, map, out) => {
+    let argsIndices = map.get(hn);
+    if ( argsIndices === undefined ) { return; }
+    if ( typeof argsIndices !== 'number' ) {
         for ( const argsIndex of argsIndices ) {
-            if ( tonotdoIndices.includes(argsIndex) ) { continue; }
-            todoIndices.add(argsIndex);
+            out.add(argsIndex);
         }
-    };
-    for ( let i = 0; i < hnpartslen; i++ ) {
-        const hn = hnParts.slice(i).join('.');
-        collectArgIndices(hn);
+    } else {
+        out.add(argsIndices);
     }
-    collectArgIndices('*');
-    hostnamesMap.clear();
-}
+};
 
-// Entity-based
-if ( entitiesMap.size !== 0 ) {
-    const n = hnpartslen - 1;
-    for ( let i = 0; i < n; i++ ) {
-        for ( let j = n; j > i; j-- ) {
-            const en = hnParts.slice(i,j).join('.');
-            let argsIndices = entitiesMap.get(en);
-            if ( argsIndices === undefined ) { continue; }
-            if ( typeof argsIndices === 'number' ) { argsIndices = [ argsIndices ]; }
-            for ( const argsIndex of argsIndices ) {
-                if ( tonotdoIndices.includes(argsIndex) ) { continue; }
-                todoIndices.add(argsIndex);
+const indicesFromHostname = (hostname, suffix = '') => {
+    const hnParts = hostname.split('.');
+    const hnpartslen = hnParts.length;
+    if ( hnpartslen === 0 ) { return; }
+    for ( let i = 0; i < hnpartslen; i++ ) {
+        const hn = `${hnParts.slice(i).join('.')}${suffix}`;
+        collectArgIndices(hn, hostnamesMap, todoIndices);
+        collectArgIndices(hn, exceptionsMap, tonotdoIndices);
+    }
+    if ( hasEntities ) {
+        const n = hnpartslen - 1;
+        for ( let i = 0; i < n; i++ ) {
+            for ( let j = n; j > i; j-- ) {
+                const en = `${hnParts.slice(i,j).join('.')}.*${suffix}`;
+                collectArgIndices(en, hostnamesMap, todoIndices);
+                collectArgIndices(en, exceptionsMap, tonotdoIndices);
             }
         }
     }
-    entitiesMap.clear();
+};
+
+const entries = (( ) => {
+    const docloc = document.location;
+    const origins = [ docloc.origin ];
+    if ( docloc.ancestorOrigins ) {
+        origins.push(...docloc.ancestorOrigins);
+    }
+    return origins.map((origin, i) => {
+        const beg = origin.lastIndexOf('://');
+        if ( beg === -1 ) { return; }
+        const hn = origin.slice(beg+3)
+        const end = hn.indexOf(':');
+        return { hn: end === -1 ? hn : hn.slice(0, end), i };
+    }).filter(a => a !== undefined);
+})();
+if ( entries.length === 0 ) { return; }
+
+const todoIndices = new Set();
+const tonotdoIndices = new Set();
+
+indicesFromHostname(entries[0].hn);
+if ( hasAncestors ) {
+    for ( const entry of entries ) {
+        if ( entry.i === 0 ) { continue; }
+        indicesFromHostname(entry.hn, '>>');
+    }
 }
 
 // Apply scriplets
 for ( const i of todoIndices ) {
-    try { noFetchIf(...argsList[i]); }
-    catch(ex) {}
+    if ( tonotdoIndices.has(i) ) { continue; }
+    try { preventFetch(...argsList[i]); }
+    catch { }
 }
-argsList.length = 0;
-
-/******************************************************************************/
-
-};
-// End of code to inject
-
-/******************************************************************************/
-
-uBOL_noFetchIf();
 
 /******************************************************************************/
 
 // End of local scope
 })();
-
-/******************************************************************************/
 
 void 0;

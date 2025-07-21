@@ -19,13 +19,7 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/* jshint esversion:11 */
-
-'use strict';
-
 // ruleset: rou-1
-
-/******************************************************************************/
 
 // Important!
 // Isolate from global scope
@@ -33,16 +27,13 @@
 
 /******************************************************************************/
 
-const argsList = [["{\"selector\":\"html\",\"action\":[\"style\",\"overflow: auto !important;\"]}"],["{\"selector\":\"#header\",\"action\":[\"style\",\"position:static!important; top: 0 !important;\"]}","{\"selector\":\"#main_container\",\"action\":[\"style\",\"padding-top: 0 !important;\"]}","{\"selector\":\".header_nav\",\"action\":[\"style\",\"position:static !important;\"]}"],["{\"selector\":\"body\",\"action\":[\"style\",\"overflow: unset !important\"]}"]];
-
-const hostnamesMap = new Map([["litoraltv.ro",0],["cinemagia.ro",1],["epochtimes-romania.com",2]]);
-
-const entitiesMap = new Map(undefined);
-
-const exceptionsMap = new Map(undefined);
+const argsList = ["","{\"selector\":\".striped_table_row:has(> div > .multicolumndayproginnerad)\",\"action\":[\"style\",\"position: absolute;\"]}","{\"selector\":\"html\",\"action\":[\"style\",\"overflow: auto !important;\"]}","{\"selector\":\"#header\",\"action\":[\"style\",\"position:static!important; top: 0 !important;\"]}\n{\"selector\":\"#main_container\",\"action\":[\"style\",\"padding-top: 0 !important;\"]}\n{\"selector\":\".header_nav\",\"action\":[\"style\",\"position:static !important;\"]}"];
+const argsSeqs = [0,1,2,3];
+const hostnamesMap = new Map([["program-tv.ro",1],["litoraltv.ro",2],["cinemagia.ro",3]]);
+const hasEntities = false;
 
 self.declarativeImports = self.declarativeImports || [];
-self.declarativeImports.push({ argsList, hostnamesMap, entitiesMap, exceptionsMap });
+self.declarativeImports.push({ argsList, argsSeqs, hostnamesMap, hasEntities });
 
 /******************************************************************************/
 

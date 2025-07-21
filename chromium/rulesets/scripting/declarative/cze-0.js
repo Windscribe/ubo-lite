@@ -19,13 +19,7 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/* jshint esversion:11 */
-
-'use strict';
-
 // ruleset: cze-0
-
-/******************************************************************************/
 
 // Important!
 // Isolate from global scope
@@ -33,16 +27,13 @@
 
 /******************************************************************************/
 
-const argsList = [["{\"selector\":\"body\",\"action\":[\"style\",\"background-image: none !important; padding-top: 0 !important;\"]}"],["{\"selector\":\"div.body\",\"action\":[\"style\",\"padding-top: 0 !important;\"]}"],["{\"selector\":\"body\",\"action\":[\"style\",\"padding-top:0px !important;\"]}"],["{\"selector\":\".top_bg_content\",\"action\":[\"style\",\"top: 0px !important;\"]}"],["{\"selector\":\".headerbanner-wrapper\",\"action\":[\"style\",\"min-height: 0 !important;\"]}"],["{\"selector\":\"header.lsa\",\"action\":[\"style\",\"margin-top: 0 !important;\"]}"],["{\"selector\":\"#page_wrapper\",\"action\":[\"style\",\"cursor: auto !important;\"]}"],["{\"selector\":\".content\",\"action\":[\"style\",\"margin-top: 0px !important;\"]}"],["{\"selector\":\"#frs\",\"action\":[\"style\",\"margin-top: 100px !important;\"]}"],["{\"selector\":\"#martevax1\",\"action\":[\"style\",\"height:1px!important;overflow:hidden\"]}","{\"selector\":\"#martevax2\",\"action\":[\"style\",\"height:1px!important;overflow:hidden\"]}","{\"selector\":\"#martevax3\",\"action\":[\"style\",\"height:1px!important;overflow:hidden\"]}"],["{\"selector\":\"div.l-wrapper\",\"action\":[\"style\",\"padding-top: 0px !important;\"]}"],["{\"selector\":\"body\",\"action\":[\"style\",\"background:none !important;\"]}"],["{\"selector\":\"div[class=\\\"advertisement-item-container\\\"]\",\"action\":[\"style\",\"visibility: hidden !important;\"]}"],["{\"selector\":\"div.jeg_topbar\",\"action\":[\"style\",\"margin-bottom: 0px !important;\"]}"]];
-
-const hostnamesMap = new Map([["cdr.cz",0],["diit.cz",0],["csfd.cz",1],["csfd.sk",1],["epochaplus.cz",2],["kupi.cz",3],["letemsvetemapplem.eu",[4,5,6]],["samsungmagazine.eu",[4,5,6]],["androidmagazine.eu",[5,6]],["jablickar.cz",6],["prehrajto.cz",7],["sector.sk",8],["kinema.sk",8],["titulky.com",9],["uloz.to",10],["uschovna.cz",11],["vranovske.sk",12],["zing.cz",13]]);
-
-const entitiesMap = new Map(undefined);
-
-const exceptionsMap = new Map(undefined);
+const argsList = ["","{\"selector\":\"body\",\"action\":[\"style\",\"background-image: none !important; padding-top: 0 !important;\"]}","{\"selector\":\"div.body\",\"action\":[\"style\",\"padding-top: 0 !important;\"]}","{\"selector\":\"body\",\"action\":[\"style\",\"padding-top:0px !important;\"]}","{\"selector\":\".top_bg_content\",\"action\":[\"style\",\"top: 0px !important;\"]}","{\"selector\":\".headerbanner-wrapper\",\"action\":[\"style\",\"min-height: 0 !important;\"]}","{\"selector\":\"header.lsa\",\"action\":[\"style\",\"margin-top: 0 !important;\"]}","{\"selector\":\"#page_wrapper\",\"action\":[\"style\",\"cursor: auto !important;\"]}","{\"selector\":\".content\",\"action\":[\"style\",\"margin-top: 0px !important;\"]}","{\"selector\":\"#frs\",\"action\":[\"style\",\"margin-top: 100px !important;\"]}","{\"selector\":\".article-of-day-doxxbet-sponsor\",\"action\":[\"style\",\"background-color:black !important;background-image:none !important\"]}\n{\"selector\":\".main-block-3.section-ms-v-hokeji-2025 .block-title.main\",\"action\":[\"style\",\"padding-bottom:0 !important\"]}\n{\"selector\":\".main-block-3.section-ms-v-hokeji-2025\",\"action\":[\"style\",\"background-color:black !important;background-image:none !important\"]}\n{\"selector\":\".section-tiposbet-sponsor .main-block-3\",\"action\":[\"style\",\"background-color:red !important;background-image:none !important\"]}\n{\"selector\":\"main\",\"action\":[\"style\",\"background-color:white !important;background-image:none !important\"]}","{\"selector\":\"#head_c\",\"action\":[\"style\",\"margin-top: 0 !important;\"]}","{\"selector\":\"body\",\"action\":[\"style\",\"background:none !important;\"]}","{\"selector\":\"div[class=\\\"advertisement-item-container\\\"]\",\"action\":[\"style\",\"visibility: hidden !important;\"]}","{\"selector\":\"div.jeg_topbar\",\"action\":[\"style\",\"margin-bottom: 0px !important;\"]}"];
+const argsSeqs = [0,1,2,3,4,-5,-6,7,-6,7,7,8,9,10,11,12,13,14];
+const hostnamesMap = new Map([["cdr.cz",1],["diit.cz",1],["csfd.cz",2],["csfd.sk",2],["epochaplus.cz",3],["kupi.cz",4],["letemsvetemapplem.eu",5],["samsungmagazine.eu",5],["androidmagazine.eu",8],["jablickar.cz",10],["prehrajto.cz",11],["sector.sk",12],["kinema.sk",12],["sport.aktuality.sk",13],["titulky.com",14],["uschovna.cz",15],["vranovske.sk",16],["zing.cz",17]]);
+const hasEntities = false;
 
 self.declarativeImports = self.declarativeImports || [];
-self.declarativeImports.push({ argsList, hostnamesMap, entitiesMap, exceptionsMap });
+self.declarativeImports.push({ argsList, argsSeqs, hostnamesMap, hasEntities });
 
 /******************************************************************************/
 
