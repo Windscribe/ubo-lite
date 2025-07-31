@@ -695,8 +695,6 @@ const casesToUse = new Set([
 ])
 
 runtime.onMessage.addListener((request, sender, callback) => {
-  console.log('onMessage - ublock', request, sender, callback)
-
   if (casesToUse.has(request.what)) {
     isFullyInitialized.then(() => {
       const r = onMessage(request, sender, callback)
