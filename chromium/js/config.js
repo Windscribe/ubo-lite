@@ -30,7 +30,7 @@ export const rulesetConfig = {
     version: '',
     enabledRulesets: [],
     autoReload: true,
-    showBlockedCount: true,
+    showBlockedCount: false,
     strictBlockMode: true,
     developerMode: false,
     hasBroadHostPermissions: true,

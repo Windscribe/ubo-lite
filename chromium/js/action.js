@@ -40,7 +40,7 @@ function disableToolbarIcon(tabId) {
     if ( tabId !== undefined ) {
         details.tabId = tabId;
     }
-    browser.action.setIcon(details);
+    // browser.action.setIcon(details);
 }
 
 function enableToolbarIcon(tabId) {
@@ -55,16 +55,16 @@ function enableToolbarIcon(tabId) {
     if ( tabId !== undefined ) {
         details.tabId = tabId;
     }
-    browser.action.setIcon(details);
+    // browser.action.setIcon(details);
 }
 
 /******************************************************************************/
 
 export function toggleToolbarIcon(tabId) {
     if ( reverseMode ) {
-        enableToolbarIcon(tabId);
+        // enableToolbarIcon(tabId);
     } else {
-        disableToolbarIcon(tabId);
+        // disableToolbarIcon(tabId);
     }
 }
 
