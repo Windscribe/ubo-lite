@@ -705,7 +705,8 @@ runtime.onMessage.addListener((request, sender, callback) => {
     return true
   }
 
-  // otherwise do nothing
+  // Explicitly tell the browser we're not handling this message
+  return false
 })
 
 browser.permissions.onRemoved.addListener((...args) => {
