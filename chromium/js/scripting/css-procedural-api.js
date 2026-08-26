@@ -23,19 +23,11 @@
 // Isolate from global scope
 (function uBOL_cssProceduralAPI() {
 
-if ( self.cssProceduralAPI !== undefined ) {
-    if ( self.cssProceduralAPI instanceof Promise === false ) { return; }
+if ( self.ProceduralFiltererAPI !== undefined ) {
+    if ( self.ProceduralFiltererAPI instanceof Promise === false ) { return; }
 }
 
 /******************************************************************************/
-
-const uBOL_injectCSS = css => {
-    chrome.runtime.sendMessage({
-        what: 'insertCSS',
-        css,
-    }).catch(( ) => {
-    });
-};
 
 const nonVisualElements = {
     head: true,
@@ -55,11 +47,21 @@ const regexFromString = (s, exact = false) => {
     return new RegExp(exact ? `^${reStr}$` : reStr);
 };
 
+const randomToken = ( ) => {
+    const n = Math.random();
+    return String.fromCharCode(n * 25 + 97) +
+        Math.floor(
+            (0.25 + n * 0.75) * Number.MAX_SAFE_INTEGER
+        ).toString(36).slice(-8);
+};
+
 /******************************************************************************/
 
 // 'P' stands for 'Procedural'
 
 class PSelectorTask {
+    destructor() {
+    }
     begin() {
     }
     end() {
@@ -69,7 +71,7 @@ class PSelectorTask {
 /******************************************************************************/
 
 class PSelectorVoidTask extends PSelectorTask {
-    constructor(task) {
+    constructor(filterer, task) {
         super();
         console.info(`uBO: :${task[0]}() operator does not exist`);
     }
@@ -80,7 +82,7 @@ class PSelectorVoidTask extends PSelectorTask {
 /******************************************************************************/
 
 class PSelectorHasTextTask extends PSelectorTask {
-    constructor(task) {
+    constructor(filterer, task) {
         super();
         this.needle = regexFromString(task[1]);
     }
@@ -94,26 +96,26 @@ class PSelectorHasTextTask extends PSelectorTask {
 /******************************************************************************/
 
 class PSelectorIfTask extends PSelectorTask {
-    constructor(task) {
+    constructor(filterer, task) {
         super();
-        this.pselector = new PSelector(task[1]);
+        this.pselector = new PSelector(filterer, task[1]);
     }
     transpose(node, output) {
         if ( this.pselector.test(node) === this.target ) {
             output.push(node);
         }
     }
+    target = true;
 }
-PSelectorIfTask.prototype.target = true;
 
 class PSelectorIfNotTask extends PSelectorIfTask {
+    target = false;
 }
-PSelectorIfNotTask.prototype.target = false;
 
 /******************************************************************************/
 
 class PSelectorMatchesAttrTask extends PSelectorTask {
-    constructor(task) {
+    constructor(filterer, task) {
         super();
         this.reAttr = regexFromString(task[1].attr, true);
         this.reValue = regexFromString(task[1].value, true);
@@ -132,7 +134,7 @@ class PSelectorMatchesAttrTask extends PSelectorTask {
 /******************************************************************************/
 
 class PSelectorMatchesCSSTask extends PSelectorTask {
-    constructor(task) {
+    constructor(filterer, task) {
         super();
         this.name = task[1].name;
         this.pseudo = task[1].pseudo ? `::${task[1].pseudo}` : null;
@@ -150,15 +152,15 @@ class PSelectorMatchesCSSTask extends PSelectorTask {
     }
 }
 class PSelectorMatchesCSSAfterTask extends PSelectorMatchesCSSTask {
-    constructor(task) {
-        super(task);
+    constructor(filterer, task) {
+        super(filterer, task);
         this.pseudo = '::after';
     }
 }
 
 class PSelectorMatchesCSSBeforeTask extends PSelectorMatchesCSSTask {
-    constructor(task) {
-        super(task);
+    constructor(filterer, task) {
+        super(filterer, task);
         this.pseudo = '::before';
     }
 }
@@ -166,26 +168,32 @@ class PSelectorMatchesCSSBeforeTask extends PSelectorMatchesCSSTask {
 /******************************************************************************/
 
 class PSelectorMatchesMediaTask extends PSelectorTask {
-    constructor(task) {
+    constructor(filterer, task) {
         super();
+        this.filterer = filterer;
         this.mql = window.matchMedia(task[1]);
         if ( this.mql.media === 'not all' ) { return; }
-        this.mql.addEventListener('change', ( ) => {
-            const { proceduralFilterer } = self.cssProceduralAPI;
-            if ( proceduralFilterer instanceof Object === false ) { return; }
-            proceduralFilterer.uBOL_DOMChanged();
-        });
+        this.boundHandler = this.handler.bind(this);
+        this.mql.addEventListener('change', this.boundHandler);
+    }
+    destructor() {
+        super.destructor();
+        this.mql.removeEventListener('change', this.boundHandler);
     }
     transpose(node, output) {
         if ( this.mql.matches === false ) { return; }
         output.push(node);
+    }
+    handler() {
+        if ( this.filterer instanceof Object === false ) { return; }
+        this.filterer.uBOL_DOMChanged();
     }
 }
 
 /******************************************************************************/
 
 class PSelectorMatchesPathTask extends PSelectorTask {
-    constructor(task) {
+    constructor(filterer, task) {
         super();
         this.needle = regexFromString(
             task[1].replace(/\P{ASCII}/gu, s => encodeURIComponent(s))
@@ -201,7 +209,7 @@ class PSelectorMatchesPathTask extends PSelectorTask {
 /******************************************************************************/
 
 class PSelectorMatchesPropTask extends PSelectorTask {
-    constructor(task) {
+    constructor(filterer, task) {
         super();
         this.props = task[1].attr.split('.');
         this.reValue = task[1].value !== ''
@@ -227,7 +235,7 @@ class PSelectorMatchesPropTask extends PSelectorTask {
 /******************************************************************************/
 
 class PSelectorMinTextLengthTask extends PSelectorTask {
-    constructor(task) {
+    constructor(filterer, task) {
         super();
         this.min = task[1];
     }
@@ -298,7 +306,7 @@ class PSelectorOthersTask extends PSelectorTask {
 /******************************************************************************/
 
 class PSelectorShadowTask extends PSelectorTask {
-    constructor(task) {
+    constructor(filterer, task) {
         super();
         this.selector = task[1];
     }
@@ -332,7 +340,7 @@ class PSelectorShadowTask extends PSelectorTask {
 // https://github.com/AdguardTeam/ExtendedCss/issues/31#issuecomment-302391277
 //   Prepend `:scope ` if needed.
 class PSelectorSpathTask extends PSelectorTask {
-    constructor(task) {
+    constructor(filterer, task) {
         super();
         this.spath = task[1];
         this.nth = /^(?:\s*[+~]|:)/.test(this.spath);
@@ -368,7 +376,7 @@ class PSelectorSpathTask extends PSelectorTask {
 /******************************************************************************/
 
 class PSelectorUpwardTask extends PSelectorTask {
-    constructor(task) {
+    constructor(filterer, task) {
         super();
         const arg = task[1];
         if ( typeof arg === 'number' ) {
@@ -394,15 +402,16 @@ class PSelectorUpwardTask extends PSelectorTask {
         }
         output.push(node);
     }
+    i = 0;
+    s = '';
 }
-PSelectorUpwardTask.prototype.i = 0;
-PSelectorUpwardTask.prototype.s = '';
 
 /******************************************************************************/
 
 class PSelectorWatchAttrs extends PSelectorTask {
-    constructor(task) {
+    constructor(filterer, task) {
         super();
+        this.filterer = filterer;
         this.observer = null;
         this.observed = new WeakSet();
         this.observerOptions = {
@@ -414,17 +423,22 @@ class PSelectorWatchAttrs extends PSelectorTask {
             this.observerOptions.attributeFilter = task[1];
         }
     }
-    // TODO: Is it worth trying to re-apply only the current selector?
-    handler() {
-        const { proceduralFilterer } = self.cssProceduralAPI;
-        if ( proceduralFilterer instanceof Object === false ) { return; }
-        proceduralFilterer.uBOL_DOMChanged();
+    destructor() {
+        super.destructor();
+        if ( this.observer ) {
+            this.observer.takeRecords();
+            this.observer.disconnect();
+            this.observer = null;
+        }
     }
     transpose(node, output) {
         output.push(node);
+        if ( this.filterer instanceof Object === false ) { return; }
         if ( this.observed.has(node) ) { return; }
         if ( this.observer === null ) {
-            this.observer = new MutationObserver(this.handler);
+            this.observer = new MutationObserver(( ) => {
+                this.filterer.uBOL_DOMChanged();
+            });
         }
         this.observer.observe(node, this.observerOptions);
         this.observed.add(node);
@@ -434,7 +448,7 @@ class PSelectorWatchAttrs extends PSelectorTask {
 /******************************************************************************/
 
 class PSelectorXpathTask extends PSelectorTask {
-    constructor(task) {
+    constructor(filterer, task) {
         super();
         this.xpe = document.createExpression(task[1], null);
         this.xpr = null;
@@ -458,16 +472,21 @@ class PSelectorXpathTask extends PSelectorTask {
 /******************************************************************************/
 
 class PSelector {
-    constructor(o) {
+    constructor(filterer, o) {
         this.selector = o.selector;
         this.tasks = [];
         const tasks = [];
         if ( Array.isArray(o.tasks) === false ) { return; }
         for ( const task of o.tasks ) {
-            const ctor = this.operatorToTaskMap.get(task[0]) || PSelectorVoidTask;
-            tasks.push(new ctor(task));
+            const ctor = PSelector.operatorToTaskMap.get(task[0]) || PSelectorVoidTask;
+            tasks.push(new ctor(filterer, task));
         }
         this.tasks = tasks;
+    }
+    destructor() {
+        for ( const task of this.tasks ) {
+            task.destructor();
+        }
     }
     prime(input) {
         const root = input || document;
@@ -514,34 +533,34 @@ class PSelector {
         }
         return false;
     }
+    static operatorToTaskMap = new Map([
+        [ 'has', PSelectorIfTask ],
+        [ 'has-text', PSelectorHasTextTask ],
+        [ 'if', PSelectorIfTask ],
+        [ 'if-not', PSelectorIfNotTask ],
+        [ 'matches-attr', PSelectorMatchesAttrTask ],
+        [ 'matches-css', PSelectorMatchesCSSTask ],
+        [ 'matches-css-after', PSelectorMatchesCSSAfterTask ],
+        [ 'matches-css-before', PSelectorMatchesCSSBeforeTask ],
+        [ 'matches-media', PSelectorMatchesMediaTask ],
+        [ 'matches-path', PSelectorMatchesPathTask ],
+        [ 'matches-prop', PSelectorMatchesPropTask ],
+        [ 'min-text-length', PSelectorMinTextLengthTask ],
+        [ 'not', PSelectorIfNotTask ],
+        [ 'others', PSelectorOthersTask ],
+        [ 'shadow', PSelectorShadowTask ],
+        [ 'spath', PSelectorSpathTask ],
+        [ 'upward', PSelectorUpwardTask ],
+        [ 'watch-attr', PSelectorWatchAttrs ],
+        [ 'xpath', PSelectorXpathTask ],
+    ]);
 }
-PSelector.prototype.operatorToTaskMap = new Map([
-    [ 'has', PSelectorIfTask ],
-    [ 'has-text', PSelectorHasTextTask ],
-    [ 'if', PSelectorIfTask ],
-    [ 'if-not', PSelectorIfNotTask ],
-    [ 'matches-attr', PSelectorMatchesAttrTask ],
-    [ 'matches-css', PSelectorMatchesCSSTask ],
-    [ 'matches-css-after', PSelectorMatchesCSSAfterTask ],
-    [ 'matches-css-before', PSelectorMatchesCSSBeforeTask ],
-    [ 'matches-media', PSelectorMatchesMediaTask ],
-    [ 'matches-path', PSelectorMatchesPathTask ],
-    [ 'matches-prop', PSelectorMatchesPropTask ],
-    [ 'min-text-length', PSelectorMinTextLengthTask ],
-    [ 'not', PSelectorIfNotTask ],
-    [ 'others', PSelectorOthersTask ],
-    [ 'shadow', PSelectorShadowTask ],
-    [ 'spath', PSelectorSpathTask ],
-    [ 'upward', PSelectorUpwardTask ],
-    [ 'watch-attr', PSelectorWatchAttrs ],
-    [ 'xpath', PSelectorXpathTask ],
-]);
 
 /******************************************************************************/
 
 class PSelectorRoot extends PSelector {
-    constructor(o) {
-        super(o);
+    constructor(filterer, o) {
+        super(filterer, o);
         this.budget = 200; // I arbitrary picked a 1/5 second
         this.raw = o.raw;
         this.cost = 0;
@@ -569,17 +588,39 @@ class PSelectorRoot extends PSelector {
 class ProceduralFilterer {
     constructor() {
         this.selectors = [];
-        this.masterToken = this.randomToken();
         this.styleTokenMap = new Map();
         this.styledNodes = new Set();
         this.timer = undefined;
         this.hideStyle = 'display:none!important;';
     }
 
+    async reset() {
+        if ( this.timer ) {
+            self.cancelAnimationFrame(this.timer);
+            this.timer = undefined;
+        }
+        for ( const pselector of this.selectors.values() ) {
+            pselector.destructor();
+        }
+        this.selectors.length = 0;
+        const promises = [];
+        for ( const [ style, token ] of this.styleTokenMap ) {
+            for ( const elem of this.styledNodes ) {
+                elem.removeAttribute(token);
+            }
+            const css = `[${token}]\n{${style}}\n`;
+            promises.push(
+                chrome.runtime.sendMessage({ what: 'removeCSS', css }).catch(( ) => { })
+            );
+        }
+        this.styleTokenMap.clear();
+        this.styledNodes.clear();
+        return Promise.all(promises);
+    }
+
     addSelectors(selectors) {
-        for ( const json of selectors ) {
-            const selector = JSON.parse(json);
-            const pselector = new PSelectorRoot(selector);
+        for ( const selector of selectors ) {
+            const pselector = new PSelectorRoot(this, selector);
             this.primeProceduralSelector(pselector);
             this.selectors.push(pselector);
         }
@@ -637,9 +678,9 @@ class ProceduralFilterer {
         if ( style === undefined ) { return; }
         let styleToken = this.styleTokenMap.get(style);
         if ( styleToken !== undefined ) { return styleToken; }
-        styleToken = this.randomToken();
+        styleToken = randomToken();
         this.styleTokenMap.set(style, styleToken);
-        uBOL_injectCSS(`[${this.masterToken}][${styleToken}]\n{${style}}\n`);
+        self.cssAPI.insert(`[${styleToken}]\n{${style}}\n`);
         return styleToken;
     }
 
@@ -654,7 +695,6 @@ class ProceduralFilterer {
                 arg === '' ? this.hideStyle : arg
             );
             for ( const node of nodes ) {
-                node.setAttribute(this.masterToken, '');
                 node.setAttribute(styleToken, '');
                 this.styledNodes.add(node);
             }
@@ -693,22 +733,14 @@ class ProceduralFilterer {
         }
     }
 
-    // TODO: Current assumption is one style per hit element. Could be an
-    //       issue if an element has multiple styling and one styling is
-    //       brought back. Possibly too rare to care about this for now.
     unprocessNodes(nodes) {
+        const tokens = Array.from(this.styleTokenMap.values());
         for ( const node of nodes ) {
             if ( this.styledNodes.has(node) ) { continue; }
-            node.removeAttribute(this.masterToken);
+            for ( const token of tokens ) {
+                node.removeAttribute(token);
+            }
         }
-    }
-
-    randomToken() {
-        const n = Math.random();
-        return String.fromCharCode(n * 25 + 97) +
-            Math.floor(
-                (0.25 + n * 0.75) * Number.MAX_SAFE_INTEGER
-            ).toString(36).slice(-8);
     }
 
     uBOL_DOMChanged() {
@@ -722,10 +754,75 @@ class ProceduralFilterer {
 
 /******************************************************************************/
 
-self.cssProceduralAPI = {
-    proceduralFilterer: null,
-    domObserver: null,
-    addSelectors(selectors) {
+self.ProceduralFiltererAPI = class {
+    constructor() {
+        this.cssSheets = new Set();
+        this.proceduralFilterer = null;
+        this.domObserver = null;
+    }
+
+    async reset() {
+        if ( this.domObserver ) {
+            this.domObserver.takeRecords();
+            this.domObserver.disconnect();
+            this.domObserver = null;
+        }
+        const promises = [];
+        if ( this.proceduralFilterer ) {
+            promises.push(this.proceduralFilterer.reset());
+            this.proceduralFilterer = null;
+        }
+        for ( const css of this.cssSheets ) {
+            promises.push(
+                chrome.runtime.sendMessage({ what: 'removeCSS', css }).catch(( ) => { })
+            );
+        }
+        this.cssSheets.clear();
+        await Promise.all(promises);
+    }
+
+    addDeclaratives(selectors) {
+        const cssRuleFromProcedural = details => {
+            const { tasks, action } = details;
+            let mq, selector;
+            if ( Array.isArray(tasks) ) {
+                if ( tasks[0][0] !== 'matches-media' ) { return; }
+                mq = tasks[0][1];
+                if ( tasks.length > 2 ) { return; }
+                if ( tasks.length === 2 ) {
+                    if ( tasks[1][0] !== 'spath' ) { return; }
+                    selector = tasks[1][1];
+                }
+            }
+            let style;
+            if ( Array.isArray(action) ) {
+                if ( action[0] !== 'style' ) { return; }
+                selector = selector || details.selector;
+                style = action[1];
+            }
+            if ( mq === undefined && style === undefined && selector === undefined ) { return; }
+            if ( mq === undefined ) {
+                return `${selector}\n{${style}}`;
+            }
+            if ( style === undefined ) {
+                return `@media ${mq} {\n${selector}\n{display:none!important;}\n}`;
+            }
+            return `@media ${mq} {\n${selector}\n{${style}}\n}`;
+        };
+        const sheetText = [];
+        for ( const details of selectors ) {
+            const ruleText = cssRuleFromProcedural(details);
+            if ( ruleText === undefined ) { continue; }
+            sheetText.push(ruleText);
+        }
+        if ( sheetText.length === 0 ) { return; }
+        const cssSheet = sheetText.join('\n');
+        if ( this.cssSheets.has(cssSheet) ) { return; }
+        this.cssSheets.add(cssSheet);
+        self.cssAPI.insert(cssSheet);
+    }
+
+    addProcedurals(selectors) {
         if ( this.proceduralFilterer === null ) {
             this.proceduralFilterer = new ProceduralFilterer();
         }
@@ -733,14 +830,22 @@ self.cssProceduralAPI = {
             this.domObserver = new MutationObserver(mutations => {
                 this.onDOMChanged(mutations);
             });
-            this.domObserver.observe(document, {
-                childList: true,
-                subtree: true,
-            });
+            this.domObserver.observe(document, { childList: true, subtree: true });
         }
         this.proceduralFilterer.addSelectors(selectors);
         this.proceduralFilterer.uBOL_commit();
-    },
+    }
+
+    qsa(selector) {
+        const o = JSON.parse(selector);
+        if ( o.cssable ) {
+            const selector = o.selector.replace(/::[a-z()-]+$/, '');
+            return Array.from(document.querySelectorAll(selector));
+        }
+        const pselector = new PSelectorRoot(null, o);
+        return pselector.exec();
+    }
+
     onDOMChanged(mutations) {
         for ( const mutation of mutations ) {
             for ( const added of mutation.addedNodes ) {
@@ -752,13 +857,11 @@ self.cssProceduralAPI = {
                 return this.proceduralFilterer.uBOL_DOMChanged();
             }
         }
-    },
+    }
 };
 
 /******************************************************************************/
 
 })();
-
-/******************************************************************************/
 
 void 0;

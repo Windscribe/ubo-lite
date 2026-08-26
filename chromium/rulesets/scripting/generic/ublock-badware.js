@@ -25,62 +25,16 @@
 // Isolate from global scope
 (function uBOL_cssGenericImport() {
 
-/******************************************************************************/
+const lowlyGeneric = new Map(/* 38 */[[25377,"html[lang] > body.ishome > div.adult + main.main"],[62925,".buttonautocl"],[29781,"body.user-clicked[style=\"cursor: auto;\"] > #root > .app-container"],[59372,"body > .main-wrapper > .main-content > .intro > #checkbox-window"],[23774,"div.card > div#cbRow.checkbox-row[onclick=\"startVerify()\"]"],[40573,"html > #bw-cf-root"],[54745,"body > .page > #mainVerifyRow,\nbody > .page > .verify-row"],[49696,"html.canvas > body.wp-singular + div[popover=\"manual\"]"],[53167,"#uc-cf-overlay"],[42259,"#turnstile[onclick=\"handleClick()\"]"],[44425,"body > .content-wrapper > .cf-wrap"],[19011,"#cmdTextDisplay,\n#cmdTextDisplay ~ *"],[23432,".btn-primary[onclick=\"showVerification()\"]"],[45503,".cta-button[onclick=\"openUpdateModal()\"]"],[19703,"#captchaBox"],[51063,"#mainBtn[onclick=\"startVerify()\"]"],[59950,"#ipBar + .main"],[25775,".wp-singular > div[data-sm][style*=\"2147483647\"] > iframe[style*=\"100%\"][allow*=\"clipboard-write\"]"],[47790,"html[lang] > body:not([class]):not([id]):not([style]) > div.background-container > div.container > div.captcha-box,\nbody > div[data-captcha-enable=\"true\"] > div.cleanslate[id^=\"google-captcha-\"] > div.captcha-box"],[35240,"html[lang] > body.startnew > div#sections > section#section_uname"],[47874,"html[lang] > body:not([style]) > div.captchaBody"],[5312,"html[lang] > body#body > * > div.cv-xwrapper > div.cvc > div.cv-inner"],[8320,"html[lang] > body#body > * > div.cvh.BlockClicksActivityBusy"],[15418,"html#html[sti][vic][lang] > body#allbody"],[58039,"html > body > div.container.m-p > #checkbox-window.checkbox-window,\nhtml > body > div.container > form#unsubscribe-form[onsubmit=\"submitUnsubscribeForm(event)\"]"],[27111,".fkrc-verifywin-window"],[32034,".fkrc-checkbox-window"],[40698,"html[lang] > body:not([class]):not([id]):not([style]) > div.container > div.recaptcha-box"],[27543,"body > .security-container[style=\"opacity: 1; transform: translateY(0px);\"]"],[59834,"html > body.hold-transition.theme-primary.bg-img[style^=\"background-image\"][style*=\"wallpaperaccess.com\"][style*=\"background-repeat\"][style*=\"background-size\"]"],[30528,"html > body > div.content > dl > dd.dd1 > div.min_sider > form#form1[action=\"unsubscribe.php\"]"],[56762,"html > body.body > div.container > div.content > form > table.optoutForm"],[31102,"html[data-scrapbook-source][data-scrapbook-create][data-scrapbook-title] > body.no-js > div.main-wrapper[role=\"main\"] > div.main-content"],[50662,".header-fix-tester-container"],[16386,"body > div.captcha-container > div.captcha-card"],[65239,"#hero a[download=\"Unicore.zip\"],\n#hero + div.marquee-wrap + section#games + section#features + #download"],[19871,"#download a[download=\"Unicore.zip\"]"],[37978,"body > .wrapper > .card-box > #step-1"]]);
+const highlyGeneric = /* 0 */"";
+const exceptions = /* 0 */[];
+const hostnames = /* 0 */[];
+const hasEntities = false;
 
-const genericSelectorMap = [[1401633,"html[lang] > body.ishome > div.adult + main.main"],[5305805,".buttonautocl"],[15121070,"html[lang] > body:not([class]):not([id]):not([style]) > div.background-container > div.container > div.captcha-box"],[7244200,"html[lang] > body.startnew > div#sections > section#section_uname"],[15121154,"html[lang] > body:not([style]) > div.captchaBody"],[1119424,"html[lang] > body#body > * > div.cv-xwrapper > div.cvc > div.cv-inner"],[11542656,"html[lang] > body#body > * > div.cvh.BlockClicksActivityBusy"],[12270650,"html#html[sti][vic][lang] > body#allbody"],[4186807,"html > body > div.container.m-p > #checkbox-window.checkbox-window,\nhtml > body > div.container > form#unsubscribe-form[onsubmit=\"submitUnsubscribeForm(event)\"]"],[10657530,"html[lang] > body:not([class]):not([id]):not([style]) > div.container > div.recaptcha-box"],[2452375,"body > .security-container[style=\"opacity: 1; transform: translateY(0px);\"]"],[10348986,"html > body.hold-transition.theme-primary.bg-img[style^=\"background-image\"][style*=\"wallpaperaccess.com\"][style*=\"background-repeat\"][style*=\"background-size\"]"],[5732160,"html > body > div.content > dl > dd.dd1 > div.min_sider > form#form1[action=\"unsubscribe.php\"]"],[1367482,"html > body.body > div.container > div.content > form > table.optoutForm"]];
-const genericExceptionSieve = undefined;
-const genericExceptionMap = undefined;
-
-if ( genericSelectorMap ) {
-    const map = self.genericSelectorMap =
-        self.genericSelectorMap || new Map();
-    if ( map.size !== 0 ) {
-        for ( const entry of genericSelectorMap ) {
-            const before = map.get(entry[0]);
-            if ( before === undefined ) {
-                map.set(entry[0], entry[1]);
-            } else {
-                map.set(entry[0], `${before},\n${entry[1]}`);
-            }
-        }
-    } else {
-        self.genericSelectorMap = new Map(genericSelectorMap);
-    }
-    genericSelectorMap.length = 0;
-}
-
-if ( genericExceptionSieve ) {
-    const hashes = self.genericExceptionSieve =
-        self.genericExceptionSieve || new Set();
-    if ( hashes.size !== 0 ) {
-        for ( const hash of genericExceptionSieve ) {
-            hashes.add(hash);
-        }
-    } else {
-        self.genericExceptionSieve = new Set(genericExceptionSieve);
-    }
-    genericExceptionSieve.length = 0;
-}
-
-if ( genericExceptionMap ) {
-    const map = self.genericExceptionMap =
-        self.genericExceptionMap || new Map();
-    if ( map.size !== 0 ) {
-        for ( const entry of genericExceptionMap ) {
-            const before = map.get(entry[0]);
-            if ( before === undefined ) {
-                map.set(entry[0], entry[1]);
-            } else {
-                map.set(entry[0], `${before}\n${entry[1]}`);
-            }
-        }
-    } else {
-        self.genericExceptionMap = new Map(genericExceptionMap);
-    }
-    genericExceptionMap.length = 0;
-}
-
-/******************************************************************************/
+self.genericSelectorMaps = self.genericSelectorMaps ?? [];
+self.genericSelectorMaps.push(lowlyGeneric);
+self.genericDetails = self.genericDetails ?? [];
+self.genericDetails.push({ highlyGeneric, exceptions, hostnames, hasEntities });
 
 })();
 

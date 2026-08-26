@@ -41,14 +41,17 @@
    "adserve.donanimhaber.com",
    "adserver.a24.com.tr",
    "adserver.bafrahaber.com",
+   "adsmanagement.atamedyagrubu.com",
    "adsp.ciner.com.tr",
    "adsp.haberturk.com",
    "aggravatingoil.com",
+   "ahatm12od.top",
    "ahatm8od.top",
    "alty.fun",
    "androidads23.adcolony.com",
    "approximatedriver.com",
    "apptospace.com",
+   "atdogan.site",
    "azelvid.com",
    "baglanbize.net",
    "banner.kanald.com.tr",
@@ -71,13 +74,21 @@
    "gr.hdream.cfd",
    "hemenindir.to",
    "hepsiads-gw.hepsiburada.com",
+   "hepsiads-ui.hepsiburada.com",
+   "impseeineclots.com",
+   "keskin-pop.vip",
+   "keskin.vip",
    "kingads2.org",
    "kingbaba.org",
    "kops1.site",
    "kriptoparahaber.care",
    "likevertising.com",
+   "lups1.site",
    "mackolikftp.tuttur.com",
+   "mdznads.com",
+   "mdznads.pages.dev",
    "movturs.click",
+   "opgg.beer",
    "partnerad.l.google.com",
    "partners.betbooaffiliates.com",
    "partnerx.bethub.io",
@@ -85,7 +96,9 @@
    "r.yabancidizi.in",
    "referans.xyz",
    "reklam.arabul.com",
+   "reklam.arailetisim.com",
    "reklam.emlakkulisi.com",
+   "reklam.ibrahimyurttapan.com.tr",
    "reklam.memurlar.net",
    "reklam.milliyet.com.tr",
    "reklam.misli.com",
@@ -94,18 +107,22 @@
    "reklam.turkmmo.com",
    "reklam.yonlendir.com",
    "reklam1.akhisar.bel.tr",
+   "reklamresimleri.yenislowradyo.com",
    "reklamstore.cubecdn.net",
    "rotorfon.go-prod.dogt.xyz",
    "rqr97sfd.xyz",
+   "rtb-stack.com",
    "savoy.cubecdn.net",
    "savoy.storage.cubecdn.net",
-   "smrtbnr.com",
    "srvd2204.com",
    "statbest.in",
    "subaxe.xyz",
+   "testrole.care",
    "trkwinaff13.com",
    "ttauri.livescience.com",
    "url.isimsepeti.net",
+   "viiukuhe.com",
+   "x.creedimages.cfd",
    "yelads2.life",
    "youtubesave.org"
   ],
@@ -114,6 +131,22 @@
   ]
  },
  "id": 1,
+ "priority": 29
+},
+{
+ "action": {
+  "redirect": {
+   "regexSubstitution": "/strictblock.html#\\0"
+  },
+  "type": "redirect"
+ },
+ "condition": {
+  "regexFilter": "^.*\\/tr\\?tag=.*",
+  "resourceTypes": [
+   "main_frame"
+  ]
+ },
+ "id": 2,
  "priority": 29
 }
 ]

@@ -19,6 +19,10 @@
     "message": "Definições",
     "description": "appears as tab name in dashboard"
   },
+  "customFiltersPageName": {
+    "message": "Filtros personalizados",
+    "description": "appears as tab name in dashboard"
+  },
   "developPageName": {
     "message": "Programação",
     "description": "appears as tab name in dashboard. Inspired from 'Develop' menu in Safari, see https://developer.apple.com/documentation/safari-developer-tools/develop-menu"
@@ -30,6 +34,10 @@
   "aboutPrivacyPolicy": {
     "message": "Política de privacidade",
     "description": "Link to privacy policy on GitHub (English)"
+  },
+  "aboutDocumentation": {
+    "message": "Documentação",
+    "description": "Link to documentation in About pane"
   },
   "popupFilteringModeLabel": {
     "message": "modo de filtragem",
@@ -68,7 +76,7 @@
     "description": "Header for a ruleset section in 'Filter lists pane'"
   },
   "3pGroupMalware": {
-    "message": "Domínios maliciosos",
+    "message": "Proteção contra malware e segurança",
     "description": "Header for a ruleset section in 'Filter lists pane'"
   },
   "3pGroupAnnoyances": {
@@ -83,12 +91,40 @@
     "message": "Regiões, idiomas",
     "description": "Header for a ruleset section in 'Filter lists pane'"
   },
+  "3pGroupImported": {
+    "message": "Listas importadas",
+    "description": "Header for a ruleset section in 'Filter lists pane'"
+  },
+  "customListImportLabel": {
+    "message": "Adicionar lista de filtros…",
+    "description": "Text label heading the import area of custom filter lists"
+  },
+  "customListImportPlaceholder": {
+    "message": "URL da lista de filtros a adicionar",
+    "description": "Placeholder text which describes the purpose of the textarea widget"
+  },
+  "customListImportUserScriptsInfo": {
+    "message": "Para aplicar filtros cosméticos ou de scriptlet provenientes de listas importadas, tem de conceder ao uBO Lite permissão para executar scripts do utilizador.",
+    "description": "A notice to inform user that the enforcement of some filters requires permission to execute 'user scripts'"
+  },
+  "customFiltersImportExportLabel": {
+    "message": "Importar/Exportar",
+    "description": "Text label heading the import/export area of custom filters"
+  },
+  "customFiltersImportTextareaPlaceholder": {
+    "message": "Filtros cosméticos/de scriptlet específicos a adicionar",
+    "description": "Placeholder text which describes the purpose of the textarea widget"
+  },
+  "userScriptsInfo": {
+    "message": "Abra a página de extensões do seu navegador (<code>chrome://extensions</code> no Chrome ou <code>about:addons</code> no Firefox), abra os detalhes do <b>uBO Lite</b> e ative a opção <b>Permitir scripts do utilizador</b> (também designada por \"scripts de terceiros não verificados\").",
+    "description": "A notice to inform user on how to enable 'user scripts' permission"
+  },
   "aboutChangelog": {
     "message": "Registo de alterações",
     "description": ""
   },
   "aboutCode": {
-    "message": "Código fonte (GPLv3)",
+    "message": "Código-fonte (GPLv3)",
     "description": "English: Source code (GPLv3)"
   },
   "aboutContributors": {
@@ -96,7 +132,7 @@
     "description": "English: Contributors"
   },
   "aboutSourceCode": {
-    "message": "Código fonte",
+    "message": "Código-fonte",
     "description": "Link text to source code repo"
   },
   "aboutTranslations": {
@@ -177,7 +213,7 @@
   },
   "supportReportSpecificButton": {
     "message": "Criar novo relatório no GitHub",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which opens an external web page in Support pane"
   },
   "defaultFilteringModeSectionLabel": {
     "message": "Modo de filtragem predefinido",
@@ -243,6 +279,22 @@
     "message": "A navegação para sites potencialmente indesejáveis será bloqueada e ser-lhe-á dada a opção de proceder.",
     "description": "Short description for a checkbox in the options page"
   },
+  "enablePopupBlockLabel": {
+    "message": "Ativar bloqueio de janelas pop-up",
+    "description": "Label for a checkbox in the options page"
+  },
+  "enablePopupBlockLegend": {
+    "message": "Quando ativado, os filtros correspondentes fecharão automaticamente os separadores indesejados do navegador criados pelos websites.",
+    "description": "Short description for a checkbox in the options page"
+  },
+  "sandboxEditorLabel": {
+    "message": "Sandbox para criação de filtros",
+    "description": "Header for filter-creation section in the dashboard"
+  },
+  "sandboxEditorUserScriptsInfo": {
+    "message": "Para aplicar filtros cosméticos ou de scriptlet provenientes da sandbox, tem de conceder ao uBO Lite permissão para executar scripts do utilizador.",
+    "description": "A notice to inform user that the enforcement of some filters requires permission to execute 'user scripts'"
+  },
   "developerModeLabel": {
     "message": "Modo de programador",
     "description": "Label for a checkbox in the options page"
@@ -251,13 +303,25 @@
     "message": "Permite acesso a funcionalidades adequadas a utilizadores técnicos",
     "description": "Short description for a checkbox in the options page"
   },
+  "settingsBackupRestoreLabel": {
+    "message": "Cópia de segurança",
+    "description": "The header text for the back up/restore section"
+  },
+  "settingsBackupRestoreSummary": {
+    "message": "Faça uma cópia de segurança das suas definições personalizadas num ficheiro ou restaure as suas definições personalizadas a partir de um ficheiro.",
+    "description": "A summary description of the back up/restore section."
+  },
+  "settingsBackupRestoreLegend": {
+    "message": "A restauração substituirá todas as suas definições personalizadas atuais.",
+    "description": "Important information about the back up/restore section."
+  },
   "findListsPlaceholder": {
     "message": "Encontrar listas",
     "description": "Placeholder for the input field used to find lists"
   },
   "strictblockTitle": {
     "message": "Página bloqueada",
-    "description": "Webpage title for the strict-blocked page"
+    "description": "Web page title for the strict-blocked page"
   },
   "strictblockSentence1": {
     "message": "O uBO Lite impediu a seguinte página de ser carregada:",
@@ -277,7 +341,7 @@
   },
   "strictblockBack": {
     "message": "Voltar",
-    "description": "A button to go back to the previous webpage"
+    "description": "A button to go back to the previous web page"
   },
   "strictblockClose": {
     "message": "Fechar esta janela",
@@ -339,6 +403,10 @@
     "message": "Reverter",
     "description": "Text for buttons used to revert changes"
   },
+  "addButton": {
+    "message": "Adicionar",
+    "description": "Text for buttons used to add content"
+  },
   "importAndAppendButton": {
     "message": "Importar e anexar…",
     "description": "Text for buttons used to import and append content"
@@ -346,6 +414,22 @@
   "exportButton": {
     "message": "Exportar…",
     "description": "Text for buttons used to export content"
+  },
+  "backupButton": {
+    "message": "Criar cópia…",
+    "description": "Text for buttons used to back up content"
+  },
+  "restoreButton": {
+    "message": "Restaurar…",
+    "description": "Text for buttons used to restore content"
+  },
+  "resetToDefaultButton": {
+    "message": "Repor as definições predefinidas…",
+    "description": "Text for buttons used to reset configurations to default"
+  },
+  "resetToDefaultConfirm": {
+    "message": "Todas as suas definições personalizadas serão removidas. Pretende mesmo repor as definições predefinidas?",
+    "description": "Message asking user to confirm reset to default settings"
   },
   "dnrRulesWarning": {
     "message": "Não adicione conteúdo de fontes não fidedignas",

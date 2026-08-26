@@ -63,14 +63,14 @@
         "path": "/rulesets/main/block-lan.json"
       },
       {
-        "id": "dpollock-0",
-        "enabled": false,
-        "path": "/rulesets/main/dpollock-0.json"
-      },
-      {
         "id": "adguard-spyware-url",
         "enabled": false,
         "path": "/rulesets/main/adguard-spyware-url.json"
+      },
+      {
+        "id": "annoyances-ai",
+        "enabled": false,
+        "path": "/rulesets/main/annoyances-ai.json"
       },
       {
         "id": "annoyances-cookies",
@@ -98,9 +98,14 @@
         "path": "/rulesets/main/annoyances-others.json"
       },
       {
-        "id": "stevenblack-hosts",
+        "id": "annoyances-notifications",
         "enabled": false,
-        "path": "/rulesets/main/stevenblack-hosts.json"
+        "path": "/rulesets/main/annoyances-notifications.json"
+      },
+      {
+        "id": "ublock-experimental",
+        "enabled": false,
+        "path": "/rulesets/main/ublock-experimental.json"
       },
       {
         "id": "ubol-tests",
@@ -111,6 +116,11 @@
         "id": "alb-0",
         "enabled": false,
         "path": "/rulesets/main/alb-0.json"
+      },
+      {
+        "id": "ara-0",
+        "enabled": false,
+        "path": "/rulesets/main/ara-0.json"
       },
       {
         "id": "bgr-0",
@@ -233,6 +243,11 @@
         "path": "/rulesets/main/pol-0.json"
       },
       {
+        "id": "pol-3",
+        "enabled": false,
+        "path": "/rulesets/main/pol-3.json"
+      },
+      {
         "id": "rou-1",
         "enabled": false,
         "path": "/rulesets/main/rou-1.json"
@@ -294,6 +309,7 @@
   "host_permissions": [
     "<all_urls>"
   ],
+  "incognito": "split",
   "icons": {
     "16": "img/icon_16.png",
     "32": "img/icon_32.png",
@@ -306,15 +322,19 @@
   "options_page": "dashboard.html",
   "permissions": [
     "activeTab",
+    "alarms",
     "declarativeNetRequest",
+    "offscreen",
     "scripting",
-    "storage"
+    "storage",
+    "unlimitedStorage",
+    "userScripts"
   ],
   "short_name": "uBO Lite",
   "storage": {
     "managed_schema": "managed_storage.json"
   },
-  "version": "2025.718.1921",
+  "version": "2026.825.1619",
   "web_accessible_resources": [
     {
       "resources": [
@@ -357,17 +377,19 @@
         "web_accessible_resources/noop.js",
         "web_accessible_resources/amazon_apstag.js",
         "web_accessible_resources/google-ima.js",
+        "web_accessible_resources/fingerprint2.js",
+        "web_accessible_resources/sensors-analytics.js",
+        "web_accessible_resources/adthrive_abd.js",
         "web_accessible_resources/noop.txt",
-        "web_accessible_resources/noop.css",
         "web_accessible_resources/1x1.gif",
+        "web_accessible_resources/empty",
+        "web_accessible_resources/noop.css",
         "web_accessible_resources/32x32.png",
         "web_accessible_resources/2x2.png",
-        "web_accessible_resources/empty",
         "web_accessible_resources/noop.html",
         "web_accessible_resources/amazon_ads.js",
         "web_accessible_resources/googletagservices_gpt.js",
         "web_accessible_resources/google-analytics_analytics.js",
-        "web_accessible_resources/fingerprint2.js",
         "web_accessible_resources/nofab.js",
         "web_accessible_resources/hd-main.js",
         "web_accessible_resources/popads.js",
@@ -382,11 +404,12 @@
         "web_accessible_resources/noop-vmap1.xml",
         "web_accessible_resources/noop-vast3.xml",
         "web_accessible_resources/noop-0.1s.mp3",
+        "web_accessible_resources/noop-vast2.xml",
         "web_accessible_resources/noop-1s.mp4",
         "web_accessible_resources/nobab2.js",
+        "web_accessible_resources/nitropay_ads.js",
         "web_accessible_resources/chartbeat.js",
         "web_accessible_resources/noop.json",
-        "web_accessible_resources/click2load.html",
         "web_accessible_resources/noeval-silent.js"
       ],
       "matches": [

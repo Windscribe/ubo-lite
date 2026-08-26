@@ -19,14 +19,7 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-import {
-    localRead,
-    runtime,
-    sendMessage,
-} from './ext.js';
-
-import { dnr } from './ext-compat.js';
-import { dom } from './dom.js';
+import { browser, runtime, sendMessage } from './ext.js';
 
 /******************************************************************************/
 
@@ -56,68 +49,109 @@ function renderData(data, depth = 0) {
 
 /******************************************************************************/
 
-export async function getTroubleshootingInfo(siteMode) {
+export async function getTroubleshootingInfo(details) {
     const manifest = runtime.getManifest();
     const [
         platformInfo,
-        rulesets,
+        defaultConfig,
+        currentConfig,
+        enabledRulesets,
+        rulesetDetails,
         defaultMode,
         userRules,
-        registerContentScriptsReason,
-        unregisterContentScriptsReason,
+        consoleOutput,
+        registeredScripts,
+        hasOmnipotence,
     ] = await Promise.all([
         runtime.getPlatformInfo(),
-        dnr.getEnabledRulesets(),
+        sendMessage({ what: 'getDefaultConfig' }),
+        sendMessage({ what: 'getCurrentConfig' }),
+        sendMessage({ what: 'getEnabledRulesets' }),
+        sendMessage({ what: 'getRulesetDetails' }).then(a => new Map(a.map(a => [ a.id, a ]))),
         sendMessage({ what: 'getDefaultFilteringMode' }),
         sendMessage({ what: 'getEffectiveUserRules' }),
-        localRead('$scripting.registerContentScripts'),
-        localRead('$scripting.unregisterContentScripts'),
+        sendMessage({ what: 'getConsoleOutput' }),
+        sendMessage({ what: 'getRegisteredContentScripts' }),
+        sendMessage({ what: 'hasBroadHostPermissions' }),
     ]);
-    const browser = (( ) => {
+    const vendor = (( ) => {
         const extURL = runtime.getURL('');
-        let agent = '';
+        let agent = '', version = '?';
         if ( extURL.startsWith('moz-extension:') ) {
             agent = 'Firefox';
+            const match = /\bFirefox\/(\d+\.\d+)\b/.exec(navigator.userAgent);
+            version = match && match[1] || '?';
         } else if ( extURL.startsWith('safari-web-extension:') ) {
             agent = 'Safari';
+            const match = /\bVersion\/(\d+\.\d+)\b/.exec(navigator.userAgent);
+            version = match && match[1] || '?';
         } else if ( /\bEdg\/\b/.test(navigator.userAgent) ) {
             agent = 'Edge';
+            const match = /\bEdg\/(\d+)\b/.exec(navigator.userAgent);
+            version = match && match[1] || '?';
         } else {
             agent = 'Chrome';
+            const match = /\bChrome\/(\d+)\b/.exec(navigator.userAgent);
+            version = match && match[1] || '?';
         }
-        dom.cl.add('html', agent.toLowerCase());
         if ( /\bMobile\b/.test(navigator.userAgent) ) {
             agent += ' Mobile';
         }
-        const reVersion = new RegExp(`\\b${agent.slice(0,3)}[^/]*/(\\d+)`);
-        const match = reVersion.exec(navigator.userAgent);
-        if ( match ) {
-            agent += ` ${match[1]}`;
-        }
-        agent += ` (${platformInfo.os})`
+        agent += ` ${version} (${platformInfo.os})`
         return agent;
     })();
     const modes = [ 'no filtering', 'basic', 'optimal', 'complete' ];
     const filtering = {};
-    if ( siteMode ) {
-        filtering.site = `${modes[siteMode]}`
+    if ( details?.siteMode ) {
+        filtering.site = `${modes[details.siteMode]}`
     }
     filtering.default = `${modes[defaultMode]}`;
     const config = {
         name: manifest.name,
         version: manifest.version,
-        browser,
+        browser: vendor,
         filtering,
+        permission: hasOmnipotence ? 'all' : 'ask',
     };
+    if ( currentConfig.strictBlockMode !== defaultConfig.strictBlockMode ) {
+        config.strictblock = currentConfig.strictBlockMode;
+    }
+    if ( currentConfig.popupBlockMode !== defaultConfig.popupBlockMode ) {
+        config.popupblock = currentConfig.popupBlockMode;
+    }
+    if ( details?.tabId ) {
+        let badge = '?';
+        if ( currentConfig.showBlockedCount ) {
+            badge = await browser.action.getBadgeText({ tabId: details.tabId });
+        }
+        if ( badge ) {
+            config.badge = badge;
+        }
+    }
     if ( userRules.length !== 0 ) {
         config['user rules'] = userRules.length;
     }
-    config.rulesets = rulesets;
-    if ( registerContentScriptsReason !== undefined ) {
-        config.registerContentScripts = registerContentScriptsReason;
+    config.rules = enabledRulesets.reduce((a, b) => {
+        return a + rulesetDetails.get(b).rules.total;
+    }, 0);
+    const defaultRulesets = defaultConfig.rulesets;
+    for ( let i = 0; i < enabledRulesets.length; i++ ) {
+        const id = enabledRulesets[i];
+        if ( defaultRulesets.includes(id) ) { continue; }
+        enabledRulesets[i] = `+${id}`;
     }
-    if ( unregisterContentScriptsReason !== undefined ) {
-        config.unregisterContentScripts = unregisterContentScriptsReason;
+    for ( const id of defaultRulesets ) {
+        if ( enabledRulesets.includes(id) ) { continue; }
+        enabledRulesets.push(`-${id}`);
+    }
+    config.rulesets = enabledRulesets.sort();
+    if ( registeredScripts.length !== 0 ) {
+        config.scripting = registeredScripts;
+    }
+    if ( consoleOutput.length !== 0 ) {
+        config.console = details?.siteMode
+            ? consoleOutput.slice(-8)
+            : consoleOutput;
     }
     return renderData(config);
 }

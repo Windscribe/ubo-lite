@@ -29,7 +29,6 @@
    "pornotom.com",
    "pornotommy.com",
    "pornozebra.com",
-   "reifporn.de",
    "sexente.com",
    "sexvideos-hd.com",
    "tube8-pornos.com",
@@ -76,19 +75,10 @@
   "initiatorDomains": [
    "190.115.18.20",
    "aniworld.to",
-   "bs.to",
-   "burningseries.nz",
-   "burningseries.se",
-   "burningseries.sx",
-   "burningseries.vc",
    "kinoger.to",
-   "kinokiste.live",
-   "kinox.top",
    "megakino.co",
-   "s.to",
    "serien.cam",
    "serienstream.to",
-   "streamcloud.movie",
    "topstreamfilm.live"
   ],
   "regexFilter": "^https?:\\/\\/[0-9a-z]{8,}\\.com\\/.*"
@@ -108,10 +98,7 @@
   ],
   "initiatorDomains": [
    "kinoger.com",
-   "kinoger.pw",
-   "kinokiste.live",
    "megakino.co",
-   "streamcloud.movie",
    "topstreamfilm.live"
   ],
   "regexFilter": "^https?:\\/\\/[0-9a-z]{8,}\\.xyz\\/.*"

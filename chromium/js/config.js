@@ -22,6 +22,7 @@
 import {
     localRead, localWrite,
     sessionRead, sessionWrite,
+    webextFlavor,
 } from './ext.js';
 
 /******************************************************************************/
@@ -31,19 +32,24 @@ export const rulesetConfig = {
     enabledRulesets: [],
     autoReload: true,
     showBlockedCount: false,
-    strictBlockMode: true,
+    strictBlockMode: webextFlavor !== 'safari',
+    popupBlockMode: true,
     developerMode: false,
     hasBroadHostPermissions: true,
 };
+
+export const defaultConfig = Object.assign({}, rulesetConfig);
 
 export const process = {
     firstRun: false,
     wakeupRun: false,
 };
 
+let pendingOpPromise = Promise.resolve();
+
 /******************************************************************************/
 
-export async function loadRulesetConfig() {
+async function _loadRulesetConfig() {
     const sessionData = await sessionRead('rulesetConfig');
     if ( sessionData ) {
         Object.assign(rulesetConfig, sessionData);
@@ -61,7 +67,19 @@ export async function loadRulesetConfig() {
     process.firstRun = true;
 }
 
-export async function saveRulesetConfig() {
+async function _saveRulesetConfig() {
     sessionWrite('rulesetConfig', rulesetConfig);
     return localWrite('rulesetConfig', rulesetConfig);
+}
+
+/******************************************************************************/
+
+export function loadRulesetConfig() {
+    pendingOpPromise = pendingOpPromise.then(_loadRulesetConfig);
+    return pendingOpPromise;
+}
+
+export function saveRulesetConfig() {
+    pendingOpPromise = pendingOpPromise.then(_saveRulesetConfig);
+    return pendingOpPromise;
 }

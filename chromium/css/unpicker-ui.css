@@ -29,6 +29,7 @@
 
 #ubol-unpicker #customFilters {
     font-family: monospace;
+    overflow: auto;
 }
 #ubol-unpicker .customFilter {
     display: flex;
@@ -49,6 +50,7 @@
     display: none;
 }
 #ubol-unpicker .customFilter.removed > span.selector {
+    color: red;
     pointer-events: none;
     text-decoration-line: line-through;
 }

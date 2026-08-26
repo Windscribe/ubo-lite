@@ -14,6 +14,7 @@
    "a.reymit.ir",
    "ad.technews-iran.com",
    "adengine.telewebion.com",
+   "adengine.telewebion.ir",
    "adexo.ir",
    "adexofiles.ir",
    "adivery.com",
@@ -23,8 +24,10 @@
    "adro.ir",
    "adrooz.com",
    "ads.asset.aparat.com",
+   "ads.farakav.com",
    "ads.karzar.net",
    "ads.safarme.ir",
+   "adsc.beytoote.com",
    "adsima.net",
    "adskav.com",
    "adtodate.ir",
@@ -38,12 +41,15 @@
    "affili.ir",
    "affiliate.malltina.com",
    "affilio.ir",
+   "aflo.ir",
    "aitrades.com",
+   "alast.group",
    "amarfa.ir",
    "amaroid.net",
    "analyt.ir",
    "analytic.magland.ir",
    "analytics.asiatech.ir",
+   "analytics.bertina.ir",
    "analytics.eirib.ir",
    "analytics.football360.ir",
    "analytics.hostiran.net",
@@ -51,8 +57,10 @@
    "analytics.jeldnews.com",
    "analytics.nastooh.ir",
    "analytics.plaza.ir",
+   "analytics.qalam.group",
    "analytics.telewebion.com",
    "analytics.zoomit.ir",
+   "analyticsdaily.ir",
    "androidupdate.download",
    "anetwork.ir",
    "api.karpishe.com",
@@ -60,6 +68,7 @@
    "apptracking.irancell.ir",
    "arongroups.co",
    "artanlife.club",
+   "arvanvads.ir",
    "aryacoin.io",
    "aryana.io",
    "aryastake.io",
@@ -85,6 +94,7 @@
    "chabok.io",
    "chancx.io",
    "chavosh.org",
+   "ck.chavosh.org",
    "click.digiato.com",
    "clickaval.com",
    "clickyab.com",
@@ -120,6 +130,7 @@
    "gpm.ltd",
    "guhtoken.org",
    "hadeseh.simra.cloud",
+   "hadeseh.telewebion.com",
    "hantana.org",
    "hoho.mobi",
    "hutvtpbhvmae.com",
@@ -130,18 +141,23 @@
    "irancoinmine.com",
    "izonekala.com",
    "jetbux.ir",
+   "jtoaxlbas.com",
    "kajads.com",
    "kaprila.com",
    "kingmoney.io",
+   "kntr.ir",
+   "l.24d.ir",
    "landyab.com",
    "laqira.io",
    "laxsson.com",
    "leumia.io",
    "linkfars.com",
    "lnremmfpc.com",
+   "log.ahlolbait.com",
    "logapi.karbord.io",
    "magnetadservices.com",
    "mat-pnu.ir",
+   "matomo.parto.media",
    "mediaad.org",
    "mediawach.com",
    "merita.ir",
@@ -156,7 +172,6 @@
    "najva.com",
    "netbina.com",
    "new-sentry.digikala.com",
-   "news-view-api.varzesh3.com",
    "newswidget.net",
    "nokontoken.com",
    "notifhub.com",
@@ -165,6 +180,7 @@
    "onclick.ir",
    "orbitnetwork.net",
    "oscaranimation.in",
+   "ovrjkuavda.com",
    "p30rank.ir",
    "pantatec.ae",
    "partclick.ir",
@@ -198,18 +214,23 @@
    "sanjagh.net",
    "scripts-ads.s3.ir-thr-at1.arvanstorage.com",
    "sendword.ir",
+   "sentry.alaatv.com",
    "sentry.alibaba.ir",
+   "sentry.bale.sh",
    "sentry.cafebazaar.org",
+   "sentry.divar.cloud",
    "sentry.hamravesh.com",
    "sentry.malltina.com",
    "sentry.mci.dev",
-   "sentry.mielse.com",
    "sentry.namava.ir",
    "sentry.querastaff.ir",
+   "sentry.sabaidea.cloud",
    "sentry.yektanet.tech",
+   "sentry01.theforge.ir",
    "shamining.com",
    "smartgalaxy.finance",
    "soodland.com",
+   "sorenad.com",
    "spellads.com",
    "spellpop.ir",
    "statistics.iriborg.ir",
@@ -238,7 +259,6 @@
    "utop.ir",
    "utopclick.com",
    "vatanclick.ir",
-   "video-view-api.varzesh3.com",
    "vidomusic.org",
    "waykingroup.com",
    "web.webpushs.com",
@@ -247,6 +267,7 @@
    "xjs.lol",
    "xmlx.lol",
    "yekbux.com",
+   "yektabanner.com",
    "yektanet.com",
    "yelloadwise.ir",
    "ylad.ir",
@@ -270,7 +291,7 @@
   "type": "redirect"
  },
  "condition": {
-  "regexFilter": "^[a-z-]+://(?:[^/?#]+\\.)?c\\.filimium\\.com/meta/affiliate.*",
+  "regexFilter": "^[^:]+:\\/\\/([^:/]+\\.)?c\\.filimium\\.com\\/meta\\/affiliate.*",
   "resourceTypes": [
    "main_frame"
   ]
@@ -286,12 +307,44 @@
   "type": "redirect"
  },
  "condition": {
-  "regexFilter": "^[a-z-]+://(?:[^/?#]+\\.)?github\\.com/rcycc/-.*",
+  "regexFilter": "^[^:]+:\\/\\/([^:/]+\\.)?10\\.10\\.34\\..*",
   "resourceTypes": [
    "main_frame"
   ]
  },
  "id": 3,
+ "priority": 29
+},
+{
+ "action": {
+  "redirect": {
+   "regexSubstitution": "/strictblock.html#\\0"
+  },
+  "type": "redirect"
+ },
+ "condition": {
+  "regexFilter": "^[^:]+:\\/\\/([^:/]+\\.)?github\\.com\\/rcycc\\/-.*",
+  "resourceTypes": [
+   "main_frame"
+  ]
+ },
+ "id": 4,
+ "priority": 29
+},
+{
+ "action": {
+  "redirect": {
+   "regexSubstitution": "/strictblock.html#\\0"
+  },
+  "type": "redirect"
+ },
+ "condition": {
+  "regexFilter": "^[^:]+:\\/\\/([^:/]+\\.)?t\\.me\\/bitbod_trading_club[^%.0-9a-z_-]?.*",
+  "resourceTypes": [
+   "main_frame"
+  ]
+ },
+ "id": 5,
  "priority": 29
 }
 ]

@@ -25,62 +25,16 @@
 // Isolate from global scope
 (function uBOL_cssGenericImport() {
 
-/******************************************************************************/
+const lowlyGeneric = new Map(/* 20 */[[44129,".ads_all > .ads_w"],[11816,".ez-video-wrap"],[15560,"html[lang=\"tr\"] > body.has-footer-ad.has-pageskin-desktop a.pageskin-mobile-wrapper"],[46073,"body > #js-adContainer.adBlock"],[27588,"#mobile-adhesion:not(#style_important)"],[25889,"#ad-300x250_mid_mobile"],[34037,".sp_ad_box_top"],[15075,".happy-header-mobile"],[23220,".standard-article-vertical-ad"],[18072,".header-ad-mobile"],[8358,".under-player-ad-mobile"],[44580,".california-sticky-footer-ad-container"],[5821,".happy-under-player-mobile"],[9000,".b-mobile-spots"],[45255,"#ad_inview_area"],[54745,"body > div.page[data-ux-tracking-url^=\"https://abtesting.tegnadigital.com/\"] > .page__top > .universal-ad,\nbody > div.page[data-kochava-app-guid^=\"kotegna-web-prod-\"] > .page__top > .universal-ad"],[56854,"#mgid_iframe1"],[8380,".amp-ad container"],[29966,".amp_ad"],[59787,"#ad-300x250_mobile"]]);
+const highlyGeneric = /* 16 */"amp-iframe[src^=\"https://ad.vidverto.io/\"],\ndiv[class^=\"MidArticleAdUnit_mobile_\"],\ndiv[class^=\"PrimisMidArticleAdUnit_mobile_\"],\nimg[width=\"320\"][height=\"50\"],\niframe[width=\"320\"][height=\"50\"],\namp-iframe[src^=\"https://html.redtram.com/\"],\namp-auto-ads,\namp-embed[type=\"24smi\"],\namp-embed[type=\"smi2\"],\namp-embed[type=\"outbrain\"],\namp-embed[type=\"engageya\"],\namp-iframe[src^=\"https://ad.mediawayss.com/\"],\namp-iframe[src^=\"https://widgets.outbrain.com\"],\namp-sticky-ad,\namp-ad,\nbody > style + div[id=\"ics\"]";
+const exceptions = /* 35 */["DIV[class^=\"banner\"]",".centered-ad",".zad.billboard",".s-result-item:has([data-ad-feedback-label-id])\n.s-result-item:has(div.puis-sponsored-label-text)","div[itemtype^=\"http://schema.org/\"] ~ div[data-role][data-target] ~ div:not(:last-child)\ndiv[itemtype=\"http://schema.org/BlogPosting\"] ~ div:not(:last-child)","img[width=\"320\"][height=\"50\"]","div[itemtype^=\"http://schema.org/\"] ~ div[data-role][data-target] ~ div:not(:last-child)\ndiv[itemtype=\"http://schema.org/BlogPosting\"] ~ div:not(:last-child)",".ad-billboard",".amp-unresolved","div > [style*=\"width: 100%;\"]:first-child",".header-ad",".header-ad",".ad-leaderboard-flex","img[width=\"320\"][height=\"50\"]",".advertisment\n#topAds",".header-ads-area",".header-ad\n.custom-ad","#AdvHeader",".sticky-ad",".ad-block",".header-ad",".mobile-ad",".block-ads","amp-auto-ads",".header-ad\n.custom-ad",".header-ad",".ad-fixed",".ad-leaderboard-flex",".header-ad","div[class^=\"ads-box-\"]",".custom-ad",".ad_area",".header-ad\n.custom-ad",".header-ad\n.custom-ad","div[id^=\"ad_position_\"]"];
+const hostnames = /* 35 */["olx.ro","vip.de","ign.com","amazon.*","drive2.ru","bestech.sk","drive2.com","ismedia.jp","ettoday.net","pornhub.com","arseblog.com","gizchina.com","huffpost.com","live.fc2.com","m.veporn.net","milk-key.com","gizmobolt.com","matomedane.jp","milesplit.com","niji-gazo.com","stevengoh.com","deviantart.com","m.tubewolf.com","my-angers.info","blogdoiphone.com","reviews.mtbr.com","seattletimes.com","huffingtonpost.jp","idownloadblog.com","zeenews.india.com","mrmoneymustache.com","news.infoseek.co.jp","westseattleblog.com","moroccoworldnews.com","safeframe.googlesyndication.com"];
+const hasEntities = true;
 
-const genericSelectorMap = [[16149444,"#mobile-adhesion:not(#style_important)"],[13818134,".gnt_xmst"],[15230241,"#ad-300x250_mid_mobile"],[9733365,".sp_ad_box_top"],[6699747,".happy-header-mobile"],[9919156,".standard-article-vertical-ad"],[1263256,".header-ad-mobile"],[15212710,".under-player-ad-mobile"],[6860324,".california-sticky-footer-ad-container"],[923325,".happy-under-player-mobile"],[6431528,".b-mobile-spots"],[14987463,"#ad_inview_area"],[16768534,"#mgid_iframe1"],[16602129,"#mgid_iframe"],[13732212,".amp-ad-container"],[3940540,".amp-ad container"],[4027662,".amp_ad"],[6547851,"#ad-300x250_mobile"]];
-const genericExceptionSieve = [2429090,4586609,15857306,288122,7086916,4299026,15469774,6896394,6276799,8701575,2427802,4075832,10769345,2819123,6200301,10374072,6409741];
-const genericExceptionMap = [["moroccoworldnews.com",".header-ad\n.custom-ad"],["gizchina.com",".header-ad"],["gizmobolt.com",".header-ad\n.custom-ad"],["blogdoiphone.com",".header-ad\n.custom-ad"],["westseattleblog.com",".header-ad\n.custom-ad"],["reviews.mtbr.com",".header-ad"],["stevengoh.com",".header-ad"],["idownloadblog.com",".header-ad"],["arseblog.com",".header-ad"],["mrmoneymustache.com",".custom-ad"],["milk-key.com",".header-ads-area"],["huffpost.com",".ad-leaderboard-flex"],["huffingtonpost.jp",".ad-leaderboard-flex"],["news.infoseek.co.jp",".ad_area"],["ign.com",".zad.billboard"],["matomedane.jp","#AdvHeader"],["itest.5ch.net",".js-cardview_ad-320x180"],["milesplit.com",".sticky-ad"],["niji-gazo.com",".ad-block"],["cancam.jp",".overlay-ad"],["seattletimes.com",".ad-fixed"],["vip.de",".centered-ad"],["m.tubewolf.com",".block-ads"],["m.veporn.net",".advertisment\n#topAds"],["deviantart.com",".mobile-ad"]];
-
-if ( genericSelectorMap ) {
-    const map = self.genericSelectorMap =
-        self.genericSelectorMap || new Map();
-    if ( map.size !== 0 ) {
-        for ( const entry of genericSelectorMap ) {
-            const before = map.get(entry[0]);
-            if ( before === undefined ) {
-                map.set(entry[0], entry[1]);
-            } else {
-                map.set(entry[0], `${before},\n${entry[1]}`);
-            }
-        }
-    } else {
-        self.genericSelectorMap = new Map(genericSelectorMap);
-    }
-    genericSelectorMap.length = 0;
-}
-
-if ( genericExceptionSieve ) {
-    const hashes = self.genericExceptionSieve =
-        self.genericExceptionSieve || new Set();
-    if ( hashes.size !== 0 ) {
-        for ( const hash of genericExceptionSieve ) {
-            hashes.add(hash);
-        }
-    } else {
-        self.genericExceptionSieve = new Set(genericExceptionSieve);
-    }
-    genericExceptionSieve.length = 0;
-}
-
-if ( genericExceptionMap ) {
-    const map = self.genericExceptionMap =
-        self.genericExceptionMap || new Map();
-    if ( map.size !== 0 ) {
-        for ( const entry of genericExceptionMap ) {
-            const before = map.get(entry[0]);
-            if ( before === undefined ) {
-                map.set(entry[0], entry[1]);
-            } else {
-                map.set(entry[0], `${before}\n${entry[1]}`);
-            }
-        }
-    } else {
-        self.genericExceptionMap = new Map(genericExceptionMap);
-    }
-    genericExceptionMap.length = 0;
-}
-
-/******************************************************************************/
+self.genericSelectorMaps = self.genericSelectorMaps ?? [];
+self.genericSelectorMaps.push(lowlyGeneric);
+self.genericDetails = self.genericDetails ?? [];
+self.genericDetails.push({ highlyGeneric, exceptions, hostnames, hasEntities });
 
 })();
 

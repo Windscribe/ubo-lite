@@ -55,6 +55,9 @@ export default new Map([
     [ 'ampproject_v0.js', {
         alias: 'ampproject.org/v0.js',
     } ],  
+    [ 'adthrive_abd.js', {
+        data: 'text',
+    } ],
     [ 'chartbeat.js', {
         alias: 'static.chartbeat.com/chartbeat.js',
     } ],
@@ -94,6 +97,11 @@ export default new Map([
     } ],
     [ 'google-ima.js', {
         alias: 'google-ima3',                       /* adguard compatibility */
+        data: 'text',
+    } ],
+    [ 'google-ima-dai.js', {
+        aliases: [ 'google-ima3-dai' ],             /* adguard compatibility */
+        data: 'text',
     } ],
     [ 'googlesyndication_adsbygoogle.js', {
         alias: [
@@ -111,8 +119,7 @@ export default new Map([
     } ],
     [ 'hd-main.js', {
     } ],
-    [ 'nobab.js', {
-        alias: [ 'bab-defuser.js', 'prevent-bab.js' ],
+    [ 'nitropay_ads.js', {
         data: 'text',
     } ],
     [ 'nobab2.js', {
@@ -176,6 +183,8 @@ export default new Map([
     [ 'outbrain-widget.js', {
         alias: 'widgets.outbrain.com/outbrain.js',
     } ],
+    [ 'piano-analytics.js', {
+    } ],
     [ 'popads.js', {
         alias: [ 'popads.net.js', 'prevent-popads-net.js' ],
         data: 'text',
@@ -188,5 +197,8 @@ export default new Map([
     } ],
     [ 'scorecardresearch_beacon.js', {
         alias: 'scorecardresearch.com/beacon.js',
+    } ],
+    [ 'sensors-analytics.js', {
+        data: 'text',
     } ],
 ]);

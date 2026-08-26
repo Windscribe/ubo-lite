@@ -10,9 +10,9 @@
 
 <body>
 <h1>uBO Lite Test Page</h1>
-<p>Test filtering capabilities according to selected filtering mode, <em class="filtering-mode">basic</em>, <em class="filtering-mode">optimal</em>, or <em class="filtering-mode">complete</em>. Regardless of how the page is navigated to &mdash; including at browser launch &mdash; results should not be different. <b>Requirements</b>:</p>
+<p><b>This is a development tool, do not open issues about this page.</b> Test filtering capabilities according to selected filtering mode, <em class="filtering-mode">basic</em>, <em class="filtering-mode">optimal</em>, or <em class="filtering-mode">complete</em>. Regardless of how the page is navigated to &mdash; including at browser launch &mdash; results should not be different. <b>Requirements</b>:</p>
 <ul>
-<li>Stable version of uBO Lite <em>above</em> 2025.3.8.1350</li>
+<li>Latest stable version of uBO Lite</li>
 <li><a href="test-filters.txt" target="_blank">"uBO Lite Test Filters"</a> enabled in the <em>Filter lists</em> pane in uBO Lite’s dashboard</li>
 </ul>
 
@@ -34,6 +34,15 @@
             <div class="pass"><div class="fail"><img src="bnf2.gif" alt=""></div></div>
             <code class="filter">/bnf2.$image,to=…</code>
         </div>
+        <div id="bnf5" class="tile">
+            <div class="pass"><div class="fail"></div></div>
+            <code class="filter">/bnf5.js^$script,to=…</code>
+            <script src="bnf5.js" async></script>
+        </div>
+        <div id="bnf6" class="tile">
+            <div class="pass"><div class="fail"></div></div>
+            <code class="filter">/bnf6.txt^$xhr,method=head,to=…</code>
+        </div>
     </div>
 </section>
 
@@ -54,6 +63,11 @@
             <code class="filter">/anf2.html$frame,csp=script-src 'none'</code>
         </div>
         <script src="anf.js" async></script>
+        <div id="anf3" class="tile">
+            <div class="pass"><div class="fail"></div></div>
+            <iframe src="anf3.html?a=1&amp;b=2&amp;c=3&amp;c=4"></iframe>
+            <code class="filter">/anf3.html$removeparam=b,to=…</code>
+        </div>
     </div>
 </section>
 
@@ -210,6 +224,31 @@
             <code class="filter">&gt;&gt;##+js(set, sf3Sentinel, undefined)</code>
         </div>
         <script src="sf.js" async></script>
+        <div id="sf4" class="tile">
+            <div class="pass"><div class="fail"></div></div>
+            <code class="filter">##+js(jsonl-edit-xhr-response, b)</code>
+        </div>
+        <div id="sf5" class="tile">
+            <div class="pass"><div class="fail"></div></div>
+            <code class="filter">##+js(jsonl-edit-fetch-response, b)</code>
+        </div>
+        <div id="sf6" class="tile">
+            <div class="pass"><div class="fail"></div></div>
+            <code class="filter">##+js(trusted-prevent-dom-bypass, Node.prototype.appendChild, Element.prototype.getElementsByTagName)</code>
+        </div>
+        <div id="sf7" class="tile">
+            <div class="pass"><div class="fail"></div></div>
+            <code class="filter">##+js(prevent-innerHTML, #sf7 .fail, &lt;b&gt;)</code>
+        </div>
+        <div id="sf8" class="tile">
+            <div class="pass"><div class="fail" onclick="this.style.display = 'none'"></div></div>
+            <code class="filter">##+js(trusted-click-element, '500, #sf8 .fail')</code>
+        </div>
+        <div id="sf9" class="tile">
+            <div class="pass"><div class="fail"></div></div>
+            <code class="filter">##+js(abort-current-script, document.createElement, sf9Sentinel)</code>
+            <script>document.createElement('b'); self.sf9Sentinel = true</script>
+        </div>
     </div>
 </section>
 
@@ -249,26 +288,16 @@
     </div>
 </section>
 
+<!--
 <section>
     <h3>Staged tests</h3>
     <ul>
         <li>These tests are not yet official and are only valid for an upcoming update of uBO Lite</li>
     </ul>
     <div class="tests">
-        <div id="sf4" class="tile">
-            <div class="pass"><div class="fail"></div></div>
-            <code class="filter">##+js(jsonl-edit-xhr-response, b)</code>
-        </div>
-        <div id="sf5" class="tile">
-            <div class="pass"><div class="fail"></div></div>
-            <code class="filter">##+js(jsonl-edit-fetch-response, b)</code>
-        </div>
-        <div id="sf6" class="tile">
-            <div class="pass"><div class="fail"></div></div>
-            <code class="filter">##+js(trusted-prevent-dom-bypass, Node.prototype.appendChild, Element.prototype.getElementsByTagName)</code>
-        </div>
     </div>
 </section>
+-->
 
 <section>
     <h3>Firefox MV2 uBO-only tests</h3>

@@ -19,6 +19,10 @@
     "message": "Inställningar",
     "description": "appears as tab name in dashboard"
   },
+  "customFiltersPageName": {
+    "message": "Anpassade filter",
+    "description": "appears as tab name in dashboard"
+  },
   "developPageName": {
     "message": "Utveckla",
     "description": "appears as tab name in dashboard. Inspired from 'Develop' menu in Safari, see https://developer.apple.com/documentation/safari-developer-tools/develop-menu"
@@ -30,6 +34,10 @@
   "aboutPrivacyPolicy": {
     "message": "Integritetspolicy",
     "description": "Link to privacy policy on GitHub (English)"
+  },
+  "aboutDocumentation": {
+    "message": "Dokumentation",
+    "description": "Link to documentation in About pane"
   },
   "popupFilteringModeLabel": {
     "message": "filtreringsläge",
@@ -82,6 +90,34 @@
   "3pGroupRegions": {
     "message": "Regioner, språk",
     "description": "Header for a ruleset section in 'Filter lists pane'"
+  },
+  "3pGroupImported": {
+    "message": "Importerade listor",
+    "description": "Header for a ruleset section in 'Filter lists pane'"
+  },
+  "customListImportLabel": {
+    "message": "Lägg till filterlista…",
+    "description": "Text label heading the import area of custom filter lists"
+  },
+  "customListImportPlaceholder": {
+    "message": "Filterlistans webbadress som ska läggas till",
+    "description": "Placeholder text which describes the purpose of the textarea widget"
+  },
+  "customListImportUserScriptsInfo": {
+    "message": "För att tillämpa kosmetiska filter eller skriptfilter från importerade listor måste du ge uBO Lite behörighet att köra användarskript.",
+    "description": "A notice to inform user that the enforcement of some filters requires permission to execute 'user scripts'"
+  },
+  "customFiltersImportExportLabel": {
+    "message": "Importera / Exportera",
+    "description": "Text label heading the import/export area of custom filters"
+  },
+  "customFiltersImportTextareaPlaceholder": {
+    "message": "Specifika kosmetiska/scriptlet-filter att lägga till",
+    "description": "Placeholder text which describes the purpose of the textarea widget"
+  },
+  "userScriptsInfo": {
+    "message": "Öppna webbläsarens tilläggssida (<code>chrome://extensions</code> i Chrome eller <code>about:addons</code> i Firefox), öppna <b>uBO Lite</b> detaljer och aktivera <b>Tillåt användarskript</b> (även kallade \"obekräftade tredjepartsskript\").",
+    "description": "A notice to inform user on how to enable 'user scripts' permission"
   },
   "aboutChangelog": {
     "message": "Ändringslogg",
@@ -177,7 +213,7 @@
   },
   "supportReportSpecificButton": {
     "message": "Skapa ny rapport på GitHub",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which opens an external web page in Support pane"
   },
   "defaultFilteringModeSectionLabel": {
     "message": "Standardfiltreringsläge",
@@ -243,6 +279,22 @@
     "message": "Navigering till potentiellt oönskade webbplatser kommer att blockeras och du kommer att erbjudas alternativet att fortsätta.",
     "description": "Short description for a checkbox in the options page"
   },
+  "enablePopupBlockLabel": {
+    "message": "Aktivera popup-blockering",
+    "description": "Label for a checkbox in the options page"
+  },
+  "enablePopupBlockLegend": {
+    "message": "När funktionen är aktiv stänger matchande filter automatiskt oönskade flikar som webbplatser öppnat.",
+    "description": "Short description for a checkbox in the options page"
+  },
+  "sandboxEditorLabel": {
+    "message": "Sandlåda för filterskapande",
+    "description": "Header for filter-creation section in the dashboard"
+  },
+  "sandboxEditorUserScriptsInfo": {
+    "message": "För att tillämpa kosmetiska filter eller skriptfilter från sandlådan måste du ge uBO Lite behörighet att köra användarskript.",
+    "description": "A notice to inform user that the enforcement of some filters requires permission to execute 'user scripts'"
+  },
   "developerModeLabel": {
     "message": "Utvecklarläge",
     "description": "Label for a checkbox in the options page"
@@ -251,13 +303,25 @@
     "message": "Aktivera åtkomst till funktioner som är lämpliga för tekniska användare.",
     "description": "Short description for a checkbox in the options page"
   },
+  "settingsBackupRestoreLabel": {
+    "message": "Säkerhetskopiering",
+    "description": "The header text for the back up/restore section"
+  },
+  "settingsBackupRestoreSummary": {
+    "message": "Säkerhetskopiera dina anpassade inställningar till en fil, eller återställ dina anpassade inställningar från en fil.",
+    "description": "A summary description of the back up/restore section."
+  },
+  "settingsBackupRestoreLegend": {
+    "message": "Återställningen kommer att skriva över alla dina nuvarande anpassade inställningar.",
+    "description": "Important information about the back up/restore section."
+  },
   "findListsPlaceholder": {
     "message": "Hitta listor",
     "description": "Placeholder for the input field used to find lists"
   },
   "strictblockTitle": {
     "message": "Sidan blockerad",
-    "description": "Webpage title for the strict-blocked page"
+    "description": "Web page title for the strict-blocked page"
   },
   "strictblockSentence1": {
     "message": "uBO Lite har förhindrat följande sida från att läsas in:",
@@ -277,7 +341,7 @@
   },
   "strictblockBack": {
     "message": "Gå tillbaka",
-    "description": "A button to go back to the previous webpage"
+    "description": "A button to go back to the previous web page"
   },
   "strictblockClose": {
     "message": "Stäng det här fönstret",
@@ -339,6 +403,10 @@
     "message": "Ångra",
     "description": "Text for buttons used to revert changes"
   },
+  "addButton": {
+    "message": "Lägg till",
+    "description": "Text for buttons used to add content"
+  },
   "importAndAppendButton": {
     "message": "Importera och lägg till…",
     "description": "Text for buttons used to import and append content"
@@ -346,6 +414,22 @@
   "exportButton": {
     "message": "Exportera…",
     "description": "Text for buttons used to export content"
+  },
+  "backupButton": {
+    "message": "Säkerhetskopiera…",
+    "description": "Text for buttons used to back up content"
+  },
+  "restoreButton": {
+    "message": "Återställ…",
+    "description": "Text for buttons used to restore content"
+  },
+  "resetToDefaultButton": {
+    "message": "Återställ till standardinställningarna…",
+    "description": "Text for buttons used to reset configurations to default"
+  },
+  "resetToDefaultConfirm": {
+    "message": "Alla dina anpassade inställningar kommer att tas bort. Vill du verkligen återställa till standardinställningarna?",
+    "description": "Message asking user to confirm reset to default settings"
   },
   "dnrRulesWarning": {
     "message": "Lägg inte till filter från obetrodda källor.",

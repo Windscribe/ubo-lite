@@ -25,62 +25,16 @@
 // Isolate from global scope
 (function uBOL_cssGenericImport() {
 
-/******************************************************************************/
+const lowlyGeneric = new Map(/* 56 */[[31080,".ad__main"],[17229,".adblokk"],[21654,".cikk_reklam"],[6820,".cikk-reklam"],[28308,".cikkreklam"],[13904,".google_hirdetes"],[39683,".google_hirdetesek"],[33250,".google-hirdetes"],[22833,".google-hirdetesek"],[60638,".googlehirdetes"],[55525,".googlehirdetesek"],[51592,".hirdetes_box"],[36812,".hirdetes_container,\n.hirdetes-container"],[58149,".hirdetes_doboz"],[55418,".hirdetes-box"],[49047,".hirdetes-doboz"],[15199,".hirdetes-linkek"],[55791,".hirdetesek_box"],[27219,".hirdetesek_container,\n.hirdetesek-container"],[29502,".hirdetesek_doboz"],[59485,".hirdetesek-box"],[46860,".hirdetesek-doboz"],[9293,".optimonk-container"],[45577,".optimonk-iframe-container"],[44700,".optimonk-middle"],[10487,".reklam-doboz"],[60830,".reklamok"],[40448,"#adblokk"],[44600,"#cemp_doboz"],[9252,"#cenmg"],[20667,"#cikk_reklam"],[58953,"#cikk-reklam"],[345,"#cikkreklam"],[59472,"#etarget"],[8125,"#google_hirdetes"],[44590,"#google_hirdetesek"],[60431,"#google-hirdetes"],[31708,"#google-hirdetesek"],[52115,"#googlehirdetes"],[37768,"#googlehirdetesek"],[60069,"#hirdetes_box"],[21921,"#hirdetes_container,\n#hirdetes-container"],[26728,"#hirdetes_doboz"],[50432,"#hirdetes_linkek"],[63639,"#hirdetes-box"],[9178,"#hirdetes-doboz"],[54962,"#hirdetes-linkek"],[9954,"#hirdetesek_box"],[29086,"#hirdetesek_container,\n#hirdetesek-container"],[9427,"#hirdetesek_doboz"],[7184,"#hirdetesek-box"],[18657,"#hirdetesek-doboz"],[29201,"#optimonk-iframe-container-campaign-12"],[11953,"#optimonk-overlay-campaign-12"],[7578,"#reklam-doboz"],[26483,"#reklamok"]]);
+const highlyGeneric = /* 14 */"[class*=\"GoogleAds\"],\n[data-campaign-name^=\"ads\"],\n[href*=\"ad.adverticum.net\"],\n[id*=\"google_ads\"],\n[id*=\"GoogleAds\"],\n[id^=\"ad_zone_\"],\n[id^=\"adocean\"],\n[id^=\"googlead\"],\n[name*=\"google_ads\"],\na[href*=\"ad.eval.hu\"],\na[href*=\"ad.netmedia.hu\"],\na[href*=\"adverticum.net\"],\na[href*=\"daserver.ultraweb.hu\"],\niframe[id*=\"ETARGET-\"]";
+const exceptions = /* 5 */[".adBanner",".ad-box:not(#ad-banner):not(:empty)",".heateor_sss_sharing_container",".adBanner","[href*=\"ad.adverticum.net\"]"];
+const hostnames = /* 5 */["videa.hu","media1.hu","greendex.hu","videaloop.hu","mindmegette.hu"];
+const hasEntities = false;
 
-const genericSelectorMap = [[6912360,".ad__main"],[5194573,".adblokk"],[15488150,".cikk_reklam"],[16063140,".cikk-reklam"],[14708372,".cikkreklam"],[9451088,".google_hirdetes"],[4954883,".google_hirdetesek"],[10846690,".google-hirdetes"],[2185521,".google-hirdetesek"],[8121566,".googlehirdetes"],[1300709,".googlehirdetesek"],[16566664,".hirdetes_box"],[3837900,".hirdetes_container,\n.hirdetes-container"],[5694245,".hirdetes_doboz"],[16570490,".hirdetes-box"],[5685143,".hirdetes-doboz"],[670559,".hirdetes-linkek"],[5757423,".hirdetesek_box"],[5007955,".hirdetesek_container,\n.hirdetesek-container"],[9335614,".hirdetesek_doboz"],[5761117,".hirdetesek-box"],[9418508,".hirdetesek-doboz"],[3613773,".optimonk-container"],[15118857,".optimonk-iframe-container"],[8171164,".optimonk-middle"],[1976567,".reklam-doboz"],[14216606,".reklamok"],[9739776,"#adblokk"],[12365368,"#cemp_doboz"],[13444132,"#cenmg"],[16470203,"#cikk_reklam"],[12445257,"#cikk-reklam"],[12321113,"#cikkreklam"],[4057168,"#etarget"],[7479229,"#google_hirdetes"],[6598190,"#google_hirdetesek"],[6155279,"#google-hirdetes"],[8420316,"#google-hirdetesek"],[7850899,"#googlehirdetes"],[12424072,"#googlehirdetesek"],[6613669,"#hirdetes_box"],[9131425,"#hirdetes_container,\n#hirdetes-container"],[15165544,"#hirdetes_doboz"],[11322624,"#hirdetes_linkek"],[6617239,"#hirdetes-box"],[15147994,"#hirdetes-doboz"],[8312498,"#hirdetes-linkek"],[15214306,"#hirdetesek_box"],[3502494,"#hirdetesek_container,\n#hirdetesek-container"],[4531411,"#hirdetesek_doboz"],[15211536,"#hirdetesek-box"],[4409569,"#hirdetesek-doboz"],[4682257,"#optimonk-iframe-container-campaign-12"],[5975729,"#optimonk-overlay-campaign-12"],[7216538,"#reklam-doboz"],[2385779,"#reklamok"]];
-const genericExceptionSieve = [449175,4309191];
-const genericExceptionMap = [["videa.hu",".adBanner"],["videaloop.hu",".adBanner"],["greendex.hu",".heateor_sss_sharing_container"]];
-
-if ( genericSelectorMap ) {
-    const map = self.genericSelectorMap =
-        self.genericSelectorMap || new Map();
-    if ( map.size !== 0 ) {
-        for ( const entry of genericSelectorMap ) {
-            const before = map.get(entry[0]);
-            if ( before === undefined ) {
-                map.set(entry[0], entry[1]);
-            } else {
-                map.set(entry[0], `${before},\n${entry[1]}`);
-            }
-        }
-    } else {
-        self.genericSelectorMap = new Map(genericSelectorMap);
-    }
-    genericSelectorMap.length = 0;
-}
-
-if ( genericExceptionSieve ) {
-    const hashes = self.genericExceptionSieve =
-        self.genericExceptionSieve || new Set();
-    if ( hashes.size !== 0 ) {
-        for ( const hash of genericExceptionSieve ) {
-            hashes.add(hash);
-        }
-    } else {
-        self.genericExceptionSieve = new Set(genericExceptionSieve);
-    }
-    genericExceptionSieve.length = 0;
-}
-
-if ( genericExceptionMap ) {
-    const map = self.genericExceptionMap =
-        self.genericExceptionMap || new Map();
-    if ( map.size !== 0 ) {
-        for ( const entry of genericExceptionMap ) {
-            const before = map.get(entry[0]);
-            if ( before === undefined ) {
-                map.set(entry[0], entry[1]);
-            } else {
-                map.set(entry[0], `${before}\n${entry[1]}`);
-            }
-        }
-    } else {
-        self.genericExceptionMap = new Map(genericExceptionMap);
-    }
-    genericExceptionMap.length = 0;
-}
-
-/******************************************************************************/
+self.genericSelectorMaps = self.genericSelectorMaps ?? [];
+self.genericSelectorMaps.push(lowlyGeneric);
+self.genericDetails = self.genericDetails ?? [];
+self.genericDetails.push({ highlyGeneric, exceptions, hostnames, hasEntities });
 
 })();
 

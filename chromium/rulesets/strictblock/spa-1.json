@@ -15,7 +15,9 @@
    "ad.terra.com",
    "ad.terra.com.mx",
    "adclient-uol.lp.uol.com.br",
+   "adme2.click",
    "ads-redis.ecn.cl",
+   "ads.comunidades.net",
    "ads.elpais.com.uy",
    "ads.enrt.eu",
    "ads.gamavirtual.com",
@@ -26,7 +28,6 @@
    "ads.olx.com",
    "ads.periodistadigital.com",
    "ads.regiedepub.com",
-   "ads.sapo.pt",
    "ads.terra.es",
    "ads.tvtuga.com",
    "ads.webme.com",
@@ -35,18 +36,25 @@
    "adsroute.com",
    "adv.r7.com",
    "adw.sapo.pt",
+   "adzep.io",
    "adzonestatic.com",
+   "ak-ads-ns.prisasd.com",
    "analytic.337.com",
    "anunciospatrocinados.com",
+   "azureedge-global-fastly-cloudfront-ondigitalocean-stackpathcdn.buzz",
    "banners.emol.com",
    "banners.inforchannel.com.br",
    "banners.todoconsolas.com",
+   "bivogrvfyoj.in",
    "bowedcounty.com",
    "bserver.gp-guia.net",
    "byfoongusor.com",
+   "cdn-4k-webp.site",
    "ceremonyjogglecling.com",
+   "chorumebbbbgoza.xyz",
    "classic-bonus.com",
    "clicks.abril.com.br",
+   "comprargratis.com.br",
    "compras.periodistadigital.com",
    "crummydevioussucculent.com",
    "eru5tdmbuwxm.com",
@@ -56,9 +64,12 @@
    "gyh1lh20owj.ru",
    "hilariouszinc.com",
    "impreso.elfinanciero.com.mx",
+   "jogoforte.com",
    "landings.hopghpfa.com",
    "landings.zcoptry.com",
+   "mathilde-ads.com",
    "navdmp.com",
+   "otzads.net",
    "p.lasexta.com",
    "parceria.americanas.com.br",
    "ppi.terra.com.br",
@@ -82,7 +93,6 @@
    "v2b.nucleo.online",
    "vitrine.lugarcerto.com.br",
    "vitrines.globo.com",
-   "webstats.sapo.pt",
    "widgets.informars.com",
    "xad.dnoticias.pt",
    "zahir2.aeiou.pt",
@@ -94,6 +104,22 @@
   ]
  },
  "id": 1,
+ "priority": 29
+},
+{
+ "action": {
+  "redirect": {
+   "regexSubstitution": "/strictblock.html#\\0"
+  },
+  "type": "redirect"
+ },
+ "condition": {
+  "regexFilter": "^[^:]+:\\/\\/([^:/]+\\.)?cuevana\\.fm\\/register.*",
+  "resourceTypes": [
+   "main_frame"
+  ]
+ },
+ "id": 2,
  "priority": 29
 }
 ]

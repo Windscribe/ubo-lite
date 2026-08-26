@@ -48,8 +48,48 @@ jobs.push(function bnf3() {
 
 // This just tests whether the filtering engine can deal with a very long URL
 jobs.push(function bnf4() {
-    const looongURL = `/${'a-'.repeat(16384)}bnf4.gif`;
+    const looongURL = `./${'a-'.repeat(16384)}bnf4.gif`;
     fetch(looongURL).then(response => response.text()).catch(( ) => { });
+});
+
+jobs.push(function bnf5() {
+    if ( window.bnf5Sentinel === true ) { return; }
+    hide('#bnf5 .fail');
+});
+
+jobs.push(function bnf6() {
+    fetch('./bnf6.txt', { method: 'get' }).then(response => {
+        if ( response.ok !== true ) { return; }
+        return response.text();
+    }).then(text => {
+        if ( typeof text !== 'string' ) { return; }
+        if ( text !== 'ok' ) { return; }
+        return fetch('./bnf6.txt', { method: 'head' })
+    }).catch(( ) => {
+        hide('#bnf6 .fail');
+    });
+});
+
+jobs.push(function anf1() {
+    const img = qs$('#anf1 img');
+    img.decode().then(( ) => {
+        if ( img.naturalWidth !== 32 ) { return; }
+        hide('#anf1 .fail');
+    });
+});
+
+jobs.push(function anf2() {
+    if ( qs$('#anf2 iframe').contentWindow.anf2Sentinel === true ) { return; }
+    hide('#anf2 .fail');
+});
+
+jobs.push(function anf3() {
+    const frameURL = new URL(qs$('#anf3 iframe').contentWindow.location.href);
+    const params = frameURL.searchParams;
+    if ( params.has('b') ) { return; }
+    if ( params.has('a') === false ) { return; }
+    if ( params.getAll('c').length !== 2 ) { return; }
+    hide('#anf3 .fail');
 });
 
 jobs.push(function pcf18() {
@@ -70,19 +110,6 @@ jobs.push(function sf2() {
         hide('#sf2 .fail');
     };
     setTimeout(( ) => { check(); }, 100);
-});
-
-jobs.push(function anf1() {
-    const img = qs$('#anf1 img');
-    img.decode().then(( ) => {
-        if ( img.naturalWidth !== 32 ) { return; }
-        hide('#anf1 .fail');
-    });
-});
-
-jobs.push(function anf2() {
-    if ( qs$('#anf2 iframe').contentWindow.anf2Sentinel === true ) { return; }
-    hide('#anf2 .fail');
 });
 
 jobs.push(function sf3() {
@@ -117,6 +144,18 @@ jobs.push(function sf6() {
     if ( self.sf6Sentinel === undefined ) { return; }
     if ( self.sf6Sentinel.getElementsByTagName !== document.body.getElementsByTagName ) { return; }
     hide('#sf6 .fail');
+});
+
+jobs.push(function sf7() {
+    const elem = document.querySelector('#sf7 .fail');
+    elem.innerHTML = '<b></b>';
+    if ( elem.innerHTML === '<b></b>' ) { return; }
+    hide('#sf7 .fail');
+});
+
+jobs.push(function sf9() {
+    if ( self.sf9Sentinel === true ) { return; }
+    hide('#sf9 .fail');
 });
 
 jobs.push(async function x() {

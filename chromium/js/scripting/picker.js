@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    uBlock Origin - a comprehensive, efficient content blocker
+    uBlock Origin Lite - a comprehensive, MV3-compliant content blocker
     Copyright (C) 2025-present Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
@@ -237,22 +237,68 @@ const excludedSelectors = [
 
 /******************************************************************************/
 
+async function previewSelector(selector) {
+    previewSelector.promise = previewSelector.promise.then(( ) =>
+        previewSelector.commit(selector)
+    );
+    return previewSelector.promise;
+}
+
+previewSelector.commit = async function(selector) {
+    if ( selector === previewSelector.selector ) { return; }
+    if ( previewSelector.selector !== '' ) {
+        if ( previewSelector.selector.startsWith('{') ) {
+            if ( self.pickerProceduralFilteringAPI ) {
+                await self.pickerProceduralFilteringAPI.reset();
+            }
+        }
+        if ( previewSelector.css !== '' ) {
+            await ubolOverlay.sendMessage({ what: 'removeCSS', css: previewSelector.css });
+            previewSelector.css = '';
+        }
+    }
+    previewSelector.selector = selector || '';
+    if ( selector === '' ) { return; }
+    if ( selector.startsWith('{') ) {
+        if ( self.ProceduralFiltererAPI === undefined ) { return; }
+        if ( self.pickerProceduralFilteringAPI === undefined ) {
+            self.pickerProceduralFilteringAPI = new self.ProceduralFiltererAPI();
+        }
+        const pselector = JSON.parse(selector);
+        if ( pselector.cssable ) {
+            self.pickerProceduralFilteringAPI.addDeclaratives([ pselector ]);
+        } else {
+            self.pickerProceduralFilteringAPI.addProcedurals([ pselector ]);
+        }
+        return;
+    }
+    previewSelector.css = `${selector}{display:none!important;}`;
+    await ubolOverlay.sendMessage({ what: 'insertCSS', css: previewSelector.css });
+};
+
+previewSelector.promise = Promise.resolve();
+previewSelector.selector = '';
+previewSelector.css = '';
+
+/******************************************************************************/
+
+const previewProceduralFiltererAPI = new self.ProceduralFiltererAPI(); 
+
+/******************************************************************************/
+
 function onMessage(msg) {
     switch ( msg.what ) {
-    case 'injectCustomFilters':
-        return ubolOverlay.sendMessage({ what: 'injectCustomFilters',
-            hostname: ubolOverlay.url.hostname,
-        });
-    case 'uninjectCustomFilters':
-        return ubolOverlay.sendMessage({ what: 'uninjectCustomFilters',
-            hostname: ubolOverlay.url.hostname,
-        });
+    case 'quitTool':
+        previewProceduralFiltererAPI.reset();
+        break;
+    case 'startCustomFilters':
+        return ubolOverlay.sendMessage({ what: 'startCustomFilters' });
+    case 'terminateCustomFilters':
+        return ubolOverlay.sendMessage({ what: 'terminateCustomFilters' });
     case 'candidatesAtPoint':
         return candidatesAtPoint(msg.mx, msg.my, msg.broad);
-    case 'insertCSS':
-        return ubolOverlay.sendMessage(msg);
-    case 'removeCSS':
-        return ubolOverlay.sendMessage(msg);
+    case 'previewSelector':
+        return previewSelector(msg.selector);
     default:
         break;
     }

@@ -25,62 +25,16 @@
 // Isolate from global scope
 (function uBOL_cssGenericImport() {
 
-/******************************************************************************/
+const lowlyGeneric = new Map(/* 54 */[[52004,"#atwAdFrame"],[54597,"#keskimainos"],[53926,"#mainokset"],[57573,"#mainokset_oikea"],[1451,"#mainokset_vasen"],[6682,"#mainokset_yla"],[32242,"#mainos"],[15269,"#mainosbanneri"],[16326,"#mainosbannerit"],[35656,"#mainoskaruselli"],[23241,"#mainoslaatikko"],[64246,"#mainospaikka"],[31290,"#mainostila"],[35035,"#natiivit"],[26255,"#parade-container"],[24238,"#sponsori"],[48835,"#sponsorit"],[53899,"#yhteistyokaruselli"],[53804,"#yhteistyokumppanit"],[54115,"#yhteistyossa"],[32886,"#ylamainokset"],[57486,"#ylamainos"],[38052,".adbox_content"],[42738,".card--native"],[2720,".dfpBoxBottom"],[60492,".dfpListNativeBanner"],[45938,".diks-display-ad"],[27822,".diks-native-ad"],[56289,".etuovi-embed"],[23848,".keskimainos"],[10539,".mainokset"],[56456,".mainokset_oikea"],[15302,".mainokset_vasen"],[7639,".mainokset_yla"],[54047,".mainos"],[58152,".mainosbanneri"],[20363,".mainosbannerit"],[49701,".mainoskaruselli"],[5124,".mainoslaatikko"],[63388,".mainosnosto"],[61467,".mainospaikka"],[183,".mainostila"],[50883,".sponsori"],[38030,".sponsorit"],[8882,".tdt-desktop-ad"],[29843,".tdt-manager-element"],[8080,".tdt-minilanding-button"],[521,".tdt-mobile-ad"],[27110,".yhteistyokaruselli"],[27201,".yhteistyokumppanit"],[51854,".yhteistyossa"],[63131,".ylamainokset"],[14147,".ylamainos"],[35177,"div#commercial-carousel"]]);
+const highlyGeneric = /* 14 */"[href=\"https://pikakasinoja.com\"],\n[href^=\"/artikkeli/kaupallinen-yhteistyo/\"],\n[href^=\"https://media.suomikasino.com/\"],\n[href^=\"https://www.nettikasinot.org\"],\na[href*=\"/clickthrgh.asp?\"],\na[href=\"https://kasinoseta.com/\"],\na[href^=\"https://app.readpeak.com/ads\"],\na[href^=\"https://www.kumiukko.fi/ostos?tt=\"],\ndiv[class*=\"element--nativead\"],\ndiv[class*=\"newsFrontAd\"],\ndiv[class=\"ad container-right\"],\ndiv[class=\"AgAdCarousel_Container\"],\ndiv[class=\"AgAdCarousel_LightBox\"],\ndiv[id^=\"ads-content-bottom\"]";
+const exceptions = /* 7 */[".mainokset\n.mainos","#CookielawBanner",".mainokset",".adsbygoogle","article.ad",".mainos","#mainos"];
+const hostnames = /* 7 */["hs.fi","srk.fi","sokos.fi","murha.info","netticaravan.fi","tilannehuone.fi","pienimatkaopas.com"];
+const hasEntities = false;
 
-const genericSelectorMap = [[6474532,"#atwAdFrame"],[15062341,"#keskimainos"],[4838054,"#mainokset"],[6414565,"#mainokset_oikea"],[6423979,"#mainokset_vasen"],[13572634,"#mainokset_yla"],[5406194,"#mainos"],[12991397,"#mainosbanneri"],[13909958,"#mainosbannerit"],[15174472,"#mainoskaruselli"],[13982409,"#mainoslaatikko"],[522998,"#mainospaikka"],[1079866,"#mainostila"],[7243995,"#natiivit"],[2123407,"#parade-container"],[6512302,"#sponsori"],[4308675,"#sponsorit"],[6410891,"#yhteistyokaruselli"],[6410796,"#yhteistyokumppanit"],[4313955,"#yhteistyossa"],[2326646,"#ylamainokset"],[2023566,"#ylamainos"],[15963300,".adbox_content"],[14395122,".card--native"],[1051296,".dfpBoxBottom"],[191564,".dfpListNativeBanner"],[4961138,".diks-display-ad"],[14118062,".diks-native-ad"],[10410977,".etuovi-embed"],[1072424,".keskimainos"],[6039851,".mainokset"],[12639368,".mainokset_oikea"],[12663750,".mainokset_vasen"],[4529623,".mainokset_yla"],[2872095,".mainos"],[3990312,".mainosbanneri"],[12078987,".mainosbannerit"],[1884709,".mainoskaruselli"],[11867140,".mainoslaatikko"],[13170588,".mainosnosto"],[15331355,".mainospaikka"],[4260023,".mainostila"],[1951427,".sponsori"],[6329486,".sponsorit"],[8266418,".tdt-desktop-ad"],[6517907,".tdt-manager-element"],[4923280,".tdt-minilanding-button"],[6619657,".tdt-mobile-ad"],[13658598,".yhteistyokaruselli"],[13658689,".yhteistyokumppanit"],[8899214,".yhteistyossa"],[7665307,".ylamainokset"],[13252419,".ylamainos"],[5409129,"div#commercial-carousel"]];
-const genericExceptionSieve = [16153475,6039851,2872095,5406194,1647817,2616067,7105871];
-const genericExceptionMap = [["murha.info",".adsbygoogle"],["hs.fi",".mainokset\n.mainos"],["sokos.fi",".mainokset"],["tilannehuone.fi",".mainos"],["pienimatkaopas.com","#mainos"],["netticaravan.fi","article.ad"],["www.seurakuntalainen.fi","#CookieBanner"],["srk.fi","#CookielawBanner"]];
-
-if ( genericSelectorMap ) {
-    const map = self.genericSelectorMap =
-        self.genericSelectorMap || new Map();
-    if ( map.size !== 0 ) {
-        for ( const entry of genericSelectorMap ) {
-            const before = map.get(entry[0]);
-            if ( before === undefined ) {
-                map.set(entry[0], entry[1]);
-            } else {
-                map.set(entry[0], `${before},\n${entry[1]}`);
-            }
-        }
-    } else {
-        self.genericSelectorMap = new Map(genericSelectorMap);
-    }
-    genericSelectorMap.length = 0;
-}
-
-if ( genericExceptionSieve ) {
-    const hashes = self.genericExceptionSieve =
-        self.genericExceptionSieve || new Set();
-    if ( hashes.size !== 0 ) {
-        for ( const hash of genericExceptionSieve ) {
-            hashes.add(hash);
-        }
-    } else {
-        self.genericExceptionSieve = new Set(genericExceptionSieve);
-    }
-    genericExceptionSieve.length = 0;
-}
-
-if ( genericExceptionMap ) {
-    const map = self.genericExceptionMap =
-        self.genericExceptionMap || new Map();
-    if ( map.size !== 0 ) {
-        for ( const entry of genericExceptionMap ) {
-            const before = map.get(entry[0]);
-            if ( before === undefined ) {
-                map.set(entry[0], entry[1]);
-            } else {
-                map.set(entry[0], `${before}\n${entry[1]}`);
-            }
-        }
-    } else {
-        self.genericExceptionMap = new Map(genericExceptionMap);
-    }
-    genericExceptionMap.length = 0;
-}
-
-/******************************************************************************/
+self.genericSelectorMaps = self.genericSelectorMaps ?? [];
+self.genericSelectorMaps.push(lowlyGeneric);
+self.genericDetails = self.genericDetails ?? [];
+self.genericDetails.push({ highlyGeneric, exceptions, hostnames, hasEntities });
 
 })();
 

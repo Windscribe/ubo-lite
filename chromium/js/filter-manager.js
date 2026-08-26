@@ -29,18 +29,49 @@ import {
 
 import {
     intersectHostnameIters,
+    isScriptlet,
     matchesFromHostnames,
-    strArrayEq,
     subtractHostnameIters,
 } from './utils.js';
 
+import { ubolErr } from './debug.js';
+
 /******************************************************************************/
 
-export async function selectorsFromCustomFilters(hostname) {
+const isProcedural = a => a.startsWith('{');
+const isCSS = a => isProcedural(a) === false && isScriptlet(a) === false;
+
+/******************************************************************************/
+
+async function keysFromStorage() {
+    pendingStorageOp = pendingStorageOp.then(( ) => localKeys());
+    return pendingStorageOp;
+}
+
+async function readFromStorage(key) {
+    pendingStorageOp = pendingStorageOp.then(( ) => localRead(key));
+    return pendingStorageOp;
+}
+
+async function writeToStorage(key, value) {
+    pendingStorageOp = pendingStorageOp.then(( ) => localWrite(key, value));
+    return pendingStorageOp;
+}
+
+async function removeFromStorage(key) {
+    pendingStorageOp = pendingStorageOp.then(( ) => localRemove(key));
+    return pendingStorageOp;
+}
+
+let pendingStorageOp = Promise.resolve();
+
+/******************************************************************************/
+
+export async function customFiltersFromHostname(hostname) {
     const promises = [];
     let hn = hostname;
     while ( hn !== '' ) {
-        promises.push(localRead(`site.${hn}`));
+        promises.push(readFromStorage(`site.${hn}`));
         const pos = hn.indexOf('.');
         if ( pos === -1 ) { break; }
         hn = hn.slice(pos + 1);
@@ -50,7 +81,9 @@ export async function selectorsFromCustomFilters(hostname) {
     for ( let i = 0; i < promises.length; i++ ) {
         const selectors = results[i];
         if ( selectors === undefined ) { continue; }
-        selectors.forEach(selector => { out.push(selector.slice(1)); });
+        selectors.forEach(selector => {
+            out.push(selector);
+        });
     }
     return out.sort();
 }
@@ -58,48 +91,97 @@ export async function selectorsFromCustomFilters(hostname) {
 /******************************************************************************/
 
 export async function hasCustomFilters(hostname) {
-    const selectors = await selectorsFromCustomFilters(hostname);
+    const selectors = await customFiltersFromHostname(hostname);
     return selectors?.length ?? 0;
 }
 
 /******************************************************************************/
 
-export async function injectCustomFilters(tabId, frameId, hostname) {
-    const selectors = await selectorsFromCustomFilters(hostname);
-    if ( selectors.length === 0 ) { return; }
-    await browser.scripting.insertCSS({
-        css: `${selectors.join(',\n')}{display:none!important;}`,
-        origin: 'USER',
-        target: { tabId, frameIds: [ frameId ] },
-    }).catch(reason => {
-        console.log(reason);
-    });
-    return selectors;
+async function getAllCustomFilterKeys() {
+    const storageKeys = await keysFromStorage() || [];
+    return storageKeys.filter(a => a.startsWith('site.'));
 }
 
 /******************************************************************************/
 
-export async function uninjectCustomFilters(tabId, frameId, hostname) {
-    const selectors = await selectorsFromCustomFilters(hostname);
-    if ( selectors.length === 0 ) { return; }
-    return browser.scripting.removeCSS({
-        css: `${selectors.join(',\n')}{display:none!important;}`,
-        origin: 'USER',
+export async function getAllCustomFilters() {
+    const collect = async key => {
+        const selectors = await readFromStorage(key);
+        return [ key.slice(5), selectors ?? [] ];
+    };
+    const keys = await getAllCustomFilterKeys();
+    const promises = keys.map(k => collect(k));
+    return Promise.all(promises);
+}
+
+/******************************************************************************/
+
+export function startCustomFilters(tabId, frameId) {
+    return browser.scripting.executeScript({
+        files: [ '/js/scripting/css-user.js' ],
         target: { tabId, frameIds: [ frameId ] },
+        injectImmediately: true,
     }).catch(reason => {
-        console.log(reason);
-    });
+        ubolErr(`startCustomFilters/${reason}`);
+    })
+}
+
+export function terminateCustomFilters(tabId, frameId) {
+    return browser.scripting.executeScript({
+        files: [ '/js/scripting/css-user-terminate.js' ],
+        target: { tabId, frameIds: [ frameId ] },
+        injectImmediately: true,
+    }).catch(reason => {
+        ubolErr(`terminateCustomFilters/${reason}`);
+    })
+}
+
+/******************************************************************************/
+
+export async function injectCustomFilters(tabId, frameId, hostname) {
+    const selectors = await customFiltersFromHostname(hostname);
+    if ( selectors.length === 0 ) { return; }
+    const promises = [];
+    const plainSelectors = selectors.filter(a => isCSS(a));
+    if ( plainSelectors.length !== 0 ) {
+        promises.push(
+            browser.scripting.insertCSS({
+                css: `${plainSelectors.join(',\n')}{display:none!important;}`,
+                origin: 'USER',
+                target: { tabId, frameIds: [ frameId ] },
+            }).catch(reason => {
+                ubolErr(`injectCustomFilters/insertCSS/${reason}`);
+            })
+        );
+    }
+    const proceduralSelectors = selectors.filter(a => isProcedural(a));
+    if ( proceduralSelectors.length !== 0 ) {
+        promises.push(
+            browser.scripting.executeScript({
+                files: [
+                    '/js/scripting/css-api.js',
+                    '/js/scripting/css-procedural-api.js',
+                ],
+                target: { tabId, frameIds: [ frameId ] },
+                injectImmediately: true,
+            }).catch(reason => {
+                ubolErr(`injectCustomFilters/executeScript/${reason}`);
+            })
+        );
+    }
+    await Promise.all(promises);
+    return { plainSelectors, proceduralSelectors };
 }
 
 /******************************************************************************/
 
 export async function registerCustomFilters(context) {
-    const storageKeys = await localKeys() || [];
-    const siteKeys = storageKeys.filter(a => a.startsWith('site.'));
-    if ( siteKeys.length === 0 ) { return; }
+    const customFilters = new Map(await getAllCustomFilters());
+    if ( customFilters.size === 0 ) { return; }
 
     const { none } = context.filteringModeDetails;
-    let hostnames = siteKeys.map(a => a.slice(5));
+    let hostnames = Array.from(customFilters.keys());
+    let excludeHostnames = [];
     if ( none.has('all-urls') ) {
         const { basic, optimal, complete } = context.filteringModeDetails;
         hostnames = intersectHostnameIters(hostnames, [
@@ -107,51 +189,103 @@ export async function registerCustomFilters(context) {
         ]);
     } else if ( none.size !== 0 ) {
         hostnames = [ ...subtractHostnameIters(hostnames, none) ];
+        excludeHostnames = Array.from(none);
     }
+    hostnames = hostnames.filter(a =>
+        customFilters.get(a).some(a => isCSS(a) || isProcedural(a))
+    );
     if ( hostnames.length === 0 ) { return; }
-
-    const registered = context.before.get('css-user');
-    context.before.delete('css-user'); // Important!
 
     const directive = {
         id: 'css-user',
         js: [ '/js/scripting/css-user.js' ],
         matches: matchesFromHostnames(hostnames),
+        allFrames: true,
+        matchOriginAsFallback: true,
         runAt: 'document_start',
     };
-
-    if ( registered === undefined ) {
-        context.toAdd.push(directive);
-    } else if ( strArrayEq(registered.matches, directive.matches) === false ) {
-        context.toRemove.push('css-user');
-        context.toAdd.push(directive);
+    if ( excludeHostnames.length !== 0 ) {
+        directive.excludeMatches = matchesFromHostnames(excludeHostnames);
     }
+
+    context.toAdd.push(directive);
 }
 
 /******************************************************************************/
 
-export async function addCustomFilter(hostname, selector) {
+export async function addCustomFilters(hostname, toAdd) {
+    if ( hostname === '' ) { return false; }
     const key = `site.${hostname}`;
-    const selectors = await localRead(key) || [];
-    const filter = `0${selector}`;
-    if ( selectors.includes(filter) ) { return false; }
-    selectors.push(filter);
+    const selectors = await readFromStorage(key) || [];
+    const countBefore = selectors.length;
+    for ( const selector of toAdd ) {
+        if ( selectors.includes(selector) ) { continue; }
+        selectors.push(selector);
+    }
+    if ( selectors.length === countBefore ) { return false; }
     selectors.sort();
-    await localWrite(key, selectors);
+    writeToStorage(key, selectors);
     return true;
 }
 
 /******************************************************************************/
 
-export async function removeCustomFilter(hostname, selector) {
+export async function removeAllCustomFilters(hostname) {
+    if ( hostname === '*' ) {
+        const keys = await getAllCustomFilterKeys();
+        if ( keys.length === 0 ) { return false; }
+        for ( const key of keys ) {
+            removeFromStorage(key);
+        }
+        return true;
+    }
     const key = `site.${hostname}`;
-    const selectors = await localRead(key);
+    const selectors = await readFromStorage(key) || [];
+    removeFromStorage(key);
+    return selectors.length !== 0;
+}
+
+export async function removeCustomFilters(hostname, selectors) {
+    const promises = [];
+    let hn = hostname;
+    while ( hn !== '' ) {
+        promises.push(removeCustomFiltersByKey(`site.${hn}`, selectors));
+        const pos = hn.indexOf('.');
+        if ( pos === -1 ) { break; }
+        hn = hn.slice(pos + 1);
+    }
+    const results = await Promise.all(promises);
+    return results.some(a => a);
+}
+
+async function removeCustomFiltersByKey(key, toRemove) {
+    const selectors = await readFromStorage(key);
     if ( selectors === undefined ) { return false; }
-    const i = selectors.indexOf(`0${selector}`);
-    if ( i === -1 ) { return false; }
-    selectors.splice(i, 1);
-    await selectors.length !== 0
-        ? localWrite(key, selectors)
-        : localRemove(key);
+    const beforeCount = selectors.length;
+    for ( const selector of toRemove ) {
+        const i = selectors.indexOf(selector);
+        if ( i === -1 ) { continue; }
+        selectors.splice(i, 1);
+    }
+    const afterCount = selectors.length;
+    if ( afterCount === beforeCount ) { return false; }
+    if ( afterCount !== 0 ) {
+        writeToStorage(key, selectors);
+    } else {
+        removeFromStorage(key);
+    }
     return true;
+}
+
+/******************************************************************************/
+
+export function getSandboxFilters() {
+    return localRead('sandboxFilters');
+}
+
+export function setSandboxFilters(text = '') {
+    text = text.trim();
+    return text !== ''
+        ? localWrite('sandboxFilters', text)
+        : localRemove('sandboxFilters')
 }

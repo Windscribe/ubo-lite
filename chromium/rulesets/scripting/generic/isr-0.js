@@ -25,62 +25,16 @@
 // Isolate from global scope
 (function uBOL_cssGenericImport() {
 
-/******************************************************************************/
+const lowlyGeneric = new Map(/* 3 */[[35711,"#HiddenMovie > [src^=\"http://www.youtube.com\"] + #video-blocker"],[14271,".entry > .entry-inner > .wpvl.wpvl-youtube.ng-scope.size-l"],[3031,".wpvl.wpvl-dailymotion > .fblogin.lockoverlay.ng-scope,\n.wpvl.wpvl-youtube.ng-scope.size-xl > .ng-scope + .fblogin.lockoverlay.ng-scope,\n.wpvl.wpvl-youtube.ng-scope.size-xxl > [ng-show=\"!blocked\"] + * + .ng-scope + .fblogin.lockoverlay.ng-scope"]]);
+const highlyGeneric = /* 0 */"";
+const exceptions = /* 20 */[".ad-link","#taboola-below-article-thumbnails\n.share-zone",".small-ad",".addtitle","#fwdevpDiv0",".banner-300",".pub-container",".header-ad",".adclass\n.shareBtn",".cookieAlert",".adunit","#taboola-below-article-thumbnails\n.share-zone","#printads\n.adlist\n.adpic","#AdTop","#findABroker\n.generalOverlay",".postad",".ad-body","#topAds","#gnb",".image-advertisement"];
+const hostnames = /* 20 */["ad.co.il","c14.co.il","adi.gov.il","blms.co.il","ch10.co.il","leyada.net","masa.co.il","pitria.com","ynet.co.il","bezeq.co.il","kikar.co.il","now14.co.il","bipbip.co.il","callil.co.il","investing.com","homeless.co.il","junkyard.co.il","lavender.co.il","davidson.org.il","holmesplace.co.il"];
+const hasEntities = false;
 
-const genericSelectorMap = [[9997183,"#HiddenMovie > [src^=\"http://www.youtube.com\"] + #video-blocker"],[11548607,".entry > .entry-inner > .wpvl.wpvl-youtube.ng-scope.size-l"],[2034647,".wpvl.wpvl-dailymotion > .fblogin.lockoverlay.ng-scope,\n.wpvl.wpvl-youtube.ng-scope.size-xl > .ng-scope + .fblogin.lockoverlay.ng-scope,\n.wpvl.wpvl-youtube.ng-scope.size-xxl > [ng-show=\"!blocked\"] + * + .ng-scope + .fblogin.lockoverlay.ng-scope"],[12051159,"#bthn"]];
-const genericExceptionSieve = [12941665,2952977,8794540,11378159,7308180,678375,15808712,16530279,9059208,1419719,16120117,16089386,1500050,12736753,12266315,10374072,15628656,2429090,4065922,15458099];
-const genericExceptionMap = [["ad.co.il",".ad-link"],["adi.gov.il",".small-ad"],["bipbip.co.il","#printads\n.adlist\n.adpic"],["blms.co.il",".addtitle"],["c14.co.il","#taboola-below-article-thumbnails\n.share-zone"],["now14.co.il","#taboola-below-article-thumbnails\n.share-zone"],["callil.co.il","#AdTop"],["holmesplace.co.il",".image-advertisement"],["homeless.co.il",".postad"],["investing.com","#findABroker\n.generalOverlay"],["junkyard.co.il",".ad-body"],["kikar.co.il",".adunit"],["lavender.co.il","#topAds"],["leyada.net",".banner-300"],["pitria.com",".header-ad"],["ynet.co.il",".adclass\n.shareBtn"]];
-
-if ( genericSelectorMap ) {
-    const map = self.genericSelectorMap =
-        self.genericSelectorMap || new Map();
-    if ( map.size !== 0 ) {
-        for ( const entry of genericSelectorMap ) {
-            const before = map.get(entry[0]);
-            if ( before === undefined ) {
-                map.set(entry[0], entry[1]);
-            } else {
-                map.set(entry[0], `${before},\n${entry[1]}`);
-            }
-        }
-    } else {
-        self.genericSelectorMap = new Map(genericSelectorMap);
-    }
-    genericSelectorMap.length = 0;
-}
-
-if ( genericExceptionSieve ) {
-    const hashes = self.genericExceptionSieve =
-        self.genericExceptionSieve || new Set();
-    if ( hashes.size !== 0 ) {
-        for ( const hash of genericExceptionSieve ) {
-            hashes.add(hash);
-        }
-    } else {
-        self.genericExceptionSieve = new Set(genericExceptionSieve);
-    }
-    genericExceptionSieve.length = 0;
-}
-
-if ( genericExceptionMap ) {
-    const map = self.genericExceptionMap =
-        self.genericExceptionMap || new Map();
-    if ( map.size !== 0 ) {
-        for ( const entry of genericExceptionMap ) {
-            const before = map.get(entry[0]);
-            if ( before === undefined ) {
-                map.set(entry[0], entry[1]);
-            } else {
-                map.set(entry[0], `${before}\n${entry[1]}`);
-            }
-        }
-    } else {
-        self.genericExceptionMap = new Map(genericExceptionMap);
-    }
-    genericExceptionMap.length = 0;
-}
-
-/******************************************************************************/
+self.genericSelectorMaps = self.genericSelectorMaps ?? [];
+self.genericSelectorMaps.push(lowlyGeneric);
+self.genericDetails = self.genericDetails ?? [];
+self.genericDetails.push({ highlyGeneric, exceptions, hostnames, hasEntities });
 
 })();
 

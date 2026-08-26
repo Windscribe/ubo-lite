@@ -25,62 +25,16 @@
 // Isolate from global scope
 (function uBOL_cssGenericImport() {
 
-/******************************************************************************/
+const lowlyGeneric = new Map(/* 42 */[[1275,"#ad_popup"],[59419,"#adRectangle"],[60256,"#onlajny-stickers"],[10624,"#promo-box"],[19810,"#reklama-etarget"],[2331,"#reklamni-box"],[15841,"#reklamy"],[48368,"#sklik"],[31243,"#slevomat_ad"],[24947,"#topbanner"],[29355,"#zivefirmy"],[45393,".adform-adbox"],[14401,".bx-leaderboard"],[5532,".cnc-ads"],[3869,".etarget"],[25079,".hp-advert"],[61701,".jobscz"],[56213,".lsads-banner"],[63618,".nativead"],[8568,".ownad"],[10528,".perex-adblock-warning"],[45244,".r-main"],[55277,".reklama-3"],[33024,".reklama-bottom"],[10310,".reklama-box"],[22993,".reklama-left"],[19524,".reklama-lista"],[39957,".reklama-megaboard"],[9307,".reklama-right"],[9496,".reklama-top"],[20396,".reklamaBottom"],[59882,".reklamaHorniLista"],[31962,".reklama_ahead"],[17901,".reklama_square"],[38066,".rklm"],[11261,".sklik"],[53719,".sklik-block"],[10601,".sklik-box"],[51482,".sklik_left"],[36048,".sklik_right"],[43396,".topreklama"],[59437,".vreklama"]]);
+const highlyGeneric = /* 4 */"[id^=\"etarget\"],\n[id^=\"aswift\"],\n[id^=\"sklikReklama\"],\n[id^=\"sm-ad\"]";
+const exceptions = /* 12 */[".ads-box\n.reklama-box",".g_ad","#adsense",".r-main",".adBanner",".reklama","#adverts",".advertising-content",".reklama",".reklama",".rklm","#ad_skin"];
+const hostnames = /* 12 */["denik.cz","novinky.cz","skrblik.cz","hyundai.com","aktuality.sk","mazdaclub.cz","sluzebnik.cz","vranovske.sk","nissanclub.cz","jaguar-club.net","www.parabola.cz","dobre-recepty.sk"];
+const hasEntities = false;
 
-const genericSelectorMap = [[4850939,"#ad_popup"],[190491,"#adRectangle"],[11594592,"#onlajny-stickers"],[3287424,"#promo-box"],[6638946,"#reklama-etarget"],[7145755,"#reklamni-box"],[14958049,"#reklamy"],[15973616,"#sklik"],[14449163,"#slevomat_ad"],[7561587,"#topbanner"],[12677803,"#zivefirmy"],[5222737,".adform-adbox"],[538689,".bx-leaderboard"],[9377180,".cnc-ads"],[15666973,".etarget"],[16343543,".hp-advert"],[8253701,".jobscz"],[9296789,".lsads-banner"],[10025090,".nativead"],[5251448,".ownad"],[1583392,".perex-adblock-warning"],[16756924,".r-main"],[5167085,".reklama-3"],[15630592,".reklama-bottom"],[1845318,".reklama-box"],[2054609,".reklama-left"],[6048836,".reklama-lista"],[10656789,".reklama-megaboard"],[6038619,".reklama-right"],[1844504,".reklama-top"],[6049708,".reklamaBottom"],[10676714,".reklamaHorniLista"],[6061274,".reklama_ahead"],[15615469,".reklama_square"],[1938610,".rklm"],[11480061,".sklik"],[6017495,".sklik-block"],[6170985,".sklik-box"],[16632090,".sklik_left"],[5999824,".sklik_right"],[14526852,".topreklama"],[5302317,".vreklama"]];
-const genericExceptionSieve = [8454759,1845318,16756924,8567284,1512599,1938610,12747823,15864327,449175,7380929,12211741];
-const genericExceptionMap = [["denik.cz",".ads-box\n.reklama-box"],["hyundai.com",".r-main"],["jaguar-club.net",".reklama"],["mazdaclub.cz",".reklama"],["nissanclub.cz",".reklama"],["novinky.cz",".g_ad"],["www.parabola.cz",".rklm"],["skrblik.cz","#adsense"],["sluzebnik.cz","#adverts"],["aktuality.sk",".adBanner"],["dobre-recepty.sk","#ad_skin"],["vranovske.sk",".advertising-content"]];
-
-if ( genericSelectorMap ) {
-    const map = self.genericSelectorMap =
-        self.genericSelectorMap || new Map();
-    if ( map.size !== 0 ) {
-        for ( const entry of genericSelectorMap ) {
-            const before = map.get(entry[0]);
-            if ( before === undefined ) {
-                map.set(entry[0], entry[1]);
-            } else {
-                map.set(entry[0], `${before},\n${entry[1]}`);
-            }
-        }
-    } else {
-        self.genericSelectorMap = new Map(genericSelectorMap);
-    }
-    genericSelectorMap.length = 0;
-}
-
-if ( genericExceptionSieve ) {
-    const hashes = self.genericExceptionSieve =
-        self.genericExceptionSieve || new Set();
-    if ( hashes.size !== 0 ) {
-        for ( const hash of genericExceptionSieve ) {
-            hashes.add(hash);
-        }
-    } else {
-        self.genericExceptionSieve = new Set(genericExceptionSieve);
-    }
-    genericExceptionSieve.length = 0;
-}
-
-if ( genericExceptionMap ) {
-    const map = self.genericExceptionMap =
-        self.genericExceptionMap || new Map();
-    if ( map.size !== 0 ) {
-        for ( const entry of genericExceptionMap ) {
-            const before = map.get(entry[0]);
-            if ( before === undefined ) {
-                map.set(entry[0], entry[1]);
-            } else {
-                map.set(entry[0], `${before}\n${entry[1]}`);
-            }
-        }
-    } else {
-        self.genericExceptionMap = new Map(genericExceptionMap);
-    }
-    genericExceptionMap.length = 0;
-}
-
-/******************************************************************************/
+self.genericSelectorMaps = self.genericSelectorMaps ?? [];
+self.genericSelectorMaps.push(lowlyGeneric);
+self.genericDetails = self.genericDetails ?? [];
+self.genericDetails.push({ highlyGeneric, exceptions, hostnames, hasEntities });
 
 })();
 

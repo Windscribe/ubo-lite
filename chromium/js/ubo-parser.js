@@ -25,7 +25,7 @@ import redirectResourceMap from './redirect-resources.js';
 
 /******************************************************************************/
 
-const validResourceTypes = [
+const safeResourceTypes = [
     'main_frame',
     'sub_frame',
     'stylesheet',
@@ -38,8 +38,6 @@ const validResourceTypes = [
     'csp_report',
     'media',
     'websocket',
-    'webtransport',
-    'webbundle',
     'other',
 ];
 
@@ -62,6 +60,16 @@ const validRedirectResources = (( ) => {
     }
     return out;
 })();
+
+const isNotEntity = hn => hn.endsWith('.*') === false;
+
+/******************************************************************************/
+
+function toSuperDomain(hn) {
+    const pos = hn.indexOf('.');
+    if ( pos === -1 ) { return; }
+    return hn.slice(pos+1);
+}
 
 /******************************************************************************/
 
@@ -93,72 +101,301 @@ function parseHostnameList(iter) {
 
 /******************************************************************************/
 
-export function mergeIncludeExclude(rules) {
-    const includeExcludes = [
-        { includeName: 'requestDomains', excludeName: 'excludedRequestDomains' },
-        { includeName: 'initiatorDomains', excludeName: 'excludedInitiatorDomains' },
-        { includeName: 'resourceTypes', excludeName: 'excludedResourceTypes' },
-        { includeName: 'requestMethods', excludeName: 'excludedRequestMethods' },
-    ];
-    for ( const { includeName, excludeName } of includeExcludes ) {
-        const out = [];
-        const distinctRules = new Map();
-        for ( const rule of rules ) {
-            const { id, condition } = rule;
-            if ( Boolean(condition[includeName]?.length) === false ) {
-                if ( Boolean(condition[excludeName]?.length) === false ) {
-                    out.push(rule);
-                    continue;
+function ownerFromPropertyPath(root, path) {
+    let owner = root;
+    let prop = path;
+    for (;;) {
+        if ( owner instanceof Object === false ) { break; }
+        const pos = prop.indexOf('.');
+        if ( pos === -1 ) { break; }
+        owner = owner[prop.slice(0, pos)];
+        prop = prop.slice(pos+1)
+    }
+    return { owner: owner ?? undefined, prop };
+}
+
+/******************************************************************************/
+
+function propertySorter(k, v) {
+    if ( k.startsWith('_') ) { return; }
+    if ( Array.isArray(v) ) {
+        return typeof v[0] === 'string' ? v.sort() : v;
+    }
+    if ( v instanceof Object ) {
+        const sorted = {};
+        for ( const kk of Object.keys(v).sort() ) {
+            sorted[kk] = v[kk];
+        }
+        return sorted;
+    }
+    return v;
+}
+
+/******************************************************************************/
+
+function mergeDomains(rules, includeProp, excludeProp) {
+    const out = [];
+    const distinctRules = new Map();
+    for ( const rule of rules ) {
+        const { id } = rule;
+        if ( rule.condition === undefined ) {
+            out.push(rule);
+            continue;
+        }
+        const includes = rule.condition[includeProp];
+        rule.condition[includeProp] = undefined;
+        const excludes = rule.condition[excludeProp];
+        rule.condition[excludeProp] = undefined;
+        rule.id = undefined;
+        const hash = JSON.stringify(rule, propertySorter);
+        const details = distinctRules.get(hash) || { id };
+        if ( details.initialized !== true ) {
+            details.initialized = true;
+            distinctRules.set(hash, details);
+        }
+        if ( Boolean(includes?.length) === false ) {
+            details.includes = [];
+        } else if ( details.includes === undefined ) {
+            details.includes = includes;
+        } else if ( details.includes.length ) {
+            for ( const hn of includes ) {
+                details.includes.push(hn);
+            }
+        }
+        if ( excludes?.length ) {
+            if ( details.excludes === undefined ) {
+                details.excludes = excludes;
+            } else {
+                for ( const hn of excludes ) {
+                    details.excludes.push(hn);
                 }
             }
-            const included = condition[includeName] || [];
-            condition[includeName] = undefined;
-            const excluded = condition[excludeName] || [];
-            condition[excludeName] = undefined;
-            rule.id = undefined;
-            const hash = JSON.stringify(rule);
-            const details = distinctRules.get(hash) ||
-                { id, included: new Set(), excluded: new Set() };
-            if ( details.included.size === 0 && details.excluded.size === 0 ) {
-                distinctRules.set(hash, details);
-            }
-            for ( const hn of included ) {
-                details.included.add(hn);
-            }
-            for ( const hn of excluded ) {
-                if ( details.included.has(hn) ) { continue; }
-                details.excluded.add(hn);
-            }
         }
-        for ( const [ hash, { id, included, excluded } ] of distinctRules ) {
-            const rule = JSON.parse(hash);
-            if ( id ) {
-                rule.id = id;
-            }
-            if ( included.size !== 0 ) {
-                rule.condition[includeName] = Array.from(included);
-            }
-            if ( excluded.size !== 0 ) {
-                rule.condition[excludeName] = Array.from(excluded);
-            }
+    }
+    for ( const [ hash, details ] of distinctRules ) {
+        const rule = JSON.parse(hash);
+        rule.id = details.id;
+        if ( details.includes?.length ) {
+            rule.condition[includeProp] = Array.from(new Set(details.includes)).sort();
+        }
+        if ( details.excludes?.length ) {
+            rule.condition[excludeProp] = Array.from(new Set(details.excludes)).sort();
+        }
+        out.push(rule);
+    }
+    return out;
+}
+
+/******************************************************************************/
+
+function mergeArrays(rules, propertyPath, emptyIsAll = false) {
+    const out = [];
+    const distinctRules = new Map();
+    for ( const rule of rules ) {
+        const { id } = rule;
+        const { owner, prop } = ownerFromPropertyPath(rule, propertyPath);
+        if ( owner === undefined ) {
             out.push(rule);
+            continue;
         }
-        rules = out;
+        const collection = owner[prop];
+        if ( Array.isArray(collection) === false || collection.length === 0 ) {
+            if ( emptyIsAll === false ) {
+                out.push(rule);
+                continue;
+            }
+        }
+        owner[prop] = undefined;
+        rule.id = undefined;
+        const hash = JSON.stringify(rule, propertySorter);
+        const details = distinctRules.get(hash) || { id };
+        if ( details.initialized !== true ) {
+            details.initialized = true;
+            distinctRules.set(hash, details);
+        }
+        if ( Boolean(collection?.length) === false ) {
+            details.collection = [];
+        } else if ( details.collection === undefined ) {
+            details.collection = collection;
+        } else if ( details.collection.length ) {
+            for ( const v of collection ) {
+                details.collection.push(v);
+            }
+        }
+    }
+    for ( const [ hash, { id, collection } ] of distinctRules ) {
+        const rule = JSON.parse(hash);
+        if ( id ) {
+            rule.id = id;
+        }
+        if ( collection?.length ) {
+            const { owner, prop } = ownerFromPropertyPath(rule, propertyPath);
+            owner[prop] = Array.from(new Set(collection)).sort();
+        }
+        out.push(rule);
+    }
+    return out;
+}
+
+/******************************************************************************/
+
+export function minimizeRuleset(rules) {
+    rules.forEach(rule => {
+        const { condition } = rule;
+        if ( condition.excludedResourceTypes ) { return; }
+        if ( condition.resourceTypes ) { return; }
+        if ( condition.urlFilter ) { return; }
+        if ( condition.regexFilter ) { return; }
+        condition.excludedResourceTypes = [ 'main_frame' ];
+    });
+    rules = mergeArrays(rules, 'action.responseHeaders');
+    rules = mergeArrays(rules, 'action.redirect.transform.queryTransform.removeParams');
+    rules = mergeArrays(rules, 'condition.responseHeaders');
+    rules = mergeArrays(rules, 'condition.resourceTypes', true);
+    rules = mergeArrays(rules, 'condition.requestMethods', true);
+    rules = mergeDomains(rules, 'initiatorDomains', 'excludedInitiatorDomains');
+    rules = mergeDomains(rules, 'requestDomains', 'excludedRequestDomains');
+    rules = mergeDomains(rules, 'topDomains', 'excludedTopDomains');
+    rules.forEach(rule => {
+        const { condition } = rule;
+        if ( condition.resourceTypes ) { return; }
+        if ( condition.excludedResourceTypes?.length !== 1 ) { return; }
+        if ( condition.excludedResourceTypes[0] !== 'main_frame' ) { return; }
+        delete condition.excludedResourceTypes;
+    });
+    return rules;
+}
+
+/******************************************************************************/
+
+export function minimizeRules(rules) {
+    const hostnameListProp = [
+        'requestDomains',
+        'excludedRequestDomains',
+        'initiatorDomains',
+        'excludedInitiatorDomains',
+    ];
+    for ( const rule of rules ) {
+        for ( const prop of hostnameListProp ) {
+            const hostnames = rule.condition[prop];
+            if ( hostnames === undefined ) { continue; }
+            if ( hostnames.length === 1 ) { continue; }
+            const hnSet = new Set(hostnames);
+            for ( let hn of hnSet ) {
+                for (;;) {
+                    const hnup = toSuperDomain(hn);
+                    if ( hnup === undefined ) { break; }
+                    if ( hnSet.has(hnup) ) { hnSet.delete(hn); }
+                    hn = hnup;
+                }
+            }
+            if ( hnSet.size === hostnames.length ) { continue; }
+            rule.condition[prop] = Array.from(hnSet).sort();
+        }
     }
     return rules;
 }
 
 /******************************************************************************/
 
-function parseNetworkFilter(parser) {
+function dropEntities(rule, prop) {
+    const { condition } = rule;
+    if ( condition[prop] === undefined ) { return; }
+    const sanitized = condition[prop].filter(a => isNotEntity(a));
+    if ( sanitized.length === condition[prop].length ) { return; }
+    if ( sanitized.length === 0 ) { return 0; }
+    condition.requestDomains = sanitized;
+}
+
+/******************************************************************************/
+
+function convertInitiatorDomainsToRequestDomains(rule) {
+    if ( rule.condition.initiatorDomains ) {
+        rule.condition.requestDomains ??= [];
+        rule.condition.requestDomains = [
+            ...rule.condition.requestDomains,
+            ...rule.condition.initiatorDomains,
+        ];
+        delete rule.condition.initiatorDomains;
+    }
+    if ( rule.condition.excludedInitiatorDomains ) {
+        rule.condition.excludedRequestDomains ??= [];
+        rule.condition.excludedRequestDomains = [
+            ...rule.condition.excludedRequestDomains,
+            ...rule.condition.excludedInitiatorDomains,
+        ];
+        delete rule.condition.excludedInitiatorDomains;
+    }
+}
+
+/******************************************************************************/
+
+// https://github.com/uBlockOrigin/uBOL-home/discussions/736
+
+export function expandRemoveparamsRule(rule0, out) {
+    if ( Boolean(rule0.condition.resourceTypes?.includes('main_frame')) === false ) { return; }
+    if ( rule0.condition.initiatorDomains === undefined ) { return; }
+    if ( rule0.condition.resourceTypes.length === 1 ) {
+        convertInitiatorDomainsToRequestDomains(rule0);
+        return;
+    }
+    const rule1 = structuredClone(rule0);
+    rule0.condition.resourceTypes = rule0.condition.resourceTypes.filter(a => a !== 'main_frame');
+    rule1.condition.resourceTypes = [ 'main_frame' ];
+    convertInitiatorDomainsToRequestDomains(rule1);
+    out.push(rule1);
+}
+
+/******************************************************************************/
+
+export function validateRules(rules) {
+    const out = [];
+    for ( const rule of rules ) {
+        const { condition } = rule;
+        // "Only one of resourceTypes and excludedResourceTypes should be specified"
+        if ( condition.resourceTypes ) {
+            if ( condition.excludedResourceTypes ) { continue; }
+        }
+        // "Only one of requestMethods and excludedRequestMethods should be specified"
+        if ( condition.requestMethods ) {
+            if ( condition.excludedRequestMethods ) { continue; }
+        }
+        // Drop entity-based hostnames
+        if ( dropEntities(rule, 'requestDomains') === 0 ) { continue; }
+        if ( dropEntities(rule, 'excludedRequestDomains') === 0 ) { continue; }
+        if ( dropEntities(rule, 'initiatorDomains') === 0 ) { continue; }
+        if ( dropEntities(rule, 'excludedInitiatorDomains') === 0 ) { continue; }
+        // regexSubstitution requires regexFilter
+        if ( rule.action?.redirect?.regexSubstitution ) {
+            if ( rule.condition.regexFilter === undefined ) { continue; }
+        }
+        out.push(rule);
+    }
+    return out;
+}
+
+/******************************************************************************/
+
+// Priority:
+//   Removeparam: 1-4
+//   Block: 10 (default priority)
+//   Redirect: 11-19
+//   Excepted redirect: 21-29
+//   Allow: 30
+//   Block important: 40
+//   Redirect important: 41-49
+
+export function parseNetworkFilter(parser, details = {}, out = []) {
     if ( parser.isNetworkFilter() === false ) { return; }
     if ( parser.hasError() ) { return; }
 
+    const validResourceTypes = details.resourceTypes ?? safeResourceTypes;
     const rule = {
         action: { type: 'block' },
         condition: { },
     };
-    if ( parser.isException() ) {
+    const isException = parser.isException();
+    if ( isException ) {
         rule.action.type = 'allow';
     }
 
@@ -181,10 +418,13 @@ function parseNetworkFilter(parser) {
         rule.condition.urlFilter = pattern;
     }
 
+    const defaultResourceTypes = new Set();
     const initiatorDomains = new Set();
     const excludedInitiatorDomains = new Set();
     const requestDomains = new Set();
     const excludedRequestDomains = new Set();
+    const topDomains = new Set();
+    const excludedTopDomains = new Set();
     const requestMethods = new Set();
     const excludedRequestMethods = new Set();
     const resourceTypes = new Set();
@@ -202,7 +442,8 @@ function parseNetworkFilter(parser) {
         }
     };
 
-    let priority = 0;
+    let subpriority = 0;
+    let isImportant = false;
 
     for ( const type of parser.getNodeTypes() ) {
         switch ( type ) {
@@ -247,6 +488,9 @@ function parseNetworkFilter(parser) {
                 operation: 'append',
                 value: parser.getNetOptionValue(type),
             } ];
+            defaultResourceTypes.add('main_frame');
+            defaultResourceTypes.add('sub_frame');
+            defaultResourceTypes.add('object');
             break;
         case sfp.NODE_TYPE_NET_OPTION_NAME_CSS:
             processResourceType('stylesheet', type);
@@ -288,8 +532,9 @@ function parseNetworkFilter(parser) {
             }
             break;
         }
-        case sfp.NODE_TYPE_NET_OPTION_NAME_HEADER: {
+        case sfp.NODE_TYPE_NET_OPTION_NAME_RESPONSEHEADER: {
             const details = sfp.parseHeaderValue(parser.getNetOptionValue(type));
+            if ( details.bad ) { return; }
             const headerInfo = {
                 header: details.name,
             };
@@ -297,14 +542,18 @@ function parseNetworkFilter(parser) {
                 if ( details.isRegex ) { return; }
                 headerInfo.values = [ details.value ];
             }
-            rule.condition.responseHeaders = [ headerInfo ];
+            if ( details.not ) {
+                rule.condition.excludedResponseHeaders = [ headerInfo ];
+            } else {
+                rule.condition.responseHeaders = [ headerInfo ];
+            }
             break;
         }
         case sfp.NODE_TYPE_NET_OPTION_NAME_IMAGE:
             processResourceType('image', type);
             break;
         case sfp.NODE_TYPE_NET_OPTION_NAME_IMPORTANT:
-            priority += 30;
+            isImportant = true;
             break;
         case sfp.NODE_TYPE_NET_OPTION_NAME_MATCHCASE:
             rule.condition.isUrlFilterCaseSensitive = true;
@@ -314,7 +563,7 @@ function parseNetworkFilter(parser) {
             break;
         case sfp.NODE_TYPE_NET_OPTION_NAME_METHOD: {
             const value = parser.getNetOptionValue(type);
-            for ( const method of value.toUpperCase().split('|') ) {
+            for ( const method of value.toLowerCase().split('|') ) {
                 const not = method.charCodeAt(0) === 0x7E /* '~' */;
                 if ( not ) {
                     excludedRequestMethods.add(method.slice(1));
@@ -338,6 +587,9 @@ function parseNetworkFilter(parser) {
                 operation: 'append',
                 value: parser.getNetOptionValue(type),
             } ];
+            defaultResourceTypes.add('main_frame');
+            defaultResourceTypes.add('sub_frame');
+            defaultResourceTypes.add('object');
             break;
         case sfp.NODE_TYPE_NET_OPTION_NAME_PING:
             processResourceType('ping', type);
@@ -349,8 +601,7 @@ function parseNetworkFilter(parser) {
             let value = parser.getNetOptionValue(type);
             const match = /:(\d+)$/.exec(value);
             if ( match ) {
-                const subpriority = parseInt(match[1], 10);
-                priority += Math.min(subpriority, 8);
+                subpriority = Math.min(parseInt(match[1], 10) || 0, 8);
                 value = value.slice(0, match.index);
             }
             if ( validRedirectResources.has(value) === false ) { return; }
@@ -358,7 +609,6 @@ function parseNetworkFilter(parser) {
             rule.action.redirect = {
                 extensionPath: `/web_accessible_resources/${validRedirectResources.get(value)}`,
             };
-            priority += 11;
             break;
         }
         case sfp.NODE_TYPE_NET_OPTION_NAME_REMOVEPARAM: {
@@ -369,11 +619,19 @@ function parseNetworkFilter(parser) {
             const removeParams = [];
             if ( details.name ) {
                 removeParams.push(details.name);
+                if ( rule.condition.urlFilter === undefined ) {
+                    if ( rule.condition.regexFilter === undefined ) {
+                        rule.condition.urlFilter = `^${details.name}=`;
+                    }
+                }
             }
             rule.action.type = 'redirect';
             rule.action.redirect = {
                 transform: { queryTransform: { removeParams } }
             };
+            defaultResourceTypes.add('main_frame');
+            defaultResourceTypes.add('sub_frame');
+            defaultResourceTypes.add('xmlhttprequest');
             break;
         }
         case sfp.NODE_TYPE_NET_OPTION_NAME_SCRIPT:
@@ -395,11 +653,32 @@ function parseNetworkFilter(parser) {
             }
             break;
         }
-        case sfp.NODE_TYPE_NET_OPTION_NAME_URLTRANSFORM:
-            if ( this.processOptionWithValue(parser, type) === false ) {
-                return this.FILTER_INVALID;
+        case sfp.NODE_TYPE_NET_OPTION_NAME_TOP: {
+            const { included, excluded } = parseHostnameList(
+                parser.getNetFilterTopOptionIterator()
+            );
+            if ( included.good.length === 0 ) {
+                if ( included.bad.length !== 0 ) { return; }
+            }
+            if ( excluded.bad.length !== 0 ) { return; }
+            for ( const hn of included.good ) {
+                topDomains.add(hn);
+            }
+            for ( const hn of excluded.good ) {
+                excludedTopDomains.add(hn);
             }
             break;
+        }
+        case sfp.NODE_TYPE_NET_OPTION_NAME_URLTRANSFORM: {
+            const parsed = sfp.parseReplaceByRegexValue(parser.getNetOptionValue(type));
+            if ( parsed === undefined ) { return; }
+            if ( parsed.re ) { return; }
+            rule.action.type = 'redirect';
+            rule.action.redirect = {
+                regexSubstitution: parsed.replacement.replace(/\$(\d+)/g, '\\$1'),
+            };
+            break;
+        }
         case sfp.NODE_TYPE_NET_OPTION_NAME_XHR:
             processResourceType('xmlhttprequest', type);
             break;
@@ -411,55 +690,95 @@ function parseNetworkFilter(parser) {
         }
     }
     if ( initiatorDomains.size !== 0 ) {
-        rule.condition.initiatorDomains = Array.from(initiatorDomains);
+        rule.condition.initiatorDomains = Array.from(initiatorDomains).sort();
     }
     if ( excludedInitiatorDomains.size !== 0 ) {
-        rule.condition.excludedInitiatorDomains = Array.from(excludedInitiatorDomains);
+        rule.condition.excludedInitiatorDomains = Array.from(excludedInitiatorDomains).sort();
     }
     if ( requestDomains.size !== 0 ) {
-        rule.condition.requestDomains = Array.from(requestDomains);
+        rule.condition.requestDomains = Array.from(requestDomains).sort();
     }
     if ( excludedRequestDomains.size !== 0 ) {
-        rule.condition.excludedRequestDomains = Array.from(excludedRequestDomains);
+        rule.condition.excludedRequestDomains = Array.from(excludedRequestDomains).sort();
+    }
+    if ( topDomains.size !== 0 ) {
+        rule.condition.topDomains = Array.from(topDomains).sort();
+    }
+    if ( excludedTopDomains.size !== 0 ) {
+        rule.condition.excludedTopDomains = Array.from(excludedTopDomains).sort();
     }
     if ( requestMethods.size !== 0 ) {
-        rule.condition.requestMethods = Array.from(requestMethods);
+        rule.condition.requestMethods = Array.from(requestMethods).sort();
     }
     if ( excludedRequestMethods.size !== 0 ) {
-        rule.condition.excludedRequestMethods = Array.from(excludedRequestMethods);
+        rule.condition.excludedRequestMethods = Array.from(excludedRequestMethods).sort();
+    }
+    if ( resourceTypes.size === 0 && excludedResourceTypes.size === 0 ) {
+        defaultResourceTypes.forEach(a => resourceTypes.add(a));
     }
     if ( resourceTypes.size !== 0 ) {
-        const types = Array.from(resourceTypes).filter(a => a !== '');
+        const types = Array.from(resourceTypes).filter(a => a !== '').sort();
         if ( types.length === 0 ) { return; }
         rule.condition.resourceTypes = types;
     }
     if ( excludedResourceTypes.size !== 0 ) {
-        if ( resourceTypes.size !== 0 ) {
-            if ( excludedResourceTypes.size !== 0 ) { return; }
-        }
-        rule.condition.excludedResourceTypes = Array.from(excludedResourceTypes);
+        if ( resourceTypes.size !== 0 ) { return; }
+        excludedResourceTypes.add('main_frame');
+        rule.condition.excludedResourceTypes = Array.from(excludedResourceTypes).sort();
     }
-    if ( priority !== 0 ) {
+    let priority = 1;
+    if ( rule.action.type === 'block' ) {
+        priority = isImportant ? 40 : 10;
+    } else if ( rule.action.type === 'allow' ) {
+        priority = 30;
+    } else if ( rule.action.type === 'redirect' ) {
+        if ( rule.action.redirect.extensionPath ) {
+            if ( isException ) {
+                rule.action.type = 'block';
+                delete rule.action.redirect;
+                priority = 20;
+            } else {
+                priority = (isImportant ? 41 : 11) + subpriority;
+            }
+        } else if ( rule.action.redirect.transform?.queryTransform?.removeParams ) {
+            if ( isException ) {
+                rule.action.type = 'allow';
+                delete rule.action.redirect;
+            }
+        } else if ( rule.action.redirect.regexSubstitution ) {
+        }
+    } else if ( rule.action.type === 'modifyHeaders' ) {
+        if ( isException ) {
+            rule.action.type = 'allow';
+            delete rule.action.responseHeaders;
+        }
+    }
+    if ( priority !== 1 ) {
         rule.priority = priority;
     }
-    return rule;
+    out.push(rule);
+    if ( rule.action.redirect?.transform?.queryTransform?.removeParams ) {
+        expandRemoveparamsRule(rule, out);
+    }
+    return out;
 }
 
 /******************************************************************************/
 
-export function parseFilters(text) {
+export function parseFilters(text, details) {
     if ( text.startsWith('---') ) { return; }
     if ( text.endsWith('---') ) { return; }
     const lines = text.split(/\n/);
     if ( lines.some(a => a.startsWith(' ')) ) { return; }
-    const rules = [];
+    let rules = [];
     const parser = new sfp.AstFilterParser({ trustedSource: true });
     for ( const line of lines ) {
         parser.parse(line);
         if ( parser.isNetworkFilter() === false ) { continue; }
-        const rule = parseNetworkFilter(parser);
-        if ( rule === undefined ) { continue; }
-        rules.push(rule);
+        parseNetworkFilter(parser, details, rules);
     }
-    return mergeIncludeExclude(rules);
+    rules = minimizeRuleset(rules);
+    rules = minimizeRules(rules);
+    rules = validateRules(rules);
+    return rules;
 }

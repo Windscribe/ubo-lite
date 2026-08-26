@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    uBlock Origin - a comprehensive, efficient content blocker
+    uBlock Origin Lite - a comprehensive, MV3-compliant content blocker
     Copyright (C) 2025-present Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
@@ -33,8 +33,8 @@ function onMinimizeClicked() {
 
 function highlight() {
     const selectors = [];
-    for ( const selectorElem of qsa$('#customFilters .customFilter.on > span.selector') ) {
-        selectors.push(selectorElem.textContent);
+    for ( const selectorElem of qsa$('#customFilters .customFilter.on') ) {
+        selectors.push(selectorElem.dataset.selector);
     }
     if ( selectors.length !== 0 ) {
         toolOverlay.postMessage({
@@ -64,14 +64,14 @@ function onFilterClicked(ev) {
         highlight();
         return;
     }
-    const selector = selectorElem.textContent;
+    const selector = filterElem.dataset.selector;
     const trashElem = qs$(filterElem, ':scope > span.remove');
     if ( target === trashElem ) {
         dom.cl.add(filterElem, 'removed');
         dom.cl.remove(filterElem, 'on');
-        toolOverlay.sendMessage({ what: 'removeCustomFilter',
+        toolOverlay.sendMessage({ what: 'removeCustomFilters',
             hostname: toolOverlay.url.hostname,
-            selector,
+            selectors: [ selector ],
         }).then(( ) => {
             autoSelectFilter();
         });
@@ -80,9 +80,9 @@ function onFilterClicked(ev) {
     const undoElem = qs$(filterElem, ':scope > span.undo');
     if ( target === undoElem ) {
         dom.cl.remove(filterElem, 'removed');
-        toolOverlay.sendMessage({ what: 'addCustomFilter',
+        toolOverlay.sendMessage({ what: 'addCustomFilters',
             hostname: toolOverlay.url.hostname,
-            selector,
+            selectors: [ selector ],
         }).then(( ) => {
             dom.cl.remove('.customFilter.on', 'on');
             dom.cl.add(filterElem, 'on');
@@ -111,9 +111,16 @@ function populateFilters(selectors) {
     dom.clear(container);
     const rowTemplate = qs$('template#customFilterRow');
     for ( const selector of selectors ) {
-        const row = rowTemplate.content.cloneNode(true);
-        qs$(row, '.customFilter > span.selector').textContent = selector;
-        container.append(row);
+        const fragment = rowTemplate.content.cloneNode(true);
+        const row = qs$(fragment, '.customFilter');
+        row.dataset.selector = selector;
+        let text = selector;
+        if ( selector.startsWith('{') ) {
+            const o = JSON.parse(selector);
+            text = o.raw;
+        }
+        qs$(row, '.selector').textContent = text;
+        container.append(fragment);
     }
     faIconsInit(container);
     autoSelectFilter();
@@ -123,14 +130,14 @@ function populateFilters(selectors) {
 
 async function startUnpicker() {
     const selectors = await toolOverlay.sendMessage({
-        what: 'selectorsFromCustomFilters',
+        what: 'customFiltersFromHostname',
         hostname: toolOverlay.url.hostname,
     })
     if ( selectors.length === 0 ) {
         return quitUnpicker();
     }
+    await toolOverlay.postMessage({ what: 'terminateCustomFilters' });
     await toolOverlay.postMessage({ what: 'startTool' });
-    await toolOverlay.postMessage({ what: 'uninjectCustomFilters' });
     populateFilters(selectors);
     dom.on('#minimize', 'click', onMinimizeClicked);
     dom.on('#customFilters', 'click', onFilterClicked);
@@ -140,7 +147,7 @@ async function startUnpicker() {
 /******************************************************************************/
 
 async function quitUnpicker() {
-    await toolOverlay.postMessage({ what: 'injectCustomFilters' });
+    await toolOverlay.postMessage({ what: 'startCustomFilters' });
     toolOverlay.stop();
 }
 

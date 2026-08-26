@@ -25,62 +25,16 @@
 // Isolate from global scope
 (function uBOL_cssGenericImport() {
 
-/******************************************************************************/
+const lowlyGeneric = new Map(/* 10 */[[51371,"#digi-fm-live-stream"],[63309,".only-desktop.promotii-wrapper"],[24895,".only_desktop.related_on_top.parteneri.sectiune"],[10573,".SC_TBlock"],[25189,".strawberry_ads_container"],[39774,".strawberry-ads__pretty-container"],[40254,".strawberry-ads-manager-container"],[34679,".strawberry-ad-card"],[39851,".strawberry-ad"],[3896,"#sam_branding[style=\"min-height:250px;\"]"]]);
+const highlyGeneric = /* 4 */"[href^=\"https://serve.efortuna.ro/\"],\n[href^=\"https://banners.livepartners.com/\"],\n[href=\"https://www.patriotromania.ro/\"],\n[href*=\"/add.php\"]";
+const exceptions = /* 4 */["#ad-carousel","html > #bw-cf-root","[href=\"https://www.patriotromania.ro/\"]",".adsbygoogle"];
+const hostnames = /* 4 */["dez.ro","curier.ro","patriotromania.ro","televiziunea-medicala.ro"];
+const hasEntities = false;
 
-const genericSelectorMap = [[7719083,"#digi-fm-live-stream"],[12253005,".only-desktop.promotii-wrapper"],[16277823,".only_desktop.related_on_top.parteneri.sectiune"],[2566477,".SC_TBlock"],[16540261,".strawberry_ads_container"],[8559454,".strawberry-ads__pretty-container"],[9084222,".strawberry-ads-manager-container"],[5539703,".strawberry-ad-card"],[4430763,".strawberry-ad"],[5639992,"#sam_branding[style=\"min-height:250px;\"]"]];
-const genericExceptionSieve = [2152501,16153475,16634508];
-const genericExceptionMap = [["dez.ro","#ad-carousel"],["televiziunea-medicala.ro",".adsbygoogle"],["tvonline123.com","#ads-container"]];
-
-if ( genericSelectorMap ) {
-    const map = self.genericSelectorMap =
-        self.genericSelectorMap || new Map();
-    if ( map.size !== 0 ) {
-        for ( const entry of genericSelectorMap ) {
-            const before = map.get(entry[0]);
-            if ( before === undefined ) {
-                map.set(entry[0], entry[1]);
-            } else {
-                map.set(entry[0], `${before},\n${entry[1]}`);
-            }
-        }
-    } else {
-        self.genericSelectorMap = new Map(genericSelectorMap);
-    }
-    genericSelectorMap.length = 0;
-}
-
-if ( genericExceptionSieve ) {
-    const hashes = self.genericExceptionSieve =
-        self.genericExceptionSieve || new Set();
-    if ( hashes.size !== 0 ) {
-        for ( const hash of genericExceptionSieve ) {
-            hashes.add(hash);
-        }
-    } else {
-        self.genericExceptionSieve = new Set(genericExceptionSieve);
-    }
-    genericExceptionSieve.length = 0;
-}
-
-if ( genericExceptionMap ) {
-    const map = self.genericExceptionMap =
-        self.genericExceptionMap || new Map();
-    if ( map.size !== 0 ) {
-        for ( const entry of genericExceptionMap ) {
-            const before = map.get(entry[0]);
-            if ( before === undefined ) {
-                map.set(entry[0], entry[1]);
-            } else {
-                map.set(entry[0], `${before}\n${entry[1]}`);
-            }
-        }
-    } else {
-        self.genericExceptionMap = new Map(genericExceptionMap);
-    }
-    genericExceptionMap.length = 0;
-}
-
-/******************************************************************************/
+self.genericSelectorMaps = self.genericSelectorMaps ?? [];
+self.genericSelectorMaps.push(lowlyGeneric);
+self.genericDetails = self.genericDetails ?? [];
+self.genericDetails.push({ highlyGeneric, exceptions, hostnames, hasEntities });
 
 })();
 

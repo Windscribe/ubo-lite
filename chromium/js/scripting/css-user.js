@@ -24,11 +24,38 @@
 /******************************************************************************/
 
 const docURL = new URL(document.baseURI);
-chrome.runtime.sendMessage({
+const details = await chrome.runtime.sendMessage({
     what: 'injectCustomFilters',
     hostname: docURL.hostname,
 }).catch(( ) => {
 });
+
+self.customFilters = details;
+
+if ( Boolean(details?.proceduralSelectors?.length) === false ) { return; }
+
+if ( self.ProceduralFiltererAPI === undefined ) {
+    self.ProceduralFiltererAPI = chrome.runtime.sendMessage({
+        what: 'injectCSSProceduralAPI'
+    }).catch(( ) => {
+    });
+}
+
+await self.ProceduralFiltererAPI;
+
+self.customProceduralFiltererAPI = new self.ProceduralFiltererAPI();
+
+const selectors = details.proceduralSelectors.map(a => JSON.parse(a));
+
+const declaratives = selectors.filter(a => a.cssable);
+if ( declaratives.length !== 0 ) {
+    self.customProceduralFiltererAPI.addDeclaratives(declaratives);
+}
+
+const procedurals = selectors.filter(a => !a.cssable);
+if ( procedurals.length !== 0 ) {
+    self.customProceduralFiltererAPI.addProcedurals(procedurals);
+}
 
 /******************************************************************************/
 

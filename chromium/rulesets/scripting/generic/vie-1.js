@@ -25,62 +25,16 @@
 // Isolate from global scope
 (function uBOL_cssGenericImport() {
 
-/******************************************************************************/
+const lowlyGeneric = new Map(/* 20 */[[11916,"#_AM_POPUP_FRAME"],[60996,"#ads-preload"],[7458,"#banner-top"],[6491,"#mobileCatfish"],[47368,"#pmadv"],[44677,".aanetwork-ads-box"],[33586,".ad_location"],[31619,".adsbygoogle[data-ad-slot]"],[31012,".banner-ads"],[30908,".close-ads"],[9843,".float-ck"],[56502,".google-auto-placed"],[64683,".jw-cue"],[58576,".midroll-marker"],[26407,".quangcao"],[5212,".right-box.top-block"],[58138,".samBannerUnit"],[38916,".tpm-unit"],[9950,".qc"],[14993,".banner-bottom"]]);
+const highlyGeneric = /* 4 */"[class^=\"adHTML\"],\n[id^=\"bn_bottom_fixed_\"],\ndiv[style=\"position: fixed; inset: 0px; z-index: 2147483647; pointer-events: auto;\"],\n[id^=\"adm-slot\"]";
+const exceptions = /* 20 */[".qc",".qc","#adsContainer","[id^=\"adm-slot\"]",".showads",".qc","#ad-wrapper","[class^=\"div-gpt-ad\"]",".advertiser",".c-ads",".imageads","#ad-slot",".qc",".adheader",".banner-bottom","ins.adsbygoogle[data-ad-slot]",".ads_top","#horizontal-ad\n.blogAd",".ad-space\n.ad_unit",".inline-ad"];
+const hostnames = /* 20 */["dm.de","msn.com","pops.vn","cafef.vn","vndoc.com","medium.com","qmh.garden","quykhu.com","www.vn2c.my","sayhentai.cx","thanhnien.vn","timvanban.vn","livescore.com","tratu.soha.vn","vnexpress.net","ios.codevn.net","nhipcaudautu.vn","phongroblox.com","googleapiscdn.com","gicovietnam.blogspot.com"];
+const hasEntities = false;
 
-const genericSelectorMap = [[1977996,"#_AM_POPUP_FRAME"],[3075652,"#ads-preload"],[11083042,"#banner-top"],[14424411,"#mobileCatfish"],[14727432,"#pmadv"],[4238981,".aanetwork-ads-box"],[15434546,".ad_location"],[16153475,".adsbygoogle[data-ad-slot]"],[15628580,".banner-ads"],[4159676,".close-ads"],[3942003,".float-ck"],[9624758,".google-auto-placed"],[3079339,".jw-cue"],[14738640,".midroll-marker"],[16672551,".quangcao"],[4723804,".right-box.top-block"],[4317978,".samBannerUnit"],[4954116,".tpm-unit"]];
-const genericExceptionSieve = [1648350,11090577,10669509,3074695,16153475,4449035,14488712,15998283,2722794,4319895,14112296,14285148,2213262,370285,4116060,7038291];
-const genericExceptionMap = [["livescore.com",".qc"],["msn.com",".qc"],["dm.de",".qc"],["medium.com",".qc"],["vnexpress.net",".banner-bottom"],["gicovietnam.blogspot.com",".inline-ad"],["hhkungfu.club",".banner-ad"],["ios.codevn.net","ins.adsbygoogle[data-ad-slot]"],["ipacrack.com","ins.adsbygoogle[data-ad-slot]"],["nhipcaudautu.vn",".ads_top"],["phongroblox.com","#horizontal-ad\n.blogAd"],["pops.vn","#adsContainer"],["thanhnien.vn",".imageads"],["timvanban.vn","#ad-slot"],["tratu.soha.vn",".adheader"],["truyenaudiocv.org",".ads-large"],["vn2.vn",".advertiser"],["vndoc.com",".showads"],["sayhentaii.art",".c-ads"]];
-
-if ( genericSelectorMap ) {
-    const map = self.genericSelectorMap =
-        self.genericSelectorMap || new Map();
-    if ( map.size !== 0 ) {
-        for ( const entry of genericSelectorMap ) {
-            const before = map.get(entry[0]);
-            if ( before === undefined ) {
-                map.set(entry[0], entry[1]);
-            } else {
-                map.set(entry[0], `${before},\n${entry[1]}`);
-            }
-        }
-    } else {
-        self.genericSelectorMap = new Map(genericSelectorMap);
-    }
-    genericSelectorMap.length = 0;
-}
-
-if ( genericExceptionSieve ) {
-    const hashes = self.genericExceptionSieve =
-        self.genericExceptionSieve || new Set();
-    if ( hashes.size !== 0 ) {
-        for ( const hash of genericExceptionSieve ) {
-            hashes.add(hash);
-        }
-    } else {
-        self.genericExceptionSieve = new Set(genericExceptionSieve);
-    }
-    genericExceptionSieve.length = 0;
-}
-
-if ( genericExceptionMap ) {
-    const map = self.genericExceptionMap =
-        self.genericExceptionMap || new Map();
-    if ( map.size !== 0 ) {
-        for ( const entry of genericExceptionMap ) {
-            const before = map.get(entry[0]);
-            if ( before === undefined ) {
-                map.set(entry[0], entry[1]);
-            } else {
-                map.set(entry[0], `${before}\n${entry[1]}`);
-            }
-        }
-    } else {
-        self.genericExceptionMap = new Map(genericExceptionMap);
-    }
-    genericExceptionMap.length = 0;
-}
-
-/******************************************************************************/
+self.genericSelectorMaps = self.genericSelectorMaps ?? [];
+self.genericSelectorMaps.push(lowlyGeneric);
+self.genericDetails = self.genericDetails ?? [];
+self.genericDetails.push({ highlyGeneric, exceptions, hostnames, hasEntities });
 
 })();
 

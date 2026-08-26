@@ -25,36 +25,39 @@
    "adservingfactory.com",
    "adsnative.com",
    "adtlgc.com",
+   "adv.noi.md",
    "aplizz.net",
    "awstaticdn.net",
    "banners.livepartners.com",
-   "blaneo.com",
+   "beesratyou.com",
    "brand.ad",
    "brat-online.ro",
    "chargeplatform.com",
+   "colorfulculture.click",
    "contestapp.a1.ro",
    "creativcdn.net",
    "crwdcntrl.net",
-   "cumult.com",
+   "deltarockme.com",
+   "femeisingure.net",
    "flx1.com",
-   "gazeta-romaneasca.ro",
    "get-in-shape.beauty",
    "gonowx.com",
    "gravityrd-services.com",
    "gwngdfxtm.ru",
    "hotjar.com",
    "jsecoin.com",
-   "jurnalul-militar.ro",
+   "kdsk32lfa.xyz",
    "klodrum.com",
    "kreativcdn.net",
+   "l.profitshare.ro",
    "listat.biz",
    "megapopads.com",
    "minecrunch.co",
    "new.cetrk.com",
    "nnowa.com",
-   "olt-media.ro",
-   "oltenia-actualitati.ro",
    "omniconvert.com",
+   "openstat.eu",
+   "pgnasm.click",
    "pornlash.com",
    "profiling.avandor.com",
    "profiling1.avandor.com",
@@ -63,26 +66,22 @@
    "pwa.grgs.ro",
    "reasedoper.pw",
    "retargeting.biz",
-   "rezistentaromanesca.ro",
-   "romania-noastra.ro",
-   "romania-unita.ro",
-   "romanii-liberi.ro",
-   "romanulnationalist.ro",
+   "rvlqplr.com",
    "s.atemda.com",
    "s2blosh.com",
    "secure.trafic.ro",
    "serve.efortuna.ro",
    "sgbm.info",
+   "shufflefell.com",
    "st.ad.adnow.com",
    "storage.icorp.ro",
    "storage.trafic.ro",
    "tesseradigital.com",
    "track.atom-data.io",
    "tynt.com",
-   "universul-stirilor.ro",
+   "whitemaincode.com",
    "www4.smartadserver.com",
    "xamubee.ru",
-   "ziarul-democrat.ro",
    "zm232.com"
   ],
   "resourceTypes": [
@@ -100,7 +99,7 @@
   "type": "redirect"
  },
  "condition": {
-  "regexFilter": "^[a-z-]+://(?:[^/?#]+\\.)?femeisingure\\.net(?:[^%.0-9a-z_-]|$).*",
+  "regexFilter": "^[^:]+:\\/\\/([^:/]+\\.)?easyaff\\.net\\/\\?ref.*",
   "resourceTypes": [
    "main_frame"
   ]
@@ -116,7 +115,7 @@
   "type": "redirect"
  },
  "condition": {
-  "regexFilter": "^[a-z-]+://(?:[^/?#]+\\.)?easyaff\\.net/\\?ref.*",
+  "regexFilter": "^.*\\/click\\?impid=.*",
   "resourceTypes": [
    "main_frame"
   ]
@@ -132,28 +131,12 @@
   "type": "redirect"
  },
  "condition": {
-  "regexFilter": "^.*/click\\?impid=.*",
-  "resourceTypes": [
-   "main_frame"
-  ]
- },
- "id": 4,
- "priority": 29
-},
-{
- "action": {
-  "redirect": {
-   "regexSubstitution": "/strictblock.html#\\0"
-  },
-  "type": "redirect"
- },
- "condition": {
   "regexFilter": "^.*&ad_campaign_id.*",
   "resourceTypes": [
    "main_frame"
   ]
  },
- "id": 5,
+ "id": 4,
  "priority": 29
 }
 ]
