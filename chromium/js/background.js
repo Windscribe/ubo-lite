@@ -444,10 +444,11 @@ async function onMessage(request, sender) {
         return;
 
     case 'setShowBlockedCount':
-        rulesetConfig.showBlockedCount = request.state && true || false;
+        // Windscribe owns the toolbar icon; the badge stays off.
+        rulesetConfig.showBlockedCount = false;
         if ( canShowBlockedCount ) {
             dnr.setExtensionActionOptions({
-                displayActionCountAsBadgeText: rulesetConfig.showBlockedCount,
+                displayActionCountAsBadgeText: false,
             });
         }
         await saveRulesetConfig();
@@ -795,9 +796,10 @@ async function startSession() {
 
     // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/declarativeNetRequest
     //   Firefox API does not support `dnr.setExtensionActionOptions`
+    // Windscribe: Chrome persists this option, so always clear the badge.
     if ( canShowBlockedCount ) {
         dnr.setExtensionActionOptions({
-            displayActionCountAsBadgeText: rulesetConfig.showBlockedCount,
+            displayActionCountAsBadgeText: false,
         });
     }
 

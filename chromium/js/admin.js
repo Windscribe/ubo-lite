@@ -68,6 +68,8 @@ export async function loadAdminConfig() {
 function applyAdminConfig(config, apply = false) {
     const toApply = [];
     for ( const [ key, val ] of Object.entries(config) ) {
+        // Windscribe: do not let managed storage enable the toolbar badge.
+        if ( key === 'showBlockedCount' ) { continue; }
         if ( typeof val !== typeof rulesetConfig[key] ) { continue; }
         if ( val === rulesetConfig[key] ) { continue; }
         rulesetConfig[key] = val;

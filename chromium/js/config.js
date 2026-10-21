@@ -49,16 +49,30 @@ let pendingOpPromise = Promise.resolve();
 
 /******************************************************************************/
 
+// Windscribe: configs saved under uBOL's old `true` default must not show the badge.
+function enforceShowBlockedCountOff() {
+    if ( rulesetConfig.showBlockedCount === false ) { return false; }
+    rulesetConfig.showBlockedCount = false;
+    return true;
+}
+
 async function _loadRulesetConfig() {
     const sessionData = await sessionRead('rulesetConfig');
     if ( sessionData ) {
         Object.assign(rulesetConfig, sessionData);
         process.wakeupRun = true;
+        if ( enforceShowBlockedCountOff() ) {
+            sessionWrite('rulesetConfig', rulesetConfig);
+            localWrite('rulesetConfig', rulesetConfig);
+        }
         return;
     }
     const localData = await localRead('rulesetConfig');
     if ( localData ) {
         Object.assign(rulesetConfig, localData)
+        if ( enforceShowBlockedCountOff() ) {
+            localWrite('rulesetConfig', rulesetConfig);
+        }
         sessionWrite('rulesetConfig', rulesetConfig);
         return;
     }
